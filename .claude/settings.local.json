@@ -1,0 +1,30 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python tests/test_stage1.py)",
+      "Bash(python tests/test_stage2.py)",
+      "Bash(python tests/test_stage3.py)",
+      "Bash(python tests/test_stage4.py)",
+      "Bash(python tests/test_stage5.py)",
+      "Bash(python tests/test_stage6.py)",
+      "Bash(set PYTHONPATH=%CD%)",
+      "Bash(python tests/test_stage7.py)",
+      "Bash(python tests/test_stage8.py)",
+      "Bash(python tests/test_stage9.py)",
+      "Bash(python tests/test_stage10.py)",
+      "Bash(cd:*)",
+      "Bash(python:*)",
+      "Bash(findstr:*)",
+      "Bash(run_dashboard.bat)",
+      "Bash(streamlit run:*)",
+      "Bash(pkill:*)",
+      "Bash(netstat:*)",
+      "Bash(taskkill:*)",
+      "Bash(cmd /c taskkill:*)",
+      "Bash(tasklist)",
+      "Bash(git checkout:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

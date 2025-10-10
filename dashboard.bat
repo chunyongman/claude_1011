@@ -1,0 +1,1 @@
+streamlit run src/hmi/dashboard.py --server.port 8501

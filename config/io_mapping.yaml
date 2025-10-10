@@ -1,0 +1,244 @@
+# ESS AI System - IO Mapping Configuration
+# Siemens PLC & Danfoss VFD Communication Configuration
+
+system_info:
+  version: "1.0.0"
+  hardware: "NVIDIA Jetson Xavier NX"
+  plc: "Siemens"
+  vfd: "Danfoss"
+  mode: "simulation"  # simulation or production
+
+# Input Sensors Mapping
+input_sensors:
+  # Cooling System Temperature Sensors
+  cooling_temp:
+    T1:
+      description: "LT F.W Cooler S.W Inlet (S.W Pump Discharge)"
+      plc_tag: "DB100.DBD0"  # Temporary tag
+      unit: "°C"
+      range: [15.0, 40.0]
+      sigma_multiplier: 3.0
+      max_change_rate: 2.0  # °C per minute
+
+    T2:
+      description: "No.1 Cooler S.W Outlet"
+      plc_tag: "DB100.DBD4"
+      unit: "°C"
+      range: [20.0, 48.0]
+      sigma_multiplier: 3.0
+      max_change_rate: 2.0
+
+    T3:
+      description: "No.2 Cooler S.W Outlet"
+      plc_tag: "DB100.DBD8"
+      unit: "°C"
+      range: [20.0, 48.0]
+      sigma_multiplier: 3.0
+      max_change_rate: 2.0
+
+    T4:
+      description: "LT F.W Cooler F.W Inlet"
+      plc_tag: "DB100.DBD12"
+      unit: "°C"
+      range: [35.0, 47.0]
+      sigma_multiplier: 3.0
+      max_change_rate: 2.0
+
+    T5:
+      description: "LT F.W Cooler F.W Outlet"
+      plc_tag: "DB100.DBD16"
+      unit: "°C"
+      range: [25.0, 36.0]
+      sigma_multiplier: 3.0
+      max_change_rate: 2.0
+
+  # Ventilation System Temperature Sensors
+  ventilation_temp:
+    T6:
+      description: "E/R Upper Deck Rear Side (Inside)"
+      plc_tag: "DB100.DBD20"
+      unit: "°C"
+      range: [35.0, 50.0]
+      normal_range: [42.0, 44.0]
+      sigma_multiplier: 3.0
+      max_change_rate: 1.5
+
+    T7:
+      description: "Engine Casing Outside (Ambient)"
+      plc_tag: "DB100.DBD24"
+      unit: "°C"
+      range: [0.0, 45.0]
+      normal_tropical: 35.0
+      sigma_multiplier: 3.0
+      max_change_rate: 0.5
+
+  # Pressure Sensors
+  pressure:
+    PX1:
+      description: "SW Pump Discharge Manifold Pressure"
+      plc_tag: "DB100.DBD28"
+      unit: "bar"
+      range: [1.0, 3.0]
+      min_required: 1.0
+      sigma_multiplier: 3.0
+      max_change_rate: 0.3
+
+  # Operating Conditions
+  operating:
+    engine_load:
+      description: "Main Engine Load (%)"
+      plc_tag: "DB100.DBD32"
+      unit: "%"
+      range: [0.0, 100.0]
+      sigma_multiplier: 3.0
+      max_change_rate: 5.0
+
+    gps_latitude:
+      description: "GPS Latitude"
+      plc_tag: "DB100.DBD36"
+      unit: "degree"
+      range: [-90.0, 90.0]
+
+    gps_longitude:
+      description: "GPS Longitude"
+      plc_tag: "DB100.DBD40"
+      unit: "degree"
+      range: [-180.0, 180.0]
+
+    gps_speed:
+      description: "GPS Speed"
+      plc_tag: "DB100.DBD44"
+      unit: "knots"
+      range: [0.0, 30.0]
+
+    utc_time:
+      description: "UTC Timestamp"
+      plc_tag: "DB100.DBD48"
+      unit: "unix_timestamp"
+
+# Output Control Commands
+output_controls:
+  # SW Pump VFD Commands (3 pumps)
+  sw_pumps:
+    pump_1:
+      description: "Main Cooling SW Pump #1 (132kW, 1250m³/h)"
+      vfd_address: "VFD_SW_1"
+      frequency_cmd: "DB200.DBD0"
+      start_stop_cmd: "DB200.DBX4.0"
+      unit: "Hz"
+      range: [40.0, 60.0]
+      rated_power: 132.0  # kW
+      capacity: 1250.0  # m³/h
+
+    pump_2:
+      description: "Main Cooling SW Pump #2 (132kW, 1250m³/h)"
+      vfd_address: "VFD_SW_2"
+      frequency_cmd: "DB200.DBD8"
+      start_stop_cmd: "DB200.DBX12.0"
+      unit: "Hz"
+      range: [40.0, 60.0]
+      rated_power: 132.0
+      capacity: 1250.0
+
+    pump_3:
+      description: "Main Cooling SW Pump #3 (Standby)"
+      vfd_address: "VFD_SW_3"
+      frequency_cmd: "DB200.DBD16"
+      start_stop_cmd: "DB200.DBX20.0"
+      unit: "Hz"
+      range: [40.0, 60.0]
+      rated_power: 132.0
+      capacity: 1250.0
+
+  # FW Pump VFD Commands (3 pumps)
+  fw_pumps:
+    pump_1:
+      description: "LT FW Cooling Pump #1 (75kW, 740m³/h)"
+      vfd_address: "VFD_FW_1"
+      frequency_cmd: "DB200.DBD24"
+      start_stop_cmd: "DB200.DBX28.0"
+      unit: "Hz"
+      range: [40.0, 60.0]
+      rated_power: 75.0
+      capacity: 740.0
+
+    pump_2:
+      description: "LT FW Cooling Pump #2 (75kW, 740m³/h)"
+      vfd_address: "VFD_FW_2"
+      frequency_cmd: "DB200.DBD32"
+      start_stop_cmd: "DB200.DBX36.0"
+      unit: "Hz"
+      range: [40.0, 60.0]
+      rated_power: 75.0
+      capacity: 740.0
+
+    pump_3:
+      description: "LT FW Cooling Pump #3 (Standby)"
+      vfd_address: "VFD_FW_3"
+      frequency_cmd: "DB200.DBD40"
+      start_stop_cmd: "DB200.DBX44.0"
+      unit: "Hz"
+      range: [40.0, 60.0]
+      rated_power: 75.0
+      capacity: 740.0
+
+  # E/R Fan VFD Commands (4 fans)
+  er_fans:
+    fan_1:
+      description: "E/R Fan #1 (54.3kW, 3200m³/min)"
+      vfd_address: "VFD_FAN_1"
+      frequency_cmd: "DB200.DBD48"
+      frequency_feedback: "DB100.DBD52"
+      start_stop_cmd: "DB200.DBX52.0"
+      unit: "Hz"
+      range: [40.0, 60.0]
+      rated_power: 54.3
+      airflow: 3200.0  # m³/min
+
+    fan_2:
+      description: "E/R Fan #2 (54.3kW, 3200m³/min)"
+      vfd_address: "VFD_FAN_2"
+      frequency_cmd: "DB200.DBD56"
+      frequency_feedback: "DB100.DBD60"
+      start_stop_cmd: "DB200.DBX60.0"
+      unit: "Hz"
+      range: [40.0, 60.0]
+      rated_power: 54.3
+      airflow: 3200.0
+
+    fan_3:
+      description: "E/R Fan #3 (54.3kW, 3200m³/min)"
+      vfd_address: "VFD_FAN_3"
+      frequency_cmd: "DB200.DBD64"
+      frequency_feedback: "DB100.DBD68"
+      start_stop_cmd: "DB200.DBX68.0"
+      unit: "Hz"
+      range: [40.0, 60.0]
+      rated_power: 54.3
+      airflow: 3200.0
+
+    fan_4:
+      description: "E/R Fan #4 (54.3kW, 3200m³/min)"
+      vfd_address: "VFD_FAN_4"
+      frequency_cmd: "DB200.DBD72"
+      frequency_feedback: "DB100.DBD76"
+      start_stop_cmd: "DB200.DBX76.0"
+      unit: "Hz"
+      range: [40.0, 60.0]
+      rated_power: 54.3
+      airflow: 3200.0
+
+# System Status and Alarms
+system_status:
+  alarms:
+    high_temp_alarm: "DB300.DBX0.0"
+    pressure_low_alarm: "DB300.DBX0.1"
+    sensor_error_alarm: "DB300.DBX0.2"
+    ai_learning_stop: "DB300.DBX0.3"
+    safety_override: "DB300.DBX0.4"
+
+  mode_status:
+    ai_mode_active: "DB300.DBX1.0"
+    rule_based_active: "DB300.DBX1.1"
+    learning_active: "DB300.DBX1.2"
+    simulation_mode: "DB300.DBX1.3"

@@ -1,0 +1,25 @@
+# ESS AI System Requirements
+# Python 3.8+
+
+# Core dependencies
+numpy>=1.21.0
+pyyaml>=6.0
+psutil>=5.9.0
+scipy>=1.7.0
+
+# Machine Learning (Stage 1 - 경량 모델)
+scikit-learn>=1.0.0
+
+# Data handling
+pandas>=1.3.0
+
+# Communication (Stage 2)
+# pymodbus>=3.0.0  # Modbus TCP 통신 (실제 PLC 연결시)
+
+# HMI Dashboard (Stage 9)
+streamlit>=1.25.0  # Web-based dashboard
+plotly>=5.14.0  # Interactive charts and graphs
+
+# Future dependencies (Stage 2+)
+# tensorflow>=2.8.0  # Xavier NX에서 딥러닝 사용시
+# onnxruntime>=1.10.0  # 모델 최적화

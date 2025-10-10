@@ -1,0 +1,4802 @@
+[
+  {
+    "scenario_id": "temperate_20251007_100110",
+    "scenario_type": "temperate",
+    "condition": {
+      "seawater_temp_range": [
+        26.0,
+        30.0
+      ],
+      "outside_air_temp_range": [
+        28.0,
+        32.0
+      ],
+      "engine_load_range": [
+        45.0,
+        55.0
+      ],
+      "ship_speed_range": [
+        14.0,
+        16.0
+      ],
+      "season": null,
+      "latitude_range": null,
+      "longitude_range": null
+    },
+    "solution": {
+      "pump_frequency_hz": 48.5,
+      "pump_count": 2,
+      "fan_frequency_hz": 47.0,
+      "fan_count": 2,
+      "achieved_t5": 35.0,
+      "achieved_t6": 43.0,
+      "power_consumption_kw": 245.0,
+      "savings_percent": 47.0,
+      "performance_score": 96.0
+    },
+    "created_at": "2025-10-07T10:01:10.015126",
+    "last_used": "2025-10-07T10:01:10.015127",
+    "usage_count": 1,
+    "success_rate": 1.0
+  },
+  {
+    "scenario_id": "temperate_20251007_100110",
+    "scenario_type": "temperate",
+    "condition": {
+      "seawater_temp_range": [
+        26.0,
+        30.0
+      ],
+      "outside_air_temp_range": [
+        28.0,
+        32.0
+      ],
+      "engine_load_range": [
+        45.0,
+        55.0
+      ],
+      "ship_speed_range": [
+        14.0,
+        16.0
+      ],
+      "season": null,
+      "latitude_range": null,
+      "longitude_range": null
+    },
+    "solution": {
+      "pump_frequency_hz": 48.5,
+      "pump_count": 2,
+      "fan_frequency_hz": 47.0,
+      "fan_count": 2,
+      "achieved_t5": 35.0,
+      "achieved_t6": 43.0,
+      "power_consumption_kw": 245.0,
+      "savings_percent": 47.0,
+      "performance_score": 96.0
+    },
+    "created_at": "2025-10-07T10:01:10.015669",
+    "last_used": "2025-10-07T10:01:10.015669",
+    "usage_count": 1,
+    "success_rate": 1.0
+  },
+  {
+    "scenario_id": "temperate_20251007_100110",
+    "scenario_type": "temperate",
+    "condition": {
+      "seawater_temp_range": [
+        26.0,
+        30.0
+      ],
+      "outside_air_temp_range": [
+        28.0,
+        32.0
+      ],
+      "engine_load_range": [
+        45.0,
+        55.0
+      ],
+      "ship_speed_range": [
+        14.0,
+        16.0
+      ],
+      "season": null,
+      "latitude_range": null,
+      "longitude_range": null
+    },
+    "solution": {
+      "pump_frequency_hz": 48.5,
+      "pump_count": 2,
+      "fan_frequency_hz": 47.0,
+      "fan_count": 2,
+      "achieved_t5": 35.0,
+      "achieved_t6": 43.0,
+      "power_consumption_kw": 245.0,
+      "savings_percent": 47.0,
+      "performance_score": 96.0
+    },
+    "created_at": "2025-10-07T10:01:10.016285",
+    "last_used": "2025-10-07T10:01:10.016285",
+    "usage_count": 1,
+    "success_rate": 1.0
+  },
+  {
+    "scenario_id": "temperate_20251007_100110",
+    "scenario_type": "temperate",
+    "condition": {
+      "seawater_temp_range": [
+        26.0,
+        30.0
+      ],
+      "outside_air_temp_range": [
+        28.0,
+        32.0
+      ],
+      "engine_load_range": [
+        45.0,
+        55.0
+      ],
+      "ship_speed_range": [
+        14.0,
+        16.0
+      ],
+      "season": null,
+      "latitude_range": null,
+      "longitude_range": null
+    },
+    "solution": {
+      "pump_frequency_hz": 48.5,
+      "pump_count": 2,
+      "fan_frequency_hz": 47.0,
+      "fan_count": 2,
+      "achieved_t5": 35.0,
+      "achieved_t6": 43.0,
+      "power_consumption_kw": 245.0,
+      "savings_percent": 47.0,
+      "performance_score": 96.0
+    },
+    "created_at": "2025-10-07T10:01:10.016886",
+    "last_used": "2025-10-07T10:01:10.016886",
+    "usage_count": 1,
+    "success_rate": 1.0
+  },
+  {
+    "scenario_id": "temperate_20251007_100110",
+    "scenario_type": "temperate",
+    "condition": {
+      "seawater_temp_range": [
+        26.0,
+        30.0
+      ],
+      "outside_air_temp_range": [
+        28.0,
+        32.0
+      ],
+      "engine_load_range": [
+        45.0,
+        55.0
+      ],
+      "ship_speed_range": [
+        14.0,
+        16.0
+      ],
+      "season": null,
+      "latitude_range": null,
+      "longitude_range": null
+    },
+    "solution": {
+      "pump_frequency_hz": 48.5,
+      "pump_count": 2,
+      "fan_frequency_hz": 47.0,
+      "fan_count": 2,
+      "achieved_t5": 35.0,
+      "achieved_t6": 43.0,
+      "power_consumption_kw": 245.0,
+      "savings_percent": 47.0,
+      "performance_score": 96.0
+    },
+    "created_at": "2025-10-07T10:01:10.017444",
+    "last_used": "2025-10-07T10:01:10.017444",
+    "usage_count": 1,
+    "success_rate": 1.0
+  },
+  {
+    "scenario_id": "temperate_20251007_100110",
+    "scenario_type": "temperate",
+    "condition": {
+      "seawater_temp_range": [
+        26.0,
+        30.0
+      ],
+      "outside_air_temp_range": [
+        28.0,
+        32.0
+      ],
+      "engine_load_range": [
+        45.0,
+        55.0
+      ],
+      "ship_speed_range": [
+        14.0,
+        16.0
+      ],
+      "season": null,
+      "latitude_range": null,
+      "longitude_range": null
+    },
+    "solution": {
+      "pump_frequency_hz": 48.5,
+      "pump_count": 2,
+      "fan_frequency_hz": 47.0,
+      "fan_count": 2,
+      "achieved_t5": 35.0,
+      "achieved_t6": 43.0,
+      "power_consumption_kw": 245.0,
+      "savings_percent": 47.0,
+      "performance_score": 96.0
+    },
+    "created_at": "2025-10-07T10:01:10.018023",
+    "last_used": "2025-10-07T10:01:10.018023",
+    "usage_count": 1,
+    "success_rate": 1.0
+  },
+  {
+    "scenario_id": "temperate_20251007_100110",
+    "scenario_type": "temperate",
+    "condition": {
+      "seawater_temp_range": [
+        26.0,
+        30.0
+      ],
+      "outside_air_temp_range": [
+        28.0,
+        32.0
+      ],
+      "engine_load_range": [
+        45.0,
+        55.0
+      ],
+      "ship_speed_range": [
+        14.0,
+        16.0
+      ],
+      "season": null,
+      "latitude_range": null,
+      "longitude_range": null
+    },
+    "solution": {
+      "pump_frequency_hz": 48.5,
+      "pump_count": 2,
+      "fan_frequency_hz": 47.0,
+      "fan_count": 2,
+      "achieved_t5": 35.0,
+      "achieved_t6": 43.0,
+      "power_consumption_kw": 245.0,
+      "savings_percent": 47.0,
+      "performance_score": 96.0
+    },
+    "created_at": "2025-10-07T10:01:10.018638",
+    "last_used": "2025-10-07T10:01:10.018638",
+    "usage_count": 1,
+    "success_rate": 1.0
+  },
+  {
+    "scenario_id": "temperate_20251007_100110",
+    "scenario_type": "temperate",
+    "condition": {
+      "seawater_temp_range": [
+        26.0,
+        30.0
+      ],
+      "outside_air_temp_range": [
+        28.0,
+        32.0
+      ],
+      "engine_load_range": [
+        45.0,
+        55.0
+      ],
+      "ship_speed_range": [
+        14.0,
+        16.0
+      ],
+      "season": null,
+      "latitude_range": null,
+      "longitude_range": null
+    },
+    "solution": {
+      "pump_frequency_hz": 48.5,
+      "pump_count": 2,
+      "fan_frequency_hz": 47.0,
+      "fan_count": 2,
+      "achieved_t5": 35.0,
+      "achieved_t6": 43.0,
+      "power_consumption_kw": 245.0,
+      "savings_percent": 47.0,
+      "performance_score": 96.0
+    },
+    "created_at": "2025-10-07T10:01:10.019289",
+    "last_used": "2025-10-07T10:01:10.019289",
+    "usage_count": 1,
+    "success_rate": 1.0
+  },
+  {
+    "scenario_id": "temperate_20251007_100110",
+    "scenario_type": "temperate",
+    "condition": {
+      "seawater_temp_range": [
+        26.0,
+        30.0
+      ],
+      "outside_air_temp_range": [
+        28.0,
+        32.0
+      ],
+      "engine_load_range": [
+        45.0,
+        55.0
+      ],
+      "ship_speed_range": [
+        14.0,
+        16.0
+      ],
+      "season": null,
+      "latitude_range": null,
+      "longitude_range": null
+    },
+    "solution": {
+      "pump_frequency_hz": 48.5,
+      "pump_count": 2,
+      "fan_frequency_hz": 47.0,
+      "fan_count": 2,
+      "achieved_t5": 35.0,
+      "achieved_t6": 43.0,
+      "power_consumption_kw": 245.0,
+      "savings_percent": 47.0,
+      "performance_score": 96.0
+    },
+    "created_at": "2025-10-07T10:01:10.019985",
+    "last_used": "2025-10-07T10:01:10.019985",
+    "usage_count": 1,
+    "success_rate": 1.0
+  },
+  {
+    "scenario_id": "temperate_20251007_100110",
+    "scenario_type": "temperate",
+    "condition": {
+      "seawater_temp_range": [
+        26.0,
+        30.0
+      ],
+      "outside_air_temp_range": [
+        28.0,
+        32.0
+      ],
+      "engine_load_range": [
+        45.0,
+        55.0
+      ],
+      "ship_speed_range": [
+        14.0,
+        16.0
+      ],
+      "season": null,
+      "latitude_range": null,
+      "longitude_range": null
+    },
+    "solution": {
+      "pump_frequency_hz": 48.5,
+      "pump_count": 2,
+      "fan_frequency_hz": 47.0,
+      "fan_count": 2,
+      "achieved_t5": 35.0,
+      "achieved_t6": 43.0,
+      "power_consumption_kw": 245.0,
+      "savings_percent": 47.0,
+      "performance_score": 96.0
+    },
+    "created_at": "2025-10-07T10:01:10.020758",
+    "last_used": "2025-10-07T10:01:10.020758",
+    "usage_count": 1,
+    "success_rate": 1.0
+  },
+  {
+    "scenario_id": "temperate_20251007_100110",
+    "scenario_type": "temperate",
+    "condition": {
+      "seawater_temp_range": [
+        26.0,
+        30.0
+      ],
+      "outside_air_temp_range": [
+        28.0,
+        32.0
+      ],
+      "engine_load_range": [
+        45.0,
+        55.0
+      ],
+      "ship_speed_range": [
+        14.0,
+        16.0
+      ],
+      "season": null,
+      "latitude_range": null,
+      "longitude_range": null
+    },
+    "solution": {
+      "pump_frequency_hz": 48.5,
+      "pump_count": 2,
+      "fan_frequency_hz": 47.0,
+      "fan_count": 2,
+      "achieved_t5": 35.0,
+      "achieved_t6": 43.0,
+      "power_consumption_kw": 245.0,
+      "savings_percent": 47.0,
+      "performance_score": 96.0
+    },
+    "created_at": "2025-10-07T10:01:10.021555",
+    "last_used": "2025-10-07T10:01:10.021555",
+    "usage_count": 1,
+    "success_rate": 1.0
+  },
+  {
+    "scenario_id": "temperate_20251007_100110",
+    "scenario_type": "temperate",
+    "condition": {
+      "seawater_temp_range": [
+        26.0,
+        30.0
+      ],
+      "outside_air_temp_range": [
+        28.0,
+        32.0
+      ],
+      "engine_load_range": [
+        45.0,
+        55.0
+      ],
+      "ship_speed_range": [
+        14.0,
+        16.0
+      ],
+      "season": null,
+      "latitude_range": null,
+      "longitude_range": null
+    },
+    "solution": {
+      "pump_frequency_hz": 48.5,
+      "pump_count": 2,
+      "fan_frequency_hz": 47.0,
+      "fan_count": 2,
+      "achieved_t5": 35.0,
+      "achieved_t6": 43.0,
+      "power_consumption_kw": 245.0,
+      "savings_percent": 47.0,
+      "performance_score": 96.0
+    },
+    "created_at": "2025-10-07T10:01:10.022423",
+    "last_used": "2025-10-07T10:01:10.022423",
+    "usage_count": 1,
+    "success_rate": 1.0
+  },
+  {
+    "scenario_id": "temperate_20251007_100110",
+    "scenario_type": "temperate",
+    "condition": {
+      "seawater_temp_range": [
+        26.0,
+        30.0
+      ],
+      "outside_air_temp_range": [
+        28.0,
+        32.0
+      ],
+      "engine_load_range": [
+        45.0,
+        55.0
+      ],
+      "ship_speed_range": [
+        14.0,
+        16.0
+      ],
+      "season": null,
+      "latitude_range": null,
+      "longitude_range": null
+    },
+    "solution": {
+      "pump_frequency_hz": 48.5,
+      "pump_count": 2,
+      "fan_frequency_hz": 47.0,
+      "fan_count": 2,
+      "achieved_t5": 35.0,
+      "achieved_t6": 43.0,
+      "power_consumption_kw": 245.0,
+      "savings_percent": 47.0,
+      "performance_score": 96.0
+    },
+    "created_at": "2025-10-07T10:01:10.023312",
+    "last_used": "2025-10-07T10:01:10.023312",
+    "usage_count": 1,
+    "success_rate": 1.0
+  },
+  {
+    "scenario_id": "temperate_20251007_100110",
+    "scenario_type": "temperate",
+    "condition": {
+      "seawater_temp_range": [
+        26.0,
+        30.0
+      ],
+      "outside_air_temp_range": [
+        28.0,
+        32.0
+      ],
+      "engine_load_range": [
+        45.0,
+        55.0
+      ],
+      "ship_speed_range": [
+        14.0,
+        16.0
+      ],
+      "season": null,
+      "latitude_range": null,
+      "longitude_range": null
+    },
+    "solution": {
+      "pump_frequency_hz": 48.5,
+      "pump_count": 2,
+      "fan_frequency_hz": 47.0,
+      "fan_count": 2,
+      "achieved_t5": 35.0,
+      "achieved_t6": 43.0,
+      "power_consumption_kw": 245.0,
+      "savings_percent": 47.0,
+      "performance_score": 96.0
+    },
+    "created_at": "2025-10-07T10:01:10.024268",
+    "last_used": "2025-10-07T10:01:10.024268",
+    "usage_count": 1,
+    "success_rate": 1.0
+  },
+  {
+    "scenario_id": "temperate_20251007_100110",
+    "scenario_type": "temperate",
+    "condition": {
+      "seawater_temp_range": [
+        26.0,
+        30.0
+      ],
+      "outside_air_temp_range": [
+        28.0,
+        32.0
+      ],
+      "engine_load_range": [
+        45.0,
+        55.0
+      ],
+      "ship_speed_range": [
+        14.0,
+        16.0
+      ],
+      "season": null,
+      "latitude_range": null,
+      "longitude_range": null
+    },
+    "solution": {
+      "pump_frequency_hz": 48.5,
+      "pump_count": 2,
+      "fan_frequency_hz": 47.0,
+      "fan_count": 2,
+      "achieved_t5": 35.0,
+      "achieved_t6": 43.0,
+      "power_consumption_kw": 245.0,
+      "savings_percent": 47.0,
+      "performance_score": 96.0
+    },
+    "created_at": "2025-10-07T10:01:10.025328",
+    "last_used": "2025-10-07T10:01:10.025328",
+    "usage_count": 1,
+    "success_rate": 1.0
+  },
+  {
+    "scenario_id": "temperate_20251007_100110",
+    "scenario_type": "temperate",
+    "condition": {
+      "seawater_temp_range": [
+        26.0,
+        30.0
+      ],
+      "outside_air_temp_range": [
+        28.0,
+        32.0
+      ],
+      "engine_load_range": [
+        45.0,
+        55.0
+      ],
+      "ship_speed_range": [
+        14.0,
+        16.0
+      ],
+      "season": null,
+      "latitude_range": null,
+      "longitude_range": null
+    },
+    "solution": {
+      "pump_frequency_hz": 48.5,
+      "pump_count": 2,
+      "fan_frequency_hz": 47.0,
+      "fan_count": 2,
+      "achieved_t5": 35.0,
+      "achieved_t6": 43.0,
+      "power_consumption_kw": 245.0,
+      "savings_percent": 47.0,
+      "performance_score": 96.0
+    },
+    "created_at": "2025-10-07T10:01:10.026420",
+    "last_used": "2025-10-07T10:01:10.026420",
+    "usage_count": 1,
+    "success_rate": 1.0
+  },
+  {
+    "scenario_id": "temperate_20251007_100110",
+    "scenario_type": "temperate",
+    "condition": {
+      "seawater_temp_range": [
+        26.0,
+        30.0
+      ],
+      "outside_air_temp_range": [
+        28.0,
+        32.0
+      ],
+      "engine_load_range": [
+        45.0,
+        55.0
+      ],
+      "ship_speed_range": [
+        14.0,
+        16.0
+      ],
+      "season": null,
+      "latitude_range": null,
+      "longitude_range": null
+    },
+    "solution": {
+      "pump_frequency_hz": 48.5,
+      "pump_count": 2,
+      "fan_frequency_hz": 47.0,
+      "fan_count": 2,
+      "achieved_t5": 35.0,
+      "achieved_t6": 43.0,
+      "power_consumption_kw": 245.0,
+      "savings_percent": 47.0,
+      "performance_score": 96.0
+    },
+    "created_at": "2025-10-07T10:01:10.027522",
+    "last_used": "2025-10-07T10:01:10.027522",
+    "usage_count": 1,
+    "success_rate": 1.0
+  },
+  {
+    "scenario_id": "temperate_20251007_100110",
+    "scenario_type": "temperate",
+    "condition": {
+      "seawater_temp_range": [
+        26.0,
+        30.0
+      ],
+      "outside_air_temp_range": [
+        28.0,
+        32.0
+      ],
+      "engine_load_range": [
+        45.0,
+        55.0
+      ],
+      "ship_speed_range": [
+        14.0,
+        16.0
+      ],
+      "season": null,
+      "latitude_range": null,
+      "longitude_range": null
+    },
+    "solution": {
+      "pump_frequency_hz": 48.5,
+      "pump_count": 2,
+      "fan_frequency_hz": 47.0,
+      "fan_count": 2,
+      "achieved_t5": 35.0,
+      "achieved_t6": 43.0,
+      "power_consumption_kw": 245.0,
+      "savings_percent": 47.0,
+      "performance_score": 96.0
+    },
+    "created_at": "2025-10-07T10:01:10.029426",
+    "last_used": "2025-10-07T10:01:10.029426",
+    "usage_count": 1,
+    "success_rate": 1.0
+  },
+  {
+    "scenario_id": "temperate_20251007_100110",
+    "scenario_type": "temperate",
+    "condition": {
+      "seawater_temp_range": [
+        26.0,
+        30.0
+      ],
+      "outside_air_temp_range": [
+        28.0,
+        32.0
+      ],
+      "engine_load_range": [
+        45.0,
+        55.0
+      ],
+      "ship_speed_range": [
+        14.0,
+        16.0
+      ],
+      "season": null,
+      "latitude_range": null,
+      "longitude_range": null
+    },
+    "solution": {
+      "pump_frequency_hz": 48.5,
+      "pump_count": 2,
+      "fan_frequency_hz": 47.0,
+      "fan_count": 2,
+      "achieved_t5": 35.0,
+      "achieved_t6": 43.0,
+      "power_consumption_kw": 245.0,
+      "savings_percent": 47.0,
+      "performance_score": 96.0
+    },
+    "created_at": "2025-10-07T10:01:10.030850",
+    "last_used": "2025-10-07T10:01:10.030850",
+    "usage_count": 1,
+    "success_rate": 1.0
+  },
+  {
+    "scenario_id": "temperate_20251007_100110",
+    "scenario_type": "temperate",
+    "condition": {
+      "seawater_temp_range": [
+        26.0,
+        30.0
+      ],
+      "outside_air_temp_range": [
+        28.0,
+        32.0
+      ],
+      "engine_load_range": [
+        45.0,
+        55.0
+      ],
+      "ship_speed_range": [
+        14.0,
+        16.0
+      ],
+      "season": null,
+      "latitude_range": null,
+      "longitude_range": null
+    },
+    "solution": {
+      "pump_frequency_hz": 48.5,
+      "pump_count": 2,
+      "fan_frequency_hz": 47.0,
+      "fan_count": 2,
+      "achieved_t5": 35.0,
+      "achieved_t6": 43.0,
+      "power_consumption_kw": 245.0,
+      "savings_percent": 47.0,
+      "performance_score": 96.0
+    },
+    "created_at": "2025-10-07T10:01:10.032249",
+    "last_used": "2025-10-07T10:01:10.032249",
+    "usage_count": 1,
+    "success_rate": 1.0
+  },
+  {
+    "scenario_id": "temperate_20251007_100110",
+    "scenario_type": "temperate",
+    "condition": {
+      "seawater_temp_range": [
+        26.0,
+        30.0
+      ],
+      "outside_air_temp_range": [
+        28.0,
+        32.0
+      ],
+      "engine_load_range": [
+        45.0,
+        55.0
+      ],
+      "ship_speed_range": [
+        14.0,
+        16.0
+      ],
+      "season": null,
+      "latitude_range": null,
+      "longitude_range": null
+    },
+    "solution": {
+      "pump_frequency_hz": 48.5,
+      "pump_count": 2,
+      "fan_frequency_hz": 47.0,
+      "fan_count": 2,
+      "achieved_t5": 35.0,
+      "achieved_t6": 43.0,
+      "power_consumption_kw": 245.0,
+      "savings_percent": 47.0,
+      "performance_score": 96.0
+    },
+    "created_at": "2025-10-07T10:01:10.033567",
+    "last_used": "2025-10-07T10:01:10.033567",
+    "usage_count": 1,
+    "success_rate": 1.0
+  },
+  {
+    "scenario_id": "temperate_20251007_100110",
+    "scenario_type": "temperate",
+    "condition": {
+      "seawater_temp_range": [
+        26.0,
+        30.0
+      ],
+      "outside_air_temp_range": [
+        28.0,
+        32.0
+      ],
+      "engine_load_range": [
+        45.0,
+        55.0
+      ],
+      "ship_speed_range": [
+        14.0,
+        16.0
+      ],
+      "season": null,
+      "latitude_range": null,
+      "longitude_range": null
+    },
+    "solution": {
+      "pump_frequency_hz": 48.5,
+      "pump_count": 2,
+      "fan_frequency_hz": 47.0,
+      "fan_count": 2,
+      "achieved_t5": 35.0,
+      "achieved_t6": 43.0,
+      "power_consumption_kw": 245.0,
+      "savings_percent": 47.0,
+      "performance_score": 96.0
+    },
+    "created_at": "2025-10-07T10:01:10.034955",
+    "last_used": "2025-10-07T10:01:10.034955",
+    "usage_count": 1,
+    "success_rate": 1.0
+  },
+  {
+    "scenario_id": "temperate_20251007_100110",
+    "scenario_type": "temperate",
+    "condition": {
+      "seawater_temp_range": [
+        26.0,
+        30.0
+      ],
+      "outside_air_temp_range": [
+        28.0,
+        32.0
+      ],
+      "engine_load_range": [
+        45.0,
+        55.0
+      ],
+      "ship_speed_range": [
+        14.0,
+        16.0
+      ],
+      "season": null,
+      "latitude_range": null,
+      "longitude_range": null
+    },
+    "solution": {
+      "pump_frequency_hz": 48.5,
+      "pump_count": 2,
+      "fan_frequency_hz": 47.0,
+      "fan_count": 2,
+      "achieved_t5": 35.0,
+      "achieved_t6": 43.0,
+      "power_consumption_kw": 245.0,
+      "savings_percent": 47.0,
+      "performance_score": 96.0
+    },
+    "created_at": "2025-10-07T10:01:10.036371",
+    "last_used": "2025-10-07T10:01:10.036371",
+    "usage_count": 1,
+    "success_rate": 1.0
+  },
+  {
+    "scenario_id": "temperate_20251007_100110",
+    "scenario_type": "temperate",
+    "condition": {
+      "seawater_temp_range": [
+        26.0,
+        30.0
+      ],
+      "outside_air_temp_range": [
+        28.0,
+        32.0
+      ],
+      "engine_load_range": [
+        45.0,
+        55.0
+      ],
+      "ship_speed_range": [
+        14.0,
+        16.0
+      ],
+      "season": null,
+      "latitude_range": null,
+      "longitude_range": null
+    },
+    "solution": {
+      "pump_frequency_hz": 48.5,
+      "pump_count": 2,
+      "fan_frequency_hz": 47.0,
+      "fan_count": 2,
+      "achieved_t5": 35.0,
+      "achieved_t6": 43.0,
+      "power_consumption_kw": 245.0,
+      "savings_percent": 47.0,
+      "performance_score": 96.0
+    },
+    "created_at": "2025-10-07T10:01:10.037825",
+    "last_used": "2025-10-07T10:01:10.037825",
+    "usage_count": 1,
+    "success_rate": 1.0
+  },
+  {
+    "scenario_id": "temperate_20251007_100110",
+    "scenario_type": "temperate",
+    "condition": {
+      "seawater_temp_range": [
+        26.0,
+        30.0
+      ],
+      "outside_air_temp_range": [
+        28.0,
+        32.0
+      ],
+      "engine_load_range": [
+        45.0,
+        55.0
+      ],
+      "ship_speed_range": [
+        14.0,
+        16.0
+      ],
+      "season": null,
+      "latitude_range": null,
+      "longitude_range": null
+    },
+    "solution": {
+      "pump_frequency_hz": 48.5,
+      "pump_count": 2,
+      "fan_frequency_hz": 47.0,
+      "fan_count": 2,
+      "achieved_t5": 35.0,
+      "achieved_t6": 43.0,
+      "power_consumption_kw": 245.0,
+      "savings_percent": 47.0,
+      "performance_score": 96.0
+    },
+    "created_at": "2025-10-07T10:01:10.039317",
+    "last_used": "2025-10-07T10:01:10.039317",
+    "usage_count": 1,
+    "success_rate": 1.0
+  },
+  {
+    "scenario_id": "temperate_20251007_100110",
+    "scenario_type": "temperate",
+    "condition": {
+      "seawater_temp_range": [
+        26.0,
+        30.0
+      ],
+      "outside_air_temp_range": [
+        28.0,
+        32.0
+      ],
+      "engine_load_range": [
+        45.0,
+        55.0
+      ],
+      "ship_speed_range": [
+        14.0,
+        16.0
+      ],
+      "season": null,
+      "latitude_range": null,
+      "longitude_range": null
+    },
+    "solution": {
+      "pump_frequency_hz": 48.5,
+      "pump_count": 2,
+      "fan_frequency_hz": 47.0,
+      "fan_count": 2,
+      "achieved_t5": 35.0,
+      "achieved_t6": 43.0,
+      "power_consumption_kw": 245.0,
+      "savings_percent": 47.0,
+      "performance_score": 96.0
+    },
+    "created_at": "2025-10-07T10:01:10.040898",
+    "last_used": "2025-10-07T10:01:10.040898",
+    "usage_count": 1,
+    "success_rate": 1.0
+  },
+  {
+    "scenario_id": "temperate_20251007_100110",
+    "scenario_type": "temperate",
+    "condition": {
+      "seawater_temp_range": [
+        26.0,
+        30.0
+      ],
+      "outside_air_temp_range": [
+        28.0,
+        32.0
+      ],
+      "engine_load_range": [
+        45.0,
+        55.0
+      ],
+      "ship_speed_range": [
+        14.0,
+        16.0
+      ],
+      "season": null,
+      "latitude_range": null,
+      "longitude_range": null
+    },
+    "solution": {
+      "pump_frequency_hz": 48.5,
+      "pump_count": 2,
+      "fan_frequency_hz": 47.0,
+      "fan_count": 2,
+      "achieved_t5": 35.0,
+      "achieved_t6": 43.0,
+      "power_consumption_kw": 245.0,
+      "savings_percent": 47.0,
+      "performance_score": 96.0
+    },
+    "created_at": "2025-10-07T10:01:10.042530",
+    "last_used": "2025-10-07T10:01:10.042530",
+    "usage_count": 1,
+    "success_rate": 1.0
+  },
+  {
+    "scenario_id": "temperate_20251007_100110",
+    "scenario_type": "temperate",
+    "condition": {
+      "seawater_temp_range": [
+        26.0,
+        30.0
+      ],
+      "outside_air_temp_range": [
+        28.0,
+        32.0
+      ],
+      "engine_load_range": [
+        45.0,
+        55.0
+      ],
+      "ship_speed_range": [
+        14.0,
+        16.0
+      ],
+      "season": null,
+      "latitude_range": null,
+      "longitude_range": null
+    },
+    "solution": {
+      "pump_frequency_hz": 48.5,
+      "pump_count": 2,
+      "fan_frequency_hz": 47.0,
+      "fan_count": 2,
+      "achieved_t5": 35.0,
+      "achieved_t6": 43.0,
+      "power_consumption_kw": 245.0,
+      "savings_percent": 47.0,
+      "performance_score": 96.0
+    },
+    "created_at": "2025-10-07T10:01:10.044561",
+    "last_used": "2025-10-07T10:01:10.044562",
+    "usage_count": 1,
+    "success_rate": 1.0
+  },
+  {
+    "scenario_id": "temperate_20251007_100110",
+    "scenario_type": "temperate",
+    "condition": {
+      "seawater_temp_range": [
+        26.0,
+        30.0
+      ],
+      "outside_air_temp_range": [
+        28.0,
+        32.0
+      ],
+      "engine_load_range": [
+        45.0,
+        55.0
+      ],
+      "ship_speed_range": [
+        14.0,
+        16.0
+      ],
+      "season": null,
+      "latitude_range": null,
+      "longitude_range": null
+    },
+    "solution": {
+      "pump_frequency_hz": 48.5,
+      "pump_count": 2,
+      "fan_frequency_hz": 47.0,
+      "fan_count": 2,
+      "achieved_t5": 35.0,
+      "achieved_t6": 43.0,
+      "power_consumption_kw": 245.0,
+      "savings_percent": 47.0,
+      "performance_score": 96.0
+    },
+    "created_at": "2025-10-07T10:01:10.046406",
+    "last_used": "2025-10-07T10:01:10.046406",
+    "usage_count": 1,
+    "success_rate": 1.0
+  },
+  {
+    "scenario_id": "temperate_20251007_100110",
+    "scenario_type": "temperate",
+    "condition": {
+      "seawater_temp_range": [
+        26.0,
+        30.0
+      ],
+      "outside_air_temp_range": [
+        28.0,
+        32.0
+      ],
+      "engine_load_range": [
+        45.0,
+        55.0
+      ],
+      "ship_speed_range": [
+        14.0,
+        16.0
+      ],
+      "season": null,
+      "latitude_range": null,
+      "longitude_range": null
+    },
+    "solution": {
+      "pump_frequency_hz": 48.5,
+      "pump_count": 2,
+      "fan_frequency_hz": 47.0,
+      "fan_count": 2,
+      "achieved_t5": 35.0,
+      "achieved_t6": 43.0,
+      "power_consumption_kw": 245.0,
+      "savings_percent": 47.0,
+      "performance_score": 96.0
+    },
+    "created_at": "2025-10-07T10:01:10.048185",
+    "last_used": "2025-10-07T10:01:10.048185",
+    "usage_count": 1,
+    "success_rate": 1.0
+  },
+  {
+    "scenario_id": "temperate_20251007_100110",
+    "scenario_type": "temperate",
+    "condition": {
+      "seawater_temp_range": [
+        26.0,
+        30.0
+      ],
+      "outside_air_temp_range": [
+        28.0,
+        32.0
+      ],
+      "engine_load_range": [
+        45.0,
+        55.0
+      ],
+      "ship_speed_range": [
+        14.0,
+        16.0
+      ],
+      "season": null,
+      "latitude_range": null,
+      "longitude_range": null
+    },
+    "solution": {
+      "pump_frequency_hz": 48.5,
+      "pump_count": 2,
+      "fan_frequency_hz": 47.0,
+      "fan_count": 2,
+      "achieved_t5": 35.0,
+      "achieved_t6": 43.0,
+      "power_consumption_kw": 245.0,
+      "savings_percent": 47.0,
+      "performance_score": 96.0
+    },
+    "created_at": "2025-10-07T10:01:10.050111",
+    "last_used": "2025-10-07T10:01:10.050112",
+    "usage_count": 1,
+    "success_rate": 1.0
+  },
+  {
+    "scenario_id": "temperate_20251007_100110",
+    "scenario_type": "temperate",
+    "condition": {
+      "seawater_temp_range": [
+        26.0,
+        30.0
+      ],
+      "outside_air_temp_range": [
+        28.0,
+        32.0
+      ],
+      "engine_load_range": [
+        45.0,
+        55.0
+      ],
+      "ship_speed_range": [
+        14.0,
+        16.0
+      ],
+      "season": null,
+      "latitude_range": null,
+      "longitude_range": null
+    },
+    "solution": {
+      "pump_frequency_hz": 48.5,
+      "pump_count": 2,
+      "fan_frequency_hz": 47.0,
+      "fan_count": 2,
+      "achieved_t5": 35.0,
+      "achieved_t6": 43.0,
+      "power_consumption_kw": 245.0,
+      "savings_percent": 47.0,
+      "performance_score": 96.0
+    },
+    "created_at": "2025-10-07T10:01:10.051961",
+    "last_used": "2025-10-07T10:01:10.051961",
+    "usage_count": 1,
+    "success_rate": 1.0
+  },
+  {
+    "scenario_id": "temperate_20251007_100110",
+    "scenario_type": "temperate",
+    "condition": {
+      "seawater_temp_range": [
+        26.0,
+        30.0
+      ],
+      "outside_air_temp_range": [
+        28.0,
+        32.0
+      ],
+      "engine_load_range": [
+        45.0,
+        55.0
+      ],
+      "ship_speed_range": [
+        14.0,
+        16.0
+      ],
+      "season": null,
+      "latitude_range": null,
+      "longitude_range": null
+    },
+    "solution": {
+      "pump_frequency_hz": 48.5,
+      "pump_count": 2,
+      "fan_frequency_hz": 47.0,
+      "fan_count": 2,
+      "achieved_t5": 35.0,
+      "achieved_t6": 43.0,
+      "power_consumption_kw": 245.0,
+      "savings_percent": 47.0,
+      "performance_score": 96.0
+    },
+    "created_at": "2025-10-07T10:01:10.053833",
+    "last_used": "2025-10-07T10:01:10.053833",
+    "usage_count": 1,
+    "success_rate": 1.0
+  },
+  {
+    "scenario_id": "temperate_20251007_100110",
+    "scenario_type": "temperate",
+    "condition": {
+      "seawater_temp_range": [
+        26.0,
+        30.0
+      ],
+      "outside_air_temp_range": [
+        28.0,
+        32.0
+      ],
+      "engine_load_range": [
+        45.0,
+        55.0
+      ],
+      "ship_speed_range": [
+        14.0,
+        16.0
+      ],
+      "season": null,
+      "latitude_range": null,
+      "longitude_range": null
+    },
+    "solution": {
+      "pump_frequency_hz": 48.5,
+      "pump_count": 2,
+      "fan_frequency_hz": 47.0,
+      "fan_count": 2,
+      "achieved_t5": 35.0,
+      "achieved_t6": 43.0,
+      "power_consumption_kw": 245.0,
+      "savings_percent": 47.0,
+      "performance_score": 96.0
+    },
+    "created_at": "2025-10-07T10:01:10.055857",
+    "last_used": "2025-10-07T10:01:10.055858",
+    "usage_count": 1,
+    "success_rate": 1.0
+  },
+  {
+    "scenario_id": "temperate_20251007_100110",
+    "scenario_type": "temperate",
+    "condition": {
+      "seawater_temp_range": [
+        26.0,
+        30.0
+      ],
+      "outside_air_temp_range": [
+        28.0,
+        32.0
+      ],
+      "engine_load_range": [
+        45.0,
+        55.0
+      ],
+      "ship_speed_range": [
+        14.0,
+        16.0
+      ],
+      "season": null,
+      "latitude_range": null,
+      "longitude_range": null
+    },
+    "solution": {
+      "pump_frequency_hz": 48.5,
+      "pump_count": 2,
+      "fan_frequency_hz": 47.0,
+      "fan_count": 2,
+      "achieved_t5": 35.0,
+      "achieved_t6": 43.0,
+      "power_consumption_kw": 245.0,
+      "savings_percent": 47.0,
+      "performance_score": 96.0
+    },
+    "created_at": "2025-10-07T10:01:10.058055",
+    "last_used": "2025-10-07T10:01:10.058055",
+    "usage_count": 1,
+    "success_rate": 1.0
+  },
+  {
+    "scenario_id": "temperate_20251007_100110",
+    "scenario_type": "temperate",
+    "condition": {
+      "seawater_temp_range": [
+        26.0,
+        30.0
+      ],
+      "outside_air_temp_range": [
+        28.0,
+        32.0
+      ],
+      "engine_load_range": [
+        45.0,
+        55.0
+      ],
+      "ship_speed_range": [
+        14.0,
+        16.0
+      ],
+      "season": null,
+      "latitude_range": null,
+      "longitude_range": null
+    },
+    "solution": {
+      "pump_frequency_hz": 48.5,
+      "pump_count": 2,
+      "fan_frequency_hz": 47.0,
+      "fan_count": 2,
+      "achieved_t5": 35.0,
+      "achieved_t6": 43.0,
+      "power_consumption_kw": 245.0,
+      "savings_percent": 47.0,
+      "performance_score": 96.0
+    },
+    "created_at": "2025-10-07T10:01:10.060356",
+    "last_used": "2025-10-07T10:01:10.060357",
+    "usage_count": 1,
+    "success_rate": 1.0
+  },
+  {
+    "scenario_id": "temperate_20251007_100110",
+    "scenario_type": "temperate",
+    "condition": {
+      "seawater_temp_range": [
+        26.0,
+        30.0
+      ],
+      "outside_air_temp_range": [
+        28.0,
+        32.0
+      ],
+      "engine_load_range": [
+        45.0,
+        55.0
+      ],
+      "ship_speed_range": [
+        14.0,
+        16.0
+      ],
+      "season": null,
+      "latitude_range": null,
+      "longitude_range": null
+    },
+    "solution": {
+      "pump_frequency_hz": 48.5,
+      "pump_count": 2,
+      "fan_frequency_hz": 47.0,
+      "fan_count": 2,
+      "achieved_t5": 35.0,
+      "achieved_t6": 43.0,
+      "power_consumption_kw": 245.0,
+      "savings_percent": 47.0,
+      "performance_score": 96.0
+    },
+    "created_at": "2025-10-07T10:01:10.062584",
+    "last_used": "2025-10-07T10:01:10.062585",
+    "usage_count": 1,
+    "success_rate": 1.0
+  },
+  {
+    "scenario_id": "temperate_20251007_100110",
+    "scenario_type": "temperate",
+    "condition": {
+      "seawater_temp_range": [
+        26.0,
+        30.0
+      ],
+      "outside_air_temp_range": [
+        28.0,
+        32.0
+      ],
+      "engine_load_range": [
+        45.0,
+        55.0
+      ],
+      "ship_speed_range": [
+        14.0,
+        16.0
+      ],
+      "season": null,
+      "latitude_range": null,
+      "longitude_range": null
+    },
+    "solution": {
+      "pump_frequency_hz": 48.5,
+      "pump_count": 2,
+      "fan_frequency_hz": 47.0,
+      "fan_count": 2,
+      "achieved_t5": 35.0,
+      "achieved_t6": 43.0,
+      "power_consumption_kw": 245.0,
+      "savings_percent": 47.0,
+      "performance_score": 96.0
+    },
+    "created_at": "2025-10-07T10:01:10.064938",
+    "last_used": "2025-10-07T10:01:10.064938",
+    "usage_count": 1,
+    "success_rate": 1.0
+  },
+  {
+    "scenario_id": "temperate_20251007_100110",
+    "scenario_type": "temperate",
+    "condition": {
+      "seawater_temp_range": [
+        26.0,
+        30.0
+      ],
+      "outside_air_temp_range": [
+        28.0,
+        32.0
+      ],
+      "engine_load_range": [
+        45.0,
+        55.0
+      ],
+      "ship_speed_range": [
+        14.0,
+        16.0
+      ],
+      "season": null,
+      "latitude_range": null,
+      "longitude_range": null
+    },
+    "solution": {
+      "pump_frequency_hz": 48.5,
+      "pump_count": 2,
+      "fan_frequency_hz": 47.0,
+      "fan_count": 2,
+      "achieved_t5": 35.0,
+      "achieved_t6": 43.0,
+      "power_consumption_kw": 245.0,
+      "savings_percent": 47.0,
+      "performance_score": 96.0
+    },
+    "created_at": "2025-10-07T10:01:10.067126",
+    "last_used": "2025-10-07T10:01:10.067126",
+    "usage_count": 1,
+    "success_rate": 1.0
+  },
+  {
+    "scenario_id": "temperate_20251007_100110",
+    "scenario_type": "temperate",
+    "condition": {
+      "seawater_temp_range": [
+        26.0,
+        30.0
+      ],
+      "outside_air_temp_range": [
+        28.0,
+        32.0
+      ],
+      "engine_load_range": [
+        45.0,
+        55.0
+      ],
+      "ship_speed_range": [
+        14.0,
+        16.0
+      ],
+      "season": null,
+      "latitude_range": null,
+      "longitude_range": null
+    },
+    "solution": {
+      "pump_frequency_hz": 48.5,
+      "pump_count": 2,
+      "fan_frequency_hz": 47.0,
+      "fan_count": 2,
+      "achieved_t5": 35.0,
+      "achieved_t6": 43.0,
+      "power_consumption_kw": 245.0,
+      "savings_percent": 47.0,
+      "performance_score": 96.0
+    },
+    "created_at": "2025-10-07T10:01:10.069420",
+    "last_used": "2025-10-07T10:01:10.069420",
+    "usage_count": 1,
+    "success_rate": 1.0
+  },
+  {
+    "scenario_id": "temperate_20251007_100137",
+    "scenario_type": "temperate",
+    "condition": {
+      "seawater_temp_range": [
+        26.0,
+        30.0
+      ],
+      "outside_air_temp_range": [
+        28.0,
+        32.0
+      ],
+      "engine_load_range": [
+        45.0,
+        55.0
+      ],
+      "ship_speed_range": [
+        14.0,
+        16.0
+      ],
+      "season": null,
+      "latitude_range": null,
+      "longitude_range": null
+    },
+    "solution": {
+      "pump_frequency_hz": 48.5,
+      "pump_count": 2,
+      "fan_frequency_hz": 47.0,
+      "fan_count": 2,
+      "achieved_t5": 35.0,
+      "achieved_t6": 43.0,
+      "power_consumption_kw": 245.0,
+      "savings_percent": 47.0,
+      "performance_score": 96.0
+    },
+    "created_at": "2025-10-07T10:01:37.368144",
+    "last_used": "2025-10-07T10:01:37.368144",
+    "usage_count": 1,
+    "success_rate": 1.0
+  },
+  {
+    "scenario_id": "temperate_20251007_100137",
+    "scenario_type": "temperate",
+    "condition": {
+      "seawater_temp_range": [
+        26.0,
+        30.0
+      ],
+      "outside_air_temp_range": [
+        28.0,
+        32.0
+      ],
+      "engine_load_range": [
+        45.0,
+        55.0
+      ],
+      "ship_speed_range": [
+        14.0,
+        16.0
+      ],
+      "season": null,
+      "latitude_range": null,
+      "longitude_range": null
+    },
+    "solution": {
+      "pump_frequency_hz": 48.5,
+      "pump_count": 2,
+      "fan_frequency_hz": 47.0,
+      "fan_count": 2,
+      "achieved_t5": 35.0,
+      "achieved_t6": 43.0,
+      "power_consumption_kw": 245.0,
+      "savings_percent": 47.0,
+      "performance_score": 96.0
+    },
+    "created_at": "2025-10-07T10:01:37.371462",
+    "last_used": "2025-10-07T10:01:37.371463",
+    "usage_count": 1,
+    "success_rate": 1.0
+  },
+  {
+    "scenario_id": "temperate_20251007_100137",
+    "scenario_type": "temperate",
+    "condition": {
+      "seawater_temp_range": [
+        26.0,
+        30.0
+      ],
+      "outside_air_temp_range": [
+        28.0,
+        32.0
+      ],
+      "engine_load_range": [
+        45.0,
+        55.0
+      ],
+      "ship_speed_range": [
+        14.0,
+        16.0
+      ],
+      "season": null,
+      "latitude_range": null,
+      "longitude_range": null
+    },
+    "solution": {
+      "pump_frequency_hz": 48.5,
+      "pump_count": 2,
+      "fan_frequency_hz": 47.0,
+      "fan_count": 2,
+      "achieved_t5": 35.0,
+      "achieved_t6": 43.0,
+      "power_consumption_kw": 245.0,
+      "savings_percent": 47.0,
+      "performance_score": 96.0
+    },
+    "created_at": "2025-10-07T10:01:37.375879",
+    "last_used": "2025-10-07T10:01:37.375880",
+    "usage_count": 1,
+    "success_rate": 1.0
+  },
+  {
+    "scenario_id": "temperate_20251007_100137",
+    "scenario_type": "temperate",
+    "condition": {
+      "seawater_temp_range": [
+        26.0,
+        30.0
+      ],
+      "outside_air_temp_range": [
+        28.0,
+        32.0
+      ],
+      "engine_load_range": [
+        45.0,
+        55.0
+      ],
+      "ship_speed_range": [
+        14.0,
+        16.0
+      ],
+      "season": null,
+      "latitude_range": null,
+      "longitude_range": null
+    },
+    "solution": {
+      "pump_frequency_hz": 48.5,
+      "pump_count": 2,
+      "fan_frequency_hz": 47.0,
+      "fan_count": 2,
+      "achieved_t5": 35.0,
+      "achieved_t6": 43.0,
+      "power_consumption_kw": 245.0,
+      "savings_percent": 47.0,
+      "performance_score": 96.0
+    },
+    "created_at": "2025-10-07T10:01:37.379969",
+    "last_used": "2025-10-07T10:01:37.379969",
+    "usage_count": 1,
+    "success_rate": 1.0
+  },
+  {
+    "scenario_id": "temperate_20251007_100137",
+    "scenario_type": "temperate",
+    "condition": {
+      "seawater_temp_range": [
+        26.0,
+        30.0
+      ],
+      "outside_air_temp_range": [
+        28.0,
+        32.0
+      ],
+      "engine_load_range": [
+        45.0,
+        55.0
+      ],
+      "ship_speed_range": [
+        14.0,
+        16.0
+      ],
+      "season": null,
+      "latitude_range": null,
+      "longitude_range": null
+    },
+    "solution": {
+      "pump_frequency_hz": 48.5,
+      "pump_count": 2,
+      "fan_frequency_hz": 47.0,
+      "fan_count": 2,
+      "achieved_t5": 35.0,
+      "achieved_t6": 43.0,
+      "power_consumption_kw": 245.0,
+      "savings_percent": 47.0,
+      "performance_score": 96.0
+    },
+    "created_at": "2025-10-07T10:01:37.383745",
+    "last_used": "2025-10-07T10:01:37.383745",
+    "usage_count": 1,
+    "success_rate": 1.0
+  },
+  {
+    "scenario_id": "temperate_20251007_100137",
+    "scenario_type": "temperate",
+    "condition": {
+      "seawater_temp_range": [
+        26.0,
+        30.0
+      ],
+      "outside_air_temp_range": [
+        28.0,
+        32.0
+      ],
+      "engine_load_range": [
+        45.0,
+        55.0
+      ],
+      "ship_speed_range": [
+        14.0,
+        16.0
+      ],
+      "season": null,
+      "latitude_range": null,
+      "longitude_range": null
+    },
+    "solution": {
+      "pump_frequency_hz": 48.5,
+      "pump_count": 2,
+      "fan_frequency_hz": 47.0,
+      "fan_count": 2,
+      "achieved_t5": 35.0,
+      "achieved_t6": 43.0,
+      "power_consumption_kw": 245.0,
+      "savings_percent": 47.0,
+      "performance_score": 96.0
+    },
+    "created_at": "2025-10-07T10:01:37.388677",
+    "last_used": "2025-10-07T10:01:37.388678",
+    "usage_count": 1,
+    "success_rate": 1.0
+  },
+  {
+    "scenario_id": "temperate_20251007_100137",
+    "scenario_type": "temperate",
+    "condition": {
+      "seawater_temp_range": [
+        26.0,
+        30.0
+      ],
+      "outside_air_temp_range": [
+        28.0,
+        32.0
+      ],
+      "engine_load_range": [
+        45.0,
+        55.0
+      ],
+      "ship_speed_range": [
+        14.0,
+        16.0
+      ],
+      "season": null,
+      "latitude_range": null,
+      "longitude_range": null
+    },
+    "solution": {
+      "pump_frequency_hz": 48.5,
+      "pump_count": 2,
+      "fan_frequency_hz": 47.0,
+      "fan_count": 2,
+      "achieved_t5": 35.0,
+      "achieved_t6": 43.0,
+      "power_consumption_kw": 245.0,
+      "savings_percent": 47.0,
+      "performance_score": 96.0
+    },
+    "created_at": "2025-10-07T10:01:37.392391",
+    "last_used": "2025-10-07T10:01:37.392392",
+    "usage_count": 1,
+    "success_rate": 1.0
+  },
+  {
+    "scenario_id": "temperate_20251007_100137",
+    "scenario_type": "temperate",
+    "condition": {
+      "seawater_temp_range": [
+        26.0,
+        30.0
+      ],
+      "outside_air_temp_range": [
+        28.0,
+        32.0
+      ],
+      "engine_load_range": [
+        45.0,
+        55.0
+      ],
+      "ship_speed_range": [
+        14.0,
+        16.0
+      ],
+      "season": null,
+      "latitude_range": null,
+      "longitude_range": null
+    },
+    "solution": {
+      "pump_frequency_hz": 48.5,
+      "pump_count": 2,
+      "fan_frequency_hz": 47.0,
+      "fan_count": 2,
+      "achieved_t5": 35.0,
+      "achieved_t6": 43.0,
+      "power_consumption_kw": 245.0,
+      "savings_percent": 47.0,
+      "performance_score": 96.0
+    },
+    "created_at": "2025-10-07T10:01:37.395519",
+    "last_used": "2025-10-07T10:01:37.395520",
+    "usage_count": 1,
+    "success_rate": 1.0
+  },
+  {
+    "scenario_id": "temperate_20251007_100137",
+    "scenario_type": "temperate",
+    "condition": {
+      "seawater_temp_range": [
+        26.0,
+        30.0
+      ],
+      "outside_air_temp_range": [
+        28.0,
+        32.0
+      ],
+      "engine_load_range": [
+        45.0,
+        55.0
+      ],
+      "ship_speed_range": [
+        14.0,
+        16.0
+      ],
+      "season": null,
+      "latitude_range": null,
+      "longitude_range": null
+    },
+    "solution": {
+      "pump_frequency_hz": 48.5,
+      "pump_count": 2,
+      "fan_frequency_hz": 47.0,
+      "fan_count": 2,
+      "achieved_t5": 35.0,
+      "achieved_t6": 43.0,
+      "power_consumption_kw": 245.0,
+      "savings_percent": 47.0,
+      "performance_score": 96.0
+    },
+    "created_at": "2025-10-07T10:01:37.399167",
+    "last_used": "2025-10-07T10:01:37.399168",
+    "usage_count": 1,
+    "success_rate": 1.0
+  },
+  {
+    "scenario_id": "temperate_20251007_100137",
+    "scenario_type": "temperate",
+    "condition": {
+      "seawater_temp_range": [
+        26.0,
+        30.0
+      ],
+      "outside_air_temp_range": [
+        28.0,
+        32.0
+      ],
+      "engine_load_range": [
+        45.0,
+        55.0
+      ],
+      "ship_speed_range": [
+        14.0,
+        16.0
+      ],
+      "season": null,
+      "latitude_range": null,
+      "longitude_range": null
+    },
+    "solution": {
+      "pump_frequency_hz": 48.5,
+      "pump_count": 2,
+      "fan_frequency_hz": 47.0,
+      "fan_count": 2,
+      "achieved_t5": 35.0,
+      "achieved_t6": 43.0,
+      "power_consumption_kw": 245.0,
+      "savings_percent": 47.0,
+      "performance_score": 96.0
+    },
+    "created_at": "2025-10-07T10:01:37.403312",
+    "last_used": "2025-10-07T10:01:37.403312",
+    "usage_count": 1,
+    "success_rate": 1.0
+  },
+  {
+    "scenario_id": "temperate_20251007_100137",
+    "scenario_type": "temperate",
+    "condition": {
+      "seawater_temp_range": [
+        26.0,
+        30.0
+      ],
+      "outside_air_temp_range": [
+        28.0,
+        32.0
+      ],
+      "engine_load_range": [
+        45.0,
+        55.0
+      ],
+      "ship_speed_range": [
+        14.0,
+        16.0
+      ],
+      "season": null,
+      "latitude_range": null,
+      "longitude_range": null
+    },
+    "solution": {
+      "pump_frequency_hz": 48.5,
+      "pump_count": 2,
+      "fan_frequency_hz": 47.0,
+      "fan_count": 2,
+      "achieved_t5": 35.0,
+      "achieved_t6": 43.0,
+      "power_consumption_kw": 245.0,
+      "savings_percent": 47.0,
+      "performance_score": 96.0
+    },
+    "created_at": "2025-10-07T10:01:37.408107",
+    "last_used": "2025-10-07T10:01:37.408108",
+    "usage_count": 1,
+    "success_rate": 1.0
+  },
+  {
+    "scenario_id": "temperate_20251007_100137",
+    "scenario_type": "temperate",
+    "condition": {
+      "seawater_temp_range": [
+        26.0,
+        30.0
+      ],
+      "outside_air_temp_range": [
+        28.0,
+        32.0
+      ],
+      "engine_load_range": [
+        45.0,
+        55.0
+      ],
+      "ship_speed_range": [
+        14.0,
+        16.0
+      ],
+      "season": null,
+      "latitude_range": null,
+      "longitude_range": null
+    },
+    "solution": {
+      "pump_frequency_hz": 48.5,
+      "pump_count": 2,
+      "fan_frequency_hz": 47.0,
+      "fan_count": 2,
+      "achieved_t5": 35.0,
+      "achieved_t6": 43.0,
+      "power_consumption_kw": 245.0,
+      "savings_percent": 47.0,
+      "performance_score": 96.0
+    },
+    "created_at": "2025-10-07T10:01:37.412145",
+    "last_used": "2025-10-07T10:01:37.412146",
+    "usage_count": 1,
+    "success_rate": 1.0
+  },
+  {
+    "scenario_id": "temperate_20251007_100137",
+    "scenario_type": "temperate",
+    "condition": {
+      "seawater_temp_range": [
+        26.0,
+        30.0
+      ],
+      "outside_air_temp_range": [
+        28.0,
+        32.0
+      ],
+      "engine_load_range": [
+        45.0,
+        55.0
+      ],
+      "ship_speed_range": [
+        14.0,
+        16.0
+      ],
+      "season": null,
+      "latitude_range": null,
+      "longitude_range": null
+    },
+    "solution": {
+      "pump_frequency_hz": 48.5,
+      "pump_count": 2,
+      "fan_frequency_hz": 47.0,
+      "fan_count": 2,
+      "achieved_t5": 35.0,
+      "achieved_t6": 43.0,
+      "power_consumption_kw": 245.0,
+      "savings_percent": 47.0,
+      "performance_score": 96.0
+    },
+    "created_at": "2025-10-07T10:01:37.416438",
+    "last_used": "2025-10-07T10:01:37.416438",
+    "usage_count": 1,
+    "success_rate": 1.0
+  },
+  {
+    "scenario_id": "temperate_20251007_100137",
+    "scenario_type": "temperate",
+    "condition": {
+      "seawater_temp_range": [
+        26.0,
+        30.0
+      ],
+      "outside_air_temp_range": [
+        28.0,
+        32.0
+      ],
+      "engine_load_range": [
+        45.0,
+        55.0
+      ],
+      "ship_speed_range": [
+        14.0,
+        16.0
+      ],
+      "season": null,
+      "latitude_range": null,
+      "longitude_range": null
+    },
+    "solution": {
+      "pump_frequency_hz": 48.5,
+      "pump_count": 2,
+      "fan_frequency_hz": 47.0,
+      "fan_count": 2,
+      "achieved_t5": 35.0,
+      "achieved_t6": 43.0,
+      "power_consumption_kw": 245.0,
+      "savings_percent": 47.0,
+      "performance_score": 96.0
+    },
+    "created_at": "2025-10-07T10:01:37.420310",
+    "last_used": "2025-10-07T10:01:37.420311",
+    "usage_count": 1,
+    "success_rate": 1.0
+  },
+  {
+    "scenario_id": "temperate_20251007_100137",
+    "scenario_type": "temperate",
+    "condition": {
+      "seawater_temp_range": [
+        26.0,
+        30.0
+      ],
+      "outside_air_temp_range": [
+        28.0,
+        32.0
+      ],
+      "engine_load_range": [
+        45.0,
+        55.0
+      ],
+      "ship_speed_range": [
+        14.0,
+        16.0
+      ],
+      "season": null,
+      "latitude_range": null,
+      "longitude_range": null
+    },
+    "solution": {
+      "pump_frequency_hz": 48.5,
+      "pump_count": 2,
+      "fan_frequency_hz": 47.0,
+      "fan_count": 2,
+      "achieved_t5": 35.0,
+      "achieved_t6": 43.0,
+      "power_consumption_kw": 245.0,
+      "savings_percent": 47.0,
+      "performance_score": 96.0
+    },
+    "created_at": "2025-10-07T10:01:37.425694",
+    "last_used": "2025-10-07T10:01:37.425694",
+    "usage_count": 1,
+    "success_rate": 1.0
+  },
+  {
+    "scenario_id": "temperate_20251007_100137",
+    "scenario_type": "temperate",
+    "condition": {
+      "seawater_temp_range": [
+        26.0,
+        30.0
+      ],
+      "outside_air_temp_range": [
+        28.0,
+        32.0
+      ],
+      "engine_load_range": [
+        45.0,
+        55.0
+      ],
+      "ship_speed_range": [
+        14.0,
+        16.0
+      ],
+      "season": null,
+      "latitude_range": null,
+      "longitude_range": null
+    },
+    "solution": {
+      "pump_frequency_hz": 48.5,
+      "pump_count": 2,
+      "fan_frequency_hz": 47.0,
+      "fan_count": 2,
+      "achieved_t5": 35.0,
+      "achieved_t6": 43.0,
+      "power_consumption_kw": 245.0,
+      "savings_percent": 47.0,
+      "performance_score": 96.0
+    },
+    "created_at": "2025-10-07T10:01:37.429562",
+    "last_used": "2025-10-07T10:01:37.429562",
+    "usage_count": 1,
+    "success_rate": 1.0
+  },
+  {
+    "scenario_id": "temperate_20251007_100137",
+    "scenario_type": "temperate",
+    "condition": {
+      "seawater_temp_range": [
+        26.0,
+        30.0
+      ],
+      "outside_air_temp_range": [
+        28.0,
+        32.0
+      ],
+      "engine_load_range": [
+        45.0,
+        55.0
+      ],
+      "ship_speed_range": [
+        14.0,
+        16.0
+      ],
+      "season": null,
+      "latitude_range": null,
+      "longitude_range": null
+    },
+    "solution": {
+      "pump_frequency_hz": 48.5,
+      "pump_count": 2,
+      "fan_frequency_hz": 47.0,
+      "fan_count": 2,
+      "achieved_t5": 35.0,
+      "achieved_t6": 43.0,
+      "power_consumption_kw": 245.0,
+      "savings_percent": 47.0,
+      "performance_score": 96.0
+    },
+    "created_at": "2025-10-07T10:01:37.434719",
+    "last_used": "2025-10-07T10:01:37.434720",
+    "usage_count": 1,
+    "success_rate": 1.0
+  },
+  {
+    "scenario_id": "temperate_20251007_100137",
+    "scenario_type": "temperate",
+    "condition": {
+      "seawater_temp_range": [
+        26.0,
+        30.0
+      ],
+      "outside_air_temp_range": [
+        28.0,
+        32.0
+      ],
+      "engine_load_range": [
+        45.0,
+        55.0
+      ],
+      "ship_speed_range": [
+        14.0,
+        16.0
+      ],
+      "season": null,
+      "latitude_range": null,
+      "longitude_range": null
+    },
+    "solution": {
+      "pump_frequency_hz": 48.5,
+      "pump_count": 2,
+      "fan_frequency_hz": 47.0,
+      "fan_count": 2,
+      "achieved_t5": 35.0,
+      "achieved_t6": 43.0,
+      "power_consumption_kw": 245.0,
+      "savings_percent": 47.0,
+      "performance_score": 96.0
+    },
+    "created_at": "2025-10-07T10:01:37.438178",
+    "last_used": "2025-10-07T10:01:37.438178",
+    "usage_count": 1,
+    "success_rate": 1.0
+  },
+  {
+    "scenario_id": "temperate_20251007_100137",
+    "scenario_type": "temperate",
+    "condition": {
+      "seawater_temp_range": [
+        26.0,
+        30.0
+      ],
+      "outside_air_temp_range": [
+        28.0,
+        32.0
+      ],
+      "engine_load_range": [
+        45.0,
+        55.0
+      ],
+      "ship_speed_range": [
+        14.0,
+        16.0
+      ],
+      "season": null,
+      "latitude_range": null,
+      "longitude_range": null
+    },
+    "solution": {
+      "pump_frequency_hz": 48.5,
+      "pump_count": 2,
+      "fan_frequency_hz": 47.0,
+      "fan_count": 2,
+      "achieved_t5": 35.0,
+      "achieved_t6": 43.0,
+      "power_consumption_kw": 245.0,
+      "savings_percent": 47.0,
+      "performance_score": 96.0
+    },
+    "created_at": "2025-10-07T10:01:37.442315",
+    "last_used": "2025-10-07T10:01:37.442315",
+    "usage_count": 1,
+    "success_rate": 1.0
+  },
+  {
+    "scenario_id": "temperate_20251007_100137",
+    "scenario_type": "temperate",
+    "condition": {
+      "seawater_temp_range": [
+        26.0,
+        30.0
+      ],
+      "outside_air_temp_range": [
+        28.0,
+        32.0
+      ],
+      "engine_load_range": [
+        45.0,
+        55.0
+      ],
+      "ship_speed_range": [
+        14.0,
+        16.0
+      ],
+      "season": null,
+      "latitude_range": null,
+      "longitude_range": null
+    },
+    "solution": {
+      "pump_frequency_hz": 48.5,
+      "pump_count": 2,
+      "fan_frequency_hz": 47.0,
+      "fan_count": 2,
+      "achieved_t5": 35.0,
+      "achieved_t6": 43.0,
+      "power_consumption_kw": 245.0,
+      "savings_percent": 47.0,
+      "performance_score": 96.0
+    },
+    "created_at": "2025-10-07T10:01:37.447264",
+    "last_used": "2025-10-07T10:01:37.447264",
+    "usage_count": 1,
+    "success_rate": 1.0
+  },
+  {
+    "scenario_id": "temperate_20251007_100137",
+    "scenario_type": "temperate",
+    "condition": {
+      "seawater_temp_range": [
+        26.0,
+        30.0
+      ],
+      "outside_air_temp_range": [
+        28.0,
+        32.0
+      ],
+      "engine_load_range": [
+        45.0,
+        55.0
+      ],
+      "ship_speed_range": [
+        14.0,
+        16.0
+      ],
+      "season": null,
+      "latitude_range": null,
+      "longitude_range": null
+    },
+    "solution": {
+      "pump_frequency_hz": 48.5,
+      "pump_count": 2,
+      "fan_frequency_hz": 47.0,
+      "fan_count": 2,
+      "achieved_t5": 35.0,
+      "achieved_t6": 43.0,
+      "power_consumption_kw": 245.0,
+      "savings_percent": 47.0,
+      "performance_score": 96.0
+    },
+    "created_at": "2025-10-07T10:01:37.451599",
+    "last_used": "2025-10-07T10:01:37.451599",
+    "usage_count": 1,
+    "success_rate": 1.0
+  },
+  {
+    "scenario_id": "temperate_20251007_100137",
+    "scenario_type": "temperate",
+    "condition": {
+      "seawater_temp_range": [
+        26.0,
+        30.0
+      ],
+      "outside_air_temp_range": [
+        28.0,
+        32.0
+      ],
+      "engine_load_range": [
+        45.0,
+        55.0
+      ],
+      "ship_speed_range": [
+        14.0,
+        16.0
+      ],
+      "season": null,
+      "latitude_range": null,
+      "longitude_range": null
+    },
+    "solution": {
+      "pump_frequency_hz": 48.5,
+      "pump_count": 2,
+      "fan_frequency_hz": 47.0,
+      "fan_count": 2,
+      "achieved_t5": 35.0,
+      "achieved_t6": 43.0,
+      "power_consumption_kw": 245.0,
+      "savings_percent": 47.0,
+      "performance_score": 96.0
+    },
+    "created_at": "2025-10-07T10:01:37.455298",
+    "last_used": "2025-10-07T10:01:37.455298",
+    "usage_count": 1,
+    "success_rate": 1.0
+  },
+  {
+    "scenario_id": "temperate_20251007_100137",
+    "scenario_type": "temperate",
+    "condition": {
+      "seawater_temp_range": [
+        26.0,
+        30.0
+      ],
+      "outside_air_temp_range": [
+        28.0,
+        32.0
+      ],
+      "engine_load_range": [
+        45.0,
+        55.0
+      ],
+      "ship_speed_range": [
+        14.0,
+        16.0
+      ],
+      "season": null,
+      "latitude_range": null,
+      "longitude_range": null
+    },
+    "solution": {
+      "pump_frequency_hz": 48.5,
+      "pump_count": 2,
+      "fan_frequency_hz": 47.0,
+      "fan_count": 2,
+      "achieved_t5": 35.0,
+      "achieved_t6": 43.0,
+      "power_consumption_kw": 245.0,
+      "savings_percent": 47.0,
+      "performance_score": 96.0
+    },
+    "created_at": "2025-10-07T10:01:37.460517",
+    "last_used": "2025-10-07T10:01:37.460517",
+    "usage_count": 1,
+    "success_rate": 1.0
+  },
+  {
+    "scenario_id": "temperate_20251007_100137",
+    "scenario_type": "temperate",
+    "condition": {
+      "seawater_temp_range": [
+        26.0,
+        30.0
+      ],
+      "outside_air_temp_range": [
+        28.0,
+        32.0
+      ],
+      "engine_load_range": [
+        45.0,
+        55.0
+      ],
+      "ship_speed_range": [
+        14.0,
+        16.0
+      ],
+      "season": null,
+      "latitude_range": null,
+      "longitude_range": null
+    },
+    "solution": {
+      "pump_frequency_hz": 48.5,
+      "pump_count": 2,
+      "fan_frequency_hz": 47.0,
+      "fan_count": 2,
+      "achieved_t5": 35.0,
+      "achieved_t6": 43.0,
+      "power_consumption_kw": 245.0,
+      "savings_percent": 47.0,
+      "performance_score": 96.0
+    },
+    "created_at": "2025-10-07T10:01:37.464125",
+    "last_used": "2025-10-07T10:01:37.464125",
+    "usage_count": 1,
+    "success_rate": 1.0
+  },
+  {
+    "scenario_id": "temperate_20251007_100137",
+    "scenario_type": "temperate",
+    "condition": {
+      "seawater_temp_range": [
+        26.0,
+        30.0
+      ],
+      "outside_air_temp_range": [
+        28.0,
+        32.0
+      ],
+      "engine_load_range": [
+        45.0,
+        55.0
+      ],
+      "ship_speed_range": [
+        14.0,
+        16.0
+      ],
+      "season": null,
+      "latitude_range": null,
+      "longitude_range": null
+    },
+    "solution": {
+      "pump_frequency_hz": 48.5,
+      "pump_count": 2,
+      "fan_frequency_hz": 47.0,
+      "fan_count": 2,
+      "achieved_t5": 35.0,
+      "achieved_t6": 43.0,
+      "power_consumption_kw": 245.0,
+      "savings_percent": 47.0,
+      "performance_score": 96.0
+    },
+    "created_at": "2025-10-07T10:01:37.467926",
+    "last_used": "2025-10-07T10:01:37.467926",
+    "usage_count": 1,
+    "success_rate": 1.0
+  },
+  {
+    "scenario_id": "temperate_20251007_100137",
+    "scenario_type": "temperate",
+    "condition": {
+      "seawater_temp_range": [
+        26.0,
+        30.0
+      ],
+      "outside_air_temp_range": [
+        28.0,
+        32.0
+      ],
+      "engine_load_range": [
+        45.0,
+        55.0
+      ],
+      "ship_speed_range": [
+        14.0,
+        16.0
+      ],
+      "season": null,
+      "latitude_range": null,
+      "longitude_range": null
+    },
+    "solution": {
+      "pump_frequency_hz": 48.5,
+      "pump_count": 2,
+      "fan_frequency_hz": 47.0,
+      "fan_count": 2,
+      "achieved_t5": 35.0,
+      "achieved_t6": 43.0,
+      "power_consumption_kw": 245.0,
+      "savings_percent": 47.0,
+      "performance_score": 96.0
+    },
+    "created_at": "2025-10-07T10:01:37.471915",
+    "last_used": "2025-10-07T10:01:37.471916",
+    "usage_count": 1,
+    "success_rate": 1.0
+  },
+  {
+    "scenario_id": "temperate_20251007_100137",
+    "scenario_type": "temperate",
+    "condition": {
+      "seawater_temp_range": [
+        26.0,
+        30.0
+      ],
+      "outside_air_temp_range": [
+        28.0,
+        32.0
+      ],
+      "engine_load_range": [
+        45.0,
+        55.0
+      ],
+      "ship_speed_range": [
+        14.0,
+        16.0
+      ],
+      "season": null,
+      "latitude_range": null,
+      "longitude_range": null
+    },
+    "solution": {
+      "pump_frequency_hz": 48.5,
+      "pump_count": 2,
+      "fan_frequency_hz": 47.0,
+      "fan_count": 2,
+      "achieved_t5": 35.0,
+      "achieved_t6": 43.0,
+      "power_consumption_kw": 245.0,
+      "savings_percent": 47.0,
+      "performance_score": 96.0
+    },
+    "created_at": "2025-10-07T10:01:37.478436",
+    "last_used": "2025-10-07T10:01:37.478436",
+    "usage_count": 1,
+    "success_rate": 1.0
+  },
+  {
+    "scenario_id": "temperate_20251007_100137",
+    "scenario_type": "temperate",
+    "condition": {
+      "seawater_temp_range": [
+        26.0,
+        30.0
+      ],
+      "outside_air_temp_range": [
+        28.0,
+        32.0
+      ],
+      "engine_load_range": [
+        45.0,
+        55.0
+      ],
+      "ship_speed_range": [
+        14.0,
+        16.0
+      ],
+      "season": null,
+      "latitude_range": null,
+      "longitude_range": null
+    },
+    "solution": {
+      "pump_frequency_hz": 48.5,
+      "pump_count": 2,
+      "fan_frequency_hz": 47.0,
+      "fan_count": 2,
+      "achieved_t5": 35.0,
+      "achieved_t6": 43.0,
+      "power_consumption_kw": 245.0,
+      "savings_percent": 47.0,
+      "performance_score": 96.0
+    },
+    "created_at": "2025-10-07T10:01:37.482893",
+    "last_used": "2025-10-07T10:01:37.482893",
+    "usage_count": 1,
+    "success_rate": 1.0
+  },
+  {
+    "scenario_id": "temperate_20251007_100137",
+    "scenario_type": "temperate",
+    "condition": {
+      "seawater_temp_range": [
+        26.0,
+        30.0
+      ],
+      "outside_air_temp_range": [
+        28.0,
+        32.0
+      ],
+      "engine_load_range": [
+        45.0,
+        55.0
+      ],
+      "ship_speed_range": [
+        14.0,
+        16.0
+      ],
+      "season": null,
+      "latitude_range": null,
+      "longitude_range": null
+    },
+    "solution": {
+      "pump_frequency_hz": 48.5,
+      "pump_count": 2,
+      "fan_frequency_hz": 47.0,
+      "fan_count": 2,
+      "achieved_t5": 35.0,
+      "achieved_t6": 43.0,
+      "power_consumption_kw": 245.0,
+      "savings_percent": 47.0,
+      "performance_score": 96.0
+    },
+    "created_at": "2025-10-07T10:01:37.486761",
+    "last_used": "2025-10-07T10:01:37.486762",
+    "usage_count": 1,
+    "success_rate": 1.0
+  },
+  {
+    "scenario_id": "temperate_20251007_100137",
+    "scenario_type": "temperate",
+    "condition": {
+      "seawater_temp_range": [
+        26.0,
+        30.0
+      ],
+      "outside_air_temp_range": [
+        28.0,
+        32.0
+      ],
+      "engine_load_range": [
+        45.0,
+        55.0
+      ],
+      "ship_speed_range": [
+        14.0,
+        16.0
+      ],
+      "season": null,
+      "latitude_range": null,
+      "longitude_range": null
+    },
+    "solution": {
+      "pump_frequency_hz": 48.5,
+      "pump_count": 2,
+      "fan_frequency_hz": 47.0,
+      "fan_count": 2,
+      "achieved_t5": 35.0,
+      "achieved_t6": 43.0,
+      "power_consumption_kw": 245.0,
+      "savings_percent": 47.0,
+      "performance_score": 96.0
+    },
+    "created_at": "2025-10-07T10:01:37.492047",
+    "last_used": "2025-10-07T10:01:37.492048",
+    "usage_count": 1,
+    "success_rate": 1.0
+  },
+  {
+    "scenario_id": "temperate_20251007_100137",
+    "scenario_type": "temperate",
+    "condition": {
+      "seawater_temp_range": [
+        26.0,
+        30.0
+      ],
+      "outside_air_temp_range": [
+        28.0,
+        32.0
+      ],
+      "engine_load_range": [
+        45.0,
+        55.0
+      ],
+      "ship_speed_range": [
+        14.0,
+        16.0
+      ],
+      "season": null,
+      "latitude_range": null,
+      "longitude_range": null
+    },
+    "solution": {
+      "pump_frequency_hz": 48.5,
+      "pump_count": 2,
+      "fan_frequency_hz": 47.0,
+      "fan_count": 2,
+      "achieved_t5": 35.0,
+      "achieved_t6": 43.0,
+      "power_consumption_kw": 245.0,
+      "savings_percent": 47.0,
+      "performance_score": 96.0
+    },
+    "created_at": "2025-10-07T10:01:37.497108",
+    "last_used": "2025-10-07T10:01:37.497108",
+    "usage_count": 1,
+    "success_rate": 1.0
+  },
+  {
+    "scenario_id": "temperate_20251007_100137",
+    "scenario_type": "temperate",
+    "condition": {
+      "seawater_temp_range": [
+        26.0,
+        30.0
+      ],
+      "outside_air_temp_range": [
+        28.0,
+        32.0
+      ],
+      "engine_load_range": [
+        45.0,
+        55.0
+      ],
+      "ship_speed_range": [
+        14.0,
+        16.0
+      ],
+      "season": null,
+      "latitude_range": null,
+      "longitude_range": null
+    },
+    "solution": {
+      "pump_frequency_hz": 48.5,
+      "pump_count": 2,
+      "fan_frequency_hz": 47.0,
+      "fan_count": 2,
+      "achieved_t5": 35.0,
+      "achieved_t6": 43.0,
+      "power_consumption_kw": 245.0,
+      "savings_percent": 47.0,
+      "performance_score": 96.0
+    },
+    "created_at": "2025-10-07T10:01:37.502776",
+    "last_used": "2025-10-07T10:01:37.502777",
+    "usage_count": 1,
+    "success_rate": 1.0
+  },
+  {
+    "scenario_id": "temperate_20251007_100137",
+    "scenario_type": "temperate",
+    "condition": {
+      "seawater_temp_range": [
+        26.0,
+        30.0
+      ],
+      "outside_air_temp_range": [
+        28.0,
+        32.0
+      ],
+      "engine_load_range": [
+        45.0,
+        55.0
+      ],
+      "ship_speed_range": [
+        14.0,
+        16.0
+      ],
+      "season": null,
+      "latitude_range": null,
+      "longitude_range": null
+    },
+    "solution": {
+      "pump_frequency_hz": 48.5,
+      "pump_count": 2,
+      "fan_frequency_hz": 47.0,
+      "fan_count": 2,
+      "achieved_t5": 35.0,
+      "achieved_t6": 43.0,
+      "power_consumption_kw": 245.0,
+      "savings_percent": 47.0,
+      "performance_score": 96.0
+    },
+    "created_at": "2025-10-07T10:01:37.508577",
+    "last_used": "2025-10-07T10:01:37.508578",
+    "usage_count": 1,
+    "success_rate": 1.0
+  },
+  {
+    "scenario_id": "temperate_20251007_100137",
+    "scenario_type": "temperate",
+    "condition": {
+      "seawater_temp_range": [
+        26.0,
+        30.0
+      ],
+      "outside_air_temp_range": [
+        28.0,
+        32.0
+      ],
+      "engine_load_range": [
+        45.0,
+        55.0
+      ],
+      "ship_speed_range": [
+        14.0,
+        16.0
+      ],
+      "season": null,
+      "latitude_range": null,
+      "longitude_range": null
+    },
+    "solution": {
+      "pump_frequency_hz": 48.5,
+      "pump_count": 2,
+      "fan_frequency_hz": 47.0,
+      "fan_count": 2,
+      "achieved_t5": 35.0,
+      "achieved_t6": 43.0,
+      "power_consumption_kw": 245.0,
+      "savings_percent": 47.0,
+      "performance_score": 96.0
+    },
+    "created_at": "2025-10-07T10:01:37.514102",
+    "last_used": "2025-10-07T10:01:37.514103",
+    "usage_count": 1,
+    "success_rate": 1.0
+  },
+  {
+    "scenario_id": "temperate_20251007_100137",
+    "scenario_type": "temperate",
+    "condition": {
+      "seawater_temp_range": [
+        26.0,
+        30.0
+      ],
+      "outside_air_temp_range": [
+        28.0,
+        32.0
+      ],
+      "engine_load_range": [
+        45.0,
+        55.0
+      ],
+      "ship_speed_range": [
+        14.0,
+        16.0
+      ],
+      "season": null,
+      "latitude_range": null,
+      "longitude_range": null
+    },
+    "solution": {
+      "pump_frequency_hz": 48.5,
+      "pump_count": 2,
+      "fan_frequency_hz": 47.0,
+      "fan_count": 2,
+      "achieved_t5": 35.0,
+      "achieved_t6": 43.0,
+      "power_consumption_kw": 245.0,
+      "savings_percent": 47.0,
+      "performance_score": 96.0
+    },
+    "created_at": "2025-10-07T10:01:37.518382",
+    "last_used": "2025-10-07T10:01:37.518382",
+    "usage_count": 1,
+    "success_rate": 1.0
+  },
+  {
+    "scenario_id": "temperate_20251007_100137",
+    "scenario_type": "temperate",
+    "condition": {
+      "seawater_temp_range": [
+        26.0,
+        30.0
+      ],
+      "outside_air_temp_range": [
+        28.0,
+        32.0
+      ],
+      "engine_load_range": [
+        45.0,
+        55.0
+      ],
+      "ship_speed_range": [
+        14.0,
+        16.0
+      ],
+      "season": null,
+      "latitude_range": null,
+      "longitude_range": null
+    },
+    "solution": {
+      "pump_frequency_hz": 48.5,
+      "pump_count": 2,
+      "fan_frequency_hz": 47.0,
+      "fan_count": 2,
+      "achieved_t5": 35.0,
+      "achieved_t6": 43.0,
+      "power_consumption_kw": 245.0,
+      "savings_percent": 47.0,
+      "performance_score": 96.0
+    },
+    "created_at": "2025-10-07T10:01:37.524222",
+    "last_used": "2025-10-07T10:01:37.524222",
+    "usage_count": 1,
+    "success_rate": 1.0
+  },
+  {
+    "scenario_id": "temperate_20251007_100137",
+    "scenario_type": "temperate",
+    "condition": {
+      "seawater_temp_range": [
+        26.0,
+        30.0
+      ],
+      "outside_air_temp_range": [
+        28.0,
+        32.0
+      ],
+      "engine_load_range": [
+        45.0,
+        55.0
+      ],
+      "ship_speed_range": [
+        14.0,
+        16.0
+      ],
+      "season": null,
+      "latitude_range": null,
+      "longitude_range": null
+    },
+    "solution": {
+      "pump_frequency_hz": 48.5,
+      "pump_count": 2,
+      "fan_frequency_hz": 47.0,
+      "fan_count": 2,
+      "achieved_t5": 35.0,
+      "achieved_t6": 43.0,
+      "power_consumption_kw": 245.0,
+      "savings_percent": 47.0,
+      "performance_score": 96.0
+    },
+    "created_at": "2025-10-07T10:01:37.529957",
+    "last_used": "2025-10-07T10:01:37.529957",
+    "usage_count": 1,
+    "success_rate": 1.0
+  },
+  {
+    "scenario_id": "temperate_20251007_100137",
+    "scenario_type": "temperate",
+    "condition": {
+      "seawater_temp_range": [
+        26.0,
+        30.0
+      ],
+      "outside_air_temp_range": [
+        28.0,
+        32.0
+      ],
+      "engine_load_range": [
+        45.0,
+        55.0
+      ],
+      "ship_speed_range": [
+        14.0,
+        16.0
+      ],
+      "season": null,
+      "latitude_range": null,
+      "longitude_range": null
+    },
+    "solution": {
+      "pump_frequency_hz": 48.5,
+      "pump_count": 2,
+      "fan_frequency_hz": 47.0,
+      "fan_count": 2,
+      "achieved_t5": 35.0,
+      "achieved_t6": 43.0,
+      "power_consumption_kw": 245.0,
+      "savings_percent": 47.0,
+      "performance_score": 96.0
+    },
+    "created_at": "2025-10-07T10:01:37.534524",
+    "last_used": "2025-10-07T10:01:37.534524",
+    "usage_count": 1,
+    "success_rate": 1.0
+  },
+  {
+    "scenario_id": "temperate_20251007_100137",
+    "scenario_type": "temperate",
+    "condition": {
+      "seawater_temp_range": [
+        26.0,
+        30.0
+      ],
+      "outside_air_temp_range": [
+        28.0,
+        32.0
+      ],
+      "engine_load_range": [
+        45.0,
+        55.0
+      ],
+      "ship_speed_range": [
+        14.0,
+        16.0
+      ],
+      "season": null,
+      "latitude_range": null,
+      "longitude_range": null
+    },
+    "solution": {
+      "pump_frequency_hz": 48.5,
+      "pump_count": 2,
+      "fan_frequency_hz": 47.0,
+      "fan_count": 2,
+      "achieved_t5": 35.0,
+      "achieved_t6": 43.0,
+      "power_consumption_kw": 245.0,
+      "savings_percent": 47.0,
+      "performance_score": 96.0
+    },
+    "created_at": "2025-10-07T10:01:37.541885",
+    "last_used": "2025-10-07T10:01:37.541885",
+    "usage_count": 1,
+    "success_rate": 1.0
+  },
+  {
+    "scenario_id": "temperate_20251007_100137",
+    "scenario_type": "temperate",
+    "condition": {
+      "seawater_temp_range": [
+        26.0,
+        30.0
+      ],
+      "outside_air_temp_range": [
+        28.0,
+        32.0
+      ],
+      "engine_load_range": [
+        45.0,
+        55.0
+      ],
+      "ship_speed_range": [
+        14.0,
+        16.0
+      ],
+      "season": null,
+      "latitude_range": null,
+      "longitude_range": null
+    },
+    "solution": {
+      "pump_frequency_hz": 48.5,
+      "pump_count": 2,
+      "fan_frequency_hz": 47.0,
+      "fan_count": 2,
+      "achieved_t5": 35.0,
+      "achieved_t6": 43.0,
+      "power_consumption_kw": 245.0,
+      "savings_percent": 47.0,
+      "performance_score": 96.0
+    },
+    "created_at": "2025-10-07T10:01:37.546518",
+    "last_used": "2025-10-07T10:01:37.546518",
+    "usage_count": 1,
+    "success_rate": 1.0
+  },
+  {
+    "scenario_id": "temperate_20251007_100205",
+    "scenario_type": "temperate",
+    "condition": {
+      "seawater_temp_range": [
+        26.0,
+        30.0
+      ],
+      "outside_air_temp_range": [
+        28.0,
+        32.0
+      ],
+      "engine_load_range": [
+        45.0,
+        55.0
+      ],
+      "ship_speed_range": [
+        14.0,
+        16.0
+      ],
+      "season": null,
+      "latitude_range": null,
+      "longitude_range": null
+    },
+    "solution": {
+      "pump_frequency_hz": 48.5,
+      "pump_count": 2,
+      "fan_frequency_hz": 47.0,
+      "fan_count": 2,
+      "achieved_t5": 35.0,
+      "achieved_t6": 43.0,
+      "power_consumption_kw": 245.0,
+      "savings_percent": 47.0,
+      "performance_score": 96.0
+    },
+    "created_at": "2025-10-07T10:02:05.376133",
+    "last_used": "2025-10-07T10:02:05.376133",
+    "usage_count": 1,
+    "success_rate": 1.0
+  },
+  {
+    "scenario_id": "temperate_20251007_100205",
+    "scenario_type": "temperate",
+    "condition": {
+      "seawater_temp_range": [
+        26.0,
+        30.0
+      ],
+      "outside_air_temp_range": [
+        28.0,
+        32.0
+      ],
+      "engine_load_range": [
+        45.0,
+        55.0
+      ],
+      "ship_speed_range": [
+        14.0,
+        16.0
+      ],
+      "season": null,
+      "latitude_range": null,
+      "longitude_range": null
+    },
+    "solution": {
+      "pump_frequency_hz": 48.5,
+      "pump_count": 2,
+      "fan_frequency_hz": 47.0,
+      "fan_count": 2,
+      "achieved_t5": 35.0,
+      "achieved_t6": 43.0,
+      "power_consumption_kw": 245.0,
+      "savings_percent": 47.0,
+      "performance_score": 96.0
+    },
+    "created_at": "2025-10-07T10:02:05.380654",
+    "last_used": "2025-10-07T10:02:05.380654",
+    "usage_count": 1,
+    "success_rate": 1.0
+  },
+  {
+    "scenario_id": "temperate_20251007_100205",
+    "scenario_type": "temperate",
+    "condition": {
+      "seawater_temp_range": [
+        26.0,
+        30.0
+      ],
+      "outside_air_temp_range": [
+        28.0,
+        32.0
+      ],
+      "engine_load_range": [
+        45.0,
+        55.0
+      ],
+      "ship_speed_range": [
+        14.0,
+        16.0
+      ],
+      "season": null,
+      "latitude_range": null,
+      "longitude_range": null
+    },
+    "solution": {
+      "pump_frequency_hz": 48.5,
+      "pump_count": 2,
+      "fan_frequency_hz": 47.0,
+      "fan_count": 2,
+      "achieved_t5": 35.0,
+      "achieved_t6": 43.0,
+      "power_consumption_kw": 245.0,
+      "savings_percent": 47.0,
+      "performance_score": 96.0
+    },
+    "created_at": "2025-10-07T10:02:05.384992",
+    "last_used": "2025-10-07T10:02:05.384992",
+    "usage_count": 1,
+    "success_rate": 1.0
+  },
+  {
+    "scenario_id": "temperate_20251007_100205",
+    "scenario_type": "temperate",
+    "condition": {
+      "seawater_temp_range": [
+        26.0,
+        30.0
+      ],
+      "outside_air_temp_range": [
+        28.0,
+        32.0
+      ],
+      "engine_load_range": [
+        45.0,
+        55.0
+      ],
+      "ship_speed_range": [
+        14.0,
+        16.0
+      ],
+      "season": null,
+      "latitude_range": null,
+      "longitude_range": null
+    },
+    "solution": {
+      "pump_frequency_hz": 48.5,
+      "pump_count": 2,
+      "fan_frequency_hz": 47.0,
+      "fan_count": 2,
+      "achieved_t5": 35.0,
+      "achieved_t6": 43.0,
+      "power_consumption_kw": 245.0,
+      "savings_percent": 47.0,
+      "performance_score": 96.0
+    },
+    "created_at": "2025-10-07T10:02:05.389579",
+    "last_used": "2025-10-07T10:02:05.389580",
+    "usage_count": 1,
+    "success_rate": 1.0
+  },
+  {
+    "scenario_id": "temperate_20251007_100205",
+    "scenario_type": "temperate",
+    "condition": {
+      "seawater_temp_range": [
+        26.0,
+        30.0
+      ],
+      "outside_air_temp_range": [
+        28.0,
+        32.0
+      ],
+      "engine_load_range": [
+        45.0,
+        55.0
+      ],
+      "ship_speed_range": [
+        14.0,
+        16.0
+      ],
+      "season": null,
+      "latitude_range": null,
+      "longitude_range": null
+    },
+    "solution": {
+      "pump_frequency_hz": 48.5,
+      "pump_count": 2,
+      "fan_frequency_hz": 47.0,
+      "fan_count": 2,
+      "achieved_t5": 35.0,
+      "achieved_t6": 43.0,
+      "power_consumption_kw": 245.0,
+      "savings_percent": 47.0,
+      "performance_score": 96.0
+    },
+    "created_at": "2025-10-07T10:02:05.393985",
+    "last_used": "2025-10-07T10:02:05.393985",
+    "usage_count": 1,
+    "success_rate": 1.0
+  },
+  {
+    "scenario_id": "temperate_20251007_100205",
+    "scenario_type": "temperate",
+    "condition": {
+      "seawater_temp_range": [
+        26.0,
+        30.0
+      ],
+      "outside_air_temp_range": [
+        28.0,
+        32.0
+      ],
+      "engine_load_range": [
+        45.0,
+        55.0
+      ],
+      "ship_speed_range": [
+        14.0,
+        16.0
+      ],
+      "season": null,
+      "latitude_range": null,
+      "longitude_range": null
+    },
+    "solution": {
+      "pump_frequency_hz": 48.5,
+      "pump_count": 2,
+      "fan_frequency_hz": 47.0,
+      "fan_count": 2,
+      "achieved_t5": 35.0,
+      "achieved_t6": 43.0,
+      "power_consumption_kw": 245.0,
+      "savings_percent": 47.0,
+      "performance_score": 96.0
+    },
+    "created_at": "2025-10-07T10:02:05.398463",
+    "last_used": "2025-10-07T10:02:05.398463",
+    "usage_count": 1,
+    "success_rate": 1.0
+  },
+  {
+    "scenario_id": "temperate_20251007_100205",
+    "scenario_type": "temperate",
+    "condition": {
+      "seawater_temp_range": [
+        26.0,
+        30.0
+      ],
+      "outside_air_temp_range": [
+        28.0,
+        32.0
+      ],
+      "engine_load_range": [
+        45.0,
+        55.0
+      ],
+      "ship_speed_range": [
+        14.0,
+        16.0
+      ],
+      "season": null,
+      "latitude_range": null,
+      "longitude_range": null
+    },
+    "solution": {
+      "pump_frequency_hz": 48.5,
+      "pump_count": 2,
+      "fan_frequency_hz": 47.0,
+      "fan_count": 2,
+      "achieved_t5": 35.0,
+      "achieved_t6": 43.0,
+      "power_consumption_kw": 245.0,
+      "savings_percent": 47.0,
+      "performance_score": 96.0
+    },
+    "created_at": "2025-10-07T10:02:05.403410",
+    "last_used": "2025-10-07T10:02:05.403411",
+    "usage_count": 1,
+    "success_rate": 1.0
+  },
+  {
+    "scenario_id": "temperate_20251007_100205",
+    "scenario_type": "temperate",
+    "condition": {
+      "seawater_temp_range": [
+        26.0,
+        30.0
+      ],
+      "outside_air_temp_range": [
+        28.0,
+        32.0
+      ],
+      "engine_load_range": [
+        45.0,
+        55.0
+      ],
+      "ship_speed_range": [
+        14.0,
+        16.0
+      ],
+      "season": null,
+      "latitude_range": null,
+      "longitude_range": null
+    },
+    "solution": {
+      "pump_frequency_hz": 48.5,
+      "pump_count": 2,
+      "fan_frequency_hz": 47.0,
+      "fan_count": 2,
+      "achieved_t5": 35.0,
+      "achieved_t6": 43.0,
+      "power_consumption_kw": 245.0,
+      "savings_percent": 47.0,
+      "performance_score": 96.0
+    },
+    "created_at": "2025-10-07T10:02:05.408130",
+    "last_used": "2025-10-07T10:02:05.408131",
+    "usage_count": 1,
+    "success_rate": 1.0
+  },
+  {
+    "scenario_id": "temperate_20251007_100205",
+    "scenario_type": "temperate",
+    "condition": {
+      "seawater_temp_range": [
+        26.0,
+        30.0
+      ],
+      "outside_air_temp_range": [
+        28.0,
+        32.0
+      ],
+      "engine_load_range": [
+        45.0,
+        55.0
+      ],
+      "ship_speed_range": [
+        14.0,
+        16.0
+      ],
+      "season": null,
+      "latitude_range": null,
+      "longitude_range": null
+    },
+    "solution": {
+      "pump_frequency_hz": 48.5,
+      "pump_count": 2,
+      "fan_frequency_hz": 47.0,
+      "fan_count": 2,
+      "achieved_t5": 35.0,
+      "achieved_t6": 43.0,
+      "power_consumption_kw": 245.0,
+      "savings_percent": 47.0,
+      "performance_score": 96.0
+    },
+    "created_at": "2025-10-07T10:02:05.412773",
+    "last_used": "2025-10-07T10:02:05.412773",
+    "usage_count": 1,
+    "success_rate": 1.0
+  },
+  {
+    "scenario_id": "temperate_20251007_100205",
+    "scenario_type": "temperate",
+    "condition": {
+      "seawater_temp_range": [
+        26.0,
+        30.0
+      ],
+      "outside_air_temp_range": [
+        28.0,
+        32.0
+      ],
+      "engine_load_range": [
+        45.0,
+        55.0
+      ],
+      "ship_speed_range": [
+        14.0,
+        16.0
+      ],
+      "season": null,
+      "latitude_range": null,
+      "longitude_range": null
+    },
+    "solution": {
+      "pump_frequency_hz": 48.5,
+      "pump_count": 2,
+      "fan_frequency_hz": 47.0,
+      "fan_count": 2,
+      "achieved_t5": 35.0,
+      "achieved_t6": 43.0,
+      "power_consumption_kw": 245.0,
+      "savings_percent": 47.0,
+      "performance_score": 96.0
+    },
+    "created_at": "2025-10-07T10:02:05.417375",
+    "last_used": "2025-10-07T10:02:05.417375",
+    "usage_count": 1,
+    "success_rate": 1.0
+  },
+  {
+    "scenario_id": "temperate_20251007_100205",
+    "scenario_type": "temperate",
+    "condition": {
+      "seawater_temp_range": [
+        26.0,
+        30.0
+      ],
+      "outside_air_temp_range": [
+        28.0,
+        32.0
+      ],
+      "engine_load_range": [
+        45.0,
+        55.0
+      ],
+      "ship_speed_range": [
+        14.0,
+        16.0
+      ],
+      "season": null,
+      "latitude_range": null,
+      "longitude_range": null
+    },
+    "solution": {
+      "pump_frequency_hz": 48.5,
+      "pump_count": 2,
+      "fan_frequency_hz": 47.0,
+      "fan_count": 2,
+      "achieved_t5": 35.0,
+      "achieved_t6": 43.0,
+      "power_consumption_kw": 245.0,
+      "savings_percent": 47.0,
+      "performance_score": 96.0
+    },
+    "created_at": "2025-10-07T10:02:05.422649",
+    "last_used": "2025-10-07T10:02:05.422649",
+    "usage_count": 1,
+    "success_rate": 1.0
+  },
+  {
+    "scenario_id": "temperate_20251007_100205",
+    "scenario_type": "temperate",
+    "condition": {
+      "seawater_temp_range": [
+        26.0,
+        30.0
+      ],
+      "outside_air_temp_range": [
+        28.0,
+        32.0
+      ],
+      "engine_load_range": [
+        45.0,
+        55.0
+      ],
+      "ship_speed_range": [
+        14.0,
+        16.0
+      ],
+      "season": null,
+      "latitude_range": null,
+      "longitude_range": null
+    },
+    "solution": {
+      "pump_frequency_hz": 48.5,
+      "pump_count": 2,
+      "fan_frequency_hz": 47.0,
+      "fan_count": 2,
+      "achieved_t5": 35.0,
+      "achieved_t6": 43.0,
+      "power_consumption_kw": 245.0,
+      "savings_percent": 47.0,
+      "performance_score": 96.0
+    },
+    "created_at": "2025-10-07T10:02:05.427452",
+    "last_used": "2025-10-07T10:02:05.427452",
+    "usage_count": 1,
+    "success_rate": 1.0
+  },
+  {
+    "scenario_id": "temperate_20251007_100205",
+    "scenario_type": "temperate",
+    "condition": {
+      "seawater_temp_range": [
+        26.0,
+        30.0
+      ],
+      "outside_air_temp_range": [
+        28.0,
+        32.0
+      ],
+      "engine_load_range": [
+        45.0,
+        55.0
+      ],
+      "ship_speed_range": [
+        14.0,
+        16.0
+      ],
+      "season": null,
+      "latitude_range": null,
+      "longitude_range": null
+    },
+    "solution": {
+      "pump_frequency_hz": 48.5,
+      "pump_count": 2,
+      "fan_frequency_hz": 47.0,
+      "fan_count": 2,
+      "achieved_t5": 35.0,
+      "achieved_t6": 43.0,
+      "power_consumption_kw": 245.0,
+      "savings_percent": 47.0,
+      "performance_score": 96.0
+    },
+    "created_at": "2025-10-07T10:02:05.432198",
+    "last_used": "2025-10-07T10:02:05.432198",
+    "usage_count": 1,
+    "success_rate": 1.0
+  },
+  {
+    "scenario_id": "temperate_20251007_100205",
+    "scenario_type": "temperate",
+    "condition": {
+      "seawater_temp_range": [
+        26.0,
+        30.0
+      ],
+      "outside_air_temp_range": [
+        28.0,
+        32.0
+      ],
+      "engine_load_range": [
+        45.0,
+        55.0
+      ],
+      "ship_speed_range": [
+        14.0,
+        16.0
+      ],
+      "season": null,
+      "latitude_range": null,
+      "longitude_range": null
+    },
+    "solution": {
+      "pump_frequency_hz": 48.5,
+      "pump_count": 2,
+      "fan_frequency_hz": 47.0,
+      "fan_count": 2,
+      "achieved_t5": 35.0,
+      "achieved_t6": 43.0,
+      "power_consumption_kw": 245.0,
+      "savings_percent": 47.0,
+      "performance_score": 96.0
+    },
+    "created_at": "2025-10-07T10:02:05.437737",
+    "last_used": "2025-10-07T10:02:05.437738",
+    "usage_count": 1,
+    "success_rate": 1.0
+  },
+  {
+    "scenario_id": "temperate_20251007_100205",
+    "scenario_type": "temperate",
+    "condition": {
+      "seawater_temp_range": [
+        26.0,
+        30.0
+      ],
+      "outside_air_temp_range": [
+        28.0,
+        32.0
+      ],
+      "engine_load_range": [
+        45.0,
+        55.0
+      ],
+      "ship_speed_range": [
+        14.0,
+        16.0
+      ],
+      "season": null,
+      "latitude_range": null,
+      "longitude_range": null
+    },
+    "solution": {
+      "pump_frequency_hz": 48.5,
+      "pump_count": 2,
+      "fan_frequency_hz": 47.0,
+      "fan_count": 2,
+      "achieved_t5": 35.0,
+      "achieved_t6": 43.0,
+      "power_consumption_kw": 245.0,
+      "savings_percent": 47.0,
+      "performance_score": 96.0
+    },
+    "created_at": "2025-10-07T10:02:05.443075",
+    "last_used": "2025-10-07T10:02:05.443075",
+    "usage_count": 1,
+    "success_rate": 1.0
+  },
+  {
+    "scenario_id": "temperate_20251007_100205",
+    "scenario_type": "temperate",
+    "condition": {
+      "seawater_temp_range": [
+        26.0,
+        30.0
+      ],
+      "outside_air_temp_range": [
+        28.0,
+        32.0
+      ],
+      "engine_load_range": [
+        45.0,
+        55.0
+      ],
+      "ship_speed_range": [
+        14.0,
+        16.0
+      ],
+      "season": null,
+      "latitude_range": null,
+      "longitude_range": null
+    },
+    "solution": {
+      "pump_frequency_hz": 48.5,
+      "pump_count": 2,
+      "fan_frequency_hz": 47.0,
+      "fan_count": 2,
+      "achieved_t5": 35.0,
+      "achieved_t6": 43.0,
+      "power_consumption_kw": 245.0,
+      "savings_percent": 47.0,
+      "performance_score": 96.0
+    },
+    "created_at": "2025-10-07T10:02:05.447966",
+    "last_used": "2025-10-07T10:02:05.447966",
+    "usage_count": 1,
+    "success_rate": 1.0
+  },
+  {
+    "scenario_id": "temperate_20251007_100205",
+    "scenario_type": "temperate",
+    "condition": {
+      "seawater_temp_range": [
+        26.0,
+        30.0
+      ],
+      "outside_air_temp_range": [
+        28.0,
+        32.0
+      ],
+      "engine_load_range": [
+        45.0,
+        55.0
+      ],
+      "ship_speed_range": [
+        14.0,
+        16.0
+      ],
+      "season": null,
+      "latitude_range": null,
+      "longitude_range": null
+    },
+    "solution": {
+      "pump_frequency_hz": 48.5,
+      "pump_count": 2,
+      "fan_frequency_hz": 47.0,
+      "fan_count": 2,
+      "achieved_t5": 35.0,
+      "achieved_t6": 43.0,
+      "power_consumption_kw": 245.0,
+      "savings_percent": 47.0,
+      "performance_score": 96.0
+    },
+    "created_at": "2025-10-07T10:02:05.453690",
+    "last_used": "2025-10-07T10:02:05.453690",
+    "usage_count": 1,
+    "success_rate": 1.0
+  },
+  {
+    "scenario_id": "temperate_20251007_100205",
+    "scenario_type": "temperate",
+    "condition": {
+      "seawater_temp_range": [
+        26.0,
+        30.0
+      ],
+      "outside_air_temp_range": [
+        28.0,
+        32.0
+      ],
+      "engine_load_range": [
+        45.0,
+        55.0
+      ],
+      "ship_speed_range": [
+        14.0,
+        16.0
+      ],
+      "season": null,
+      "latitude_range": null,
+      "longitude_range": null
+    },
+    "solution": {
+      "pump_frequency_hz": 48.5,
+      "pump_count": 2,
+      "fan_frequency_hz": 47.0,
+      "fan_count": 2,
+      "achieved_t5": 35.0,
+      "achieved_t6": 43.0,
+      "power_consumption_kw": 245.0,
+      "savings_percent": 47.0,
+      "performance_score": 96.0
+    },
+    "created_at": "2025-10-07T10:02:05.458808",
+    "last_used": "2025-10-07T10:02:05.458809",
+    "usage_count": 1,
+    "success_rate": 1.0
+  },
+  {
+    "scenario_id": "temperate_20251007_100205",
+    "scenario_type": "temperate",
+    "condition": {
+      "seawater_temp_range": [
+        26.0,
+        30.0
+      ],
+      "outside_air_temp_range": [
+        28.0,
+        32.0
+      ],
+      "engine_load_range": [
+        45.0,
+        55.0
+      ],
+      "ship_speed_range": [
+        14.0,
+        16.0
+      ],
+      "season": null,
+      "latitude_range": null,
+      "longitude_range": null
+    },
+    "solution": {
+      "pump_frequency_hz": 48.5,
+      "pump_count": 2,
+      "fan_frequency_hz": 47.0,
+      "fan_count": 2,
+      "achieved_t5": 35.0,
+      "achieved_t6": 43.0,
+      "power_consumption_kw": 245.0,
+      "savings_percent": 47.0,
+      "performance_score": 96.0
+    },
+    "created_at": "2025-10-07T10:02:05.463732",
+    "last_used": "2025-10-07T10:02:05.463732",
+    "usage_count": 1,
+    "success_rate": 1.0
+  },
+  {
+    "scenario_id": "temperate_20251007_100205",
+    "scenario_type": "temperate",
+    "condition": {
+      "seawater_temp_range": [
+        26.0,
+        30.0
+      ],
+      "outside_air_temp_range": [
+        28.0,
+        32.0
+      ],
+      "engine_load_range": [
+        45.0,
+        55.0
+      ],
+      "ship_speed_range": [
+        14.0,
+        16.0
+      ],
+      "season": null,
+      "latitude_range": null,
+      "longitude_range": null
+    },
+    "solution": {
+      "pump_frequency_hz": 48.5,
+      "pump_count": 2,
+      "fan_frequency_hz": 47.0,
+      "fan_count": 2,
+      "achieved_t5": 35.0,
+      "achieved_t6": 43.0,
+      "power_consumption_kw": 245.0,
+      "savings_percent": 47.0,
+      "performance_score": 96.0
+    },
+    "created_at": "2025-10-07T10:02:05.468955",
+    "last_used": "2025-10-07T10:02:05.468955",
+    "usage_count": 1,
+    "success_rate": 1.0
+  },
+  {
+    "scenario_id": "temperate_20251007_100205",
+    "scenario_type": "temperate",
+    "condition": {
+      "seawater_temp_range": [
+        26.0,
+        30.0
+      ],
+      "outside_air_temp_range": [
+        28.0,
+        32.0
+      ],
+      "engine_load_range": [
+        45.0,
+        55.0
+      ],
+      "ship_speed_range": [
+        14.0,
+        16.0
+      ],
+      "season": null,
+      "latitude_range": null,
+      "longitude_range": null
+    },
+    "solution": {
+      "pump_frequency_hz": 48.5,
+      "pump_count": 2,
+      "fan_frequency_hz": 47.0,
+      "fan_count": 2,
+      "achieved_t5": 35.0,
+      "achieved_t6": 43.0,
+      "power_consumption_kw": 245.0,
+      "savings_percent": 47.0,
+      "performance_score": 96.0
+    },
+    "created_at": "2025-10-07T10:02:05.474220",
+    "last_used": "2025-10-07T10:02:05.474220",
+    "usage_count": 1,
+    "success_rate": 1.0
+  },
+  {
+    "scenario_id": "temperate_20251007_100205",
+    "scenario_type": "temperate",
+    "condition": {
+      "seawater_temp_range": [
+        26.0,
+        30.0
+      ],
+      "outside_air_temp_range": [
+        28.0,
+        32.0
+      ],
+      "engine_load_range": [
+        45.0,
+        55.0
+      ],
+      "ship_speed_range": [
+        14.0,
+        16.0
+      ],
+      "season": null,
+      "latitude_range": null,
+      "longitude_range": null
+    },
+    "solution": {
+      "pump_frequency_hz": 48.5,
+      "pump_count": 2,
+      "fan_frequency_hz": 47.0,
+      "fan_count": 2,
+      "achieved_t5": 35.0,
+      "achieved_t6": 43.0,
+      "power_consumption_kw": 245.0,
+      "savings_percent": 47.0,
+      "performance_score": 96.0
+    },
+    "created_at": "2025-10-07T10:02:05.479314",
+    "last_used": "2025-10-07T10:02:05.479315",
+    "usage_count": 1,
+    "success_rate": 1.0
+  },
+  {
+    "scenario_id": "temperate_20251007_100205",
+    "scenario_type": "temperate",
+    "condition": {
+      "seawater_temp_range": [
+        26.0,
+        30.0
+      ],
+      "outside_air_temp_range": [
+        28.0,
+        32.0
+      ],
+      "engine_load_range": [
+        45.0,
+        55.0
+      ],
+      "ship_speed_range": [
+        14.0,
+        16.0
+      ],
+      "season": null,
+      "latitude_range": null,
+      "longitude_range": null
+    },
+    "solution": {
+      "pump_frequency_hz": 48.5,
+      "pump_count": 2,
+      "fan_frequency_hz": 47.0,
+      "fan_count": 2,
+      "achieved_t5": 35.0,
+      "achieved_t6": 43.0,
+      "power_consumption_kw": 245.0,
+      "savings_percent": 47.0,
+      "performance_score": 96.0
+    },
+    "created_at": "2025-10-07T10:02:05.485015",
+    "last_used": "2025-10-07T10:02:05.485015",
+    "usage_count": 1,
+    "success_rate": 1.0
+  },
+  {
+    "scenario_id": "temperate_20251007_100205",
+    "scenario_type": "temperate",
+    "condition": {
+      "seawater_temp_range": [
+        26.0,
+        30.0
+      ],
+      "outside_air_temp_range": [
+        28.0,
+        32.0
+      ],
+      "engine_load_range": [
+        45.0,
+        55.0
+      ],
+      "ship_speed_range": [
+        14.0,
+        16.0
+      ],
+      "season": null,
+      "latitude_range": null,
+      "longitude_range": null
+    },
+    "solution": {
+      "pump_frequency_hz": 48.5,
+      "pump_count": 2,
+      "fan_frequency_hz": 47.0,
+      "fan_count": 2,
+      "achieved_t5": 35.0,
+      "achieved_t6": 43.0,
+      "power_consumption_kw": 245.0,
+      "savings_percent": 47.0,
+      "performance_score": 96.0
+    },
+    "created_at": "2025-10-07T10:02:05.490288",
+    "last_used": "2025-10-07T10:02:05.490288",
+    "usage_count": 1,
+    "success_rate": 1.0
+  },
+  {
+    "scenario_id": "temperate_20251007_100205",
+    "scenario_type": "temperate",
+    "condition": {
+      "seawater_temp_range": [
+        26.0,
+        30.0
+      ],
+      "outside_air_temp_range": [
+        28.0,
+        32.0
+      ],
+      "engine_load_range": [
+        45.0,
+        55.0
+      ],
+      "ship_speed_range": [
+        14.0,
+        16.0
+      ],
+      "season": null,
+      "latitude_range": null,
+      "longitude_range": null
+    },
+    "solution": {
+      "pump_frequency_hz": 48.5,
+      "pump_count": 2,
+      "fan_frequency_hz": 47.0,
+      "fan_count": 2,
+      "achieved_t5": 35.0,
+      "achieved_t6": 43.0,
+      "power_consumption_kw": 245.0,
+      "savings_percent": 47.0,
+      "performance_score": 96.0
+    },
+    "created_at": "2025-10-07T10:02:05.495503",
+    "last_used": "2025-10-07T10:02:05.495503",
+    "usage_count": 1,
+    "success_rate": 1.0
+  },
+  {
+    "scenario_id": "temperate_20251007_100205",
+    "scenario_type": "temperate",
+    "condition": {
+      "seawater_temp_range": [
+        26.0,
+        30.0
+      ],
+      "outside_air_temp_range": [
+        28.0,
+        32.0
+      ],
+      "engine_load_range": [
+        45.0,
+        55.0
+      ],
+      "ship_speed_range": [
+        14.0,
+        16.0
+      ],
+      "season": null,
+      "latitude_range": null,
+      "longitude_range": null
+    },
+    "solution": {
+      "pump_frequency_hz": 48.5,
+      "pump_count": 2,
+      "fan_frequency_hz": 47.0,
+      "fan_count": 2,
+      "achieved_t5": 35.0,
+      "achieved_t6": 43.0,
+      "power_consumption_kw": 245.0,
+      "savings_percent": 47.0,
+      "performance_score": 96.0
+    },
+    "created_at": "2025-10-07T10:02:05.501025",
+    "last_used": "2025-10-07T10:02:05.501025",
+    "usage_count": 1,
+    "success_rate": 1.0
+  },
+  {
+    "scenario_id": "temperate_20251007_100205",
+    "scenario_type": "temperate",
+    "condition": {
+      "seawater_temp_range": [
+        26.0,
+        30.0
+      ],
+      "outside_air_temp_range": [
+        28.0,
+        32.0
+      ],
+      "engine_load_range": [
+        45.0,
+        55.0
+      ],
+      "ship_speed_range": [
+        14.0,
+        16.0
+      ],
+      "season": null,
+      "latitude_range": null,
+      "longitude_range": null
+    },
+    "solution": {
+      "pump_frequency_hz": 48.5,
+      "pump_count": 2,
+      "fan_frequency_hz": 47.0,
+      "fan_count": 2,
+      "achieved_t5": 35.0,
+      "achieved_t6": 43.0,
+      "power_consumption_kw": 245.0,
+      "savings_percent": 47.0,
+      "performance_score": 96.0
+    },
+    "created_at": "2025-10-07T10:02:05.506495",
+    "last_used": "2025-10-07T10:02:05.506495",
+    "usage_count": 1,
+    "success_rate": 1.0
+  },
+  {
+    "scenario_id": "temperate_20251007_100205",
+    "scenario_type": "temperate",
+    "condition": {
+      "seawater_temp_range": [
+        26.0,
+        30.0
+      ],
+      "outside_air_temp_range": [
+        28.0,
+        32.0
+      ],
+      "engine_load_range": [
+        45.0,
+        55.0
+      ],
+      "ship_speed_range": [
+        14.0,
+        16.0
+      ],
+      "season": null,
+      "latitude_range": null,
+      "longitude_range": null
+    },
+    "solution": {
+      "pump_frequency_hz": 48.5,
+      "pump_count": 2,
+      "fan_frequency_hz": 47.0,
+      "fan_count": 2,
+      "achieved_t5": 35.0,
+      "achieved_t6": 43.0,
+      "power_consumption_kw": 245.0,
+      "savings_percent": 47.0,
+      "performance_score": 96.0
+    },
+    "created_at": "2025-10-07T10:02:05.511923",
+    "last_used": "2025-10-07T10:02:05.511923",
+    "usage_count": 1,
+    "success_rate": 1.0
+  },
+  {
+    "scenario_id": "temperate_20251007_100205",
+    "scenario_type": "temperate",
+    "condition": {
+      "seawater_temp_range": [
+        26.0,
+        30.0
+      ],
+      "outside_air_temp_range": [
+        28.0,
+        32.0
+      ],
+      "engine_load_range": [
+        45.0,
+        55.0
+      ],
+      "ship_speed_range": [
+        14.0,
+        16.0
+      ],
+      "season": null,
+      "latitude_range": null,
+      "longitude_range": null
+    },
+    "solution": {
+      "pump_frequency_hz": 48.5,
+      "pump_count": 2,
+      "fan_frequency_hz": 47.0,
+      "fan_count": 2,
+      "achieved_t5": 35.0,
+      "achieved_t6": 43.0,
+      "power_consumption_kw": 245.0,
+      "savings_percent": 47.0,
+      "performance_score": 96.0
+    },
+    "created_at": "2025-10-07T10:02:05.517591",
+    "last_used": "2025-10-07T10:02:05.517592",
+    "usage_count": 1,
+    "success_rate": 1.0
+  },
+  {
+    "scenario_id": "temperate_20251007_100205",
+    "scenario_type": "temperate",
+    "condition": {
+      "seawater_temp_range": [
+        26.0,
+        30.0
+      ],
+      "outside_air_temp_range": [
+        28.0,
+        32.0
+      ],
+      "engine_load_range": [
+        45.0,
+        55.0
+      ],
+      "ship_speed_range": [
+        14.0,
+        16.0
+      ],
+      "season": null,
+      "latitude_range": null,
+      "longitude_range": null
+    },
+    "solution": {
+      "pump_frequency_hz": 48.5,
+      "pump_count": 2,
+      "fan_frequency_hz": 47.0,
+      "fan_count": 2,
+      "achieved_t5": 35.0,
+      "achieved_t6": 43.0,
+      "power_consumption_kw": 245.0,
+      "savings_percent": 47.0,
+      "performance_score": 96.0
+    },
+    "created_at": "2025-10-07T10:02:05.523584",
+    "last_used": "2025-10-07T10:02:05.523584",
+    "usage_count": 1,
+    "success_rate": 1.0
+  },
+  {
+    "scenario_id": "temperate_20251007_100205",
+    "scenario_type": "temperate",
+    "condition": {
+      "seawater_temp_range": [
+        26.0,
+        30.0
+      ],
+      "outside_air_temp_range": [
+        28.0,
+        32.0
+      ],
+      "engine_load_range": [
+        45.0,
+        55.0
+      ],
+      "ship_speed_range": [
+        14.0,
+        16.0
+      ],
+      "season": null,
+      "latitude_range": null,
+      "longitude_range": null
+    },
+    "solution": {
+      "pump_frequency_hz": 48.5,
+      "pump_count": 2,
+      "fan_frequency_hz": 47.0,
+      "fan_count": 2,
+      "achieved_t5": 35.0,
+      "achieved_t6": 43.0,
+      "power_consumption_kw": 245.0,
+      "savings_percent": 47.0,
+      "performance_score": 96.0
+    },
+    "created_at": "2025-10-07T10:02:05.529177",
+    "last_used": "2025-10-07T10:02:05.529178",
+    "usage_count": 1,
+    "success_rate": 1.0
+  },
+  {
+    "scenario_id": "temperate_20251007_100205",
+    "scenario_type": "temperate",
+    "condition": {
+      "seawater_temp_range": [
+        26.0,
+        30.0
+      ],
+      "outside_air_temp_range": [
+        28.0,
+        32.0
+      ],
+      "engine_load_range": [
+        45.0,
+        55.0
+      ],
+      "ship_speed_range": [
+        14.0,
+        16.0
+      ],
+      "season": null,
+      "latitude_range": null,
+      "longitude_range": null
+    },
+    "solution": {
+      "pump_frequency_hz": 48.5,
+      "pump_count": 2,
+      "fan_frequency_hz": 47.0,
+      "fan_count": 2,
+      "achieved_t5": 35.0,
+      "achieved_t6": 43.0,
+      "power_consumption_kw": 245.0,
+      "savings_percent": 47.0,
+      "performance_score": 96.0
+    },
+    "created_at": "2025-10-07T10:02:05.535079",
+    "last_used": "2025-10-07T10:02:05.535079",
+    "usage_count": 1,
+    "success_rate": 1.0
+  },
+  {
+    "scenario_id": "temperate_20251007_100205",
+    "scenario_type": "temperate",
+    "condition": {
+      "seawater_temp_range": [
+        26.0,
+        30.0
+      ],
+      "outside_air_temp_range": [
+        28.0,
+        32.0
+      ],
+      "engine_load_range": [
+        45.0,
+        55.0
+      ],
+      "ship_speed_range": [
+        14.0,
+        16.0
+      ],
+      "season": null,
+      "latitude_range": null,
+      "longitude_range": null
+    },
+    "solution": {
+      "pump_frequency_hz": 48.5,
+      "pump_count": 2,
+      "fan_frequency_hz": 47.0,
+      "fan_count": 2,
+      "achieved_t5": 35.0,
+      "achieved_t6": 43.0,
+      "power_consumption_kw": 245.0,
+      "savings_percent": 47.0,
+      "performance_score": 96.0
+    },
+    "created_at": "2025-10-07T10:02:05.540936",
+    "last_used": "2025-10-07T10:02:05.540936",
+    "usage_count": 1,
+    "success_rate": 1.0
+  },
+  {
+    "scenario_id": "temperate_20251007_100205",
+    "scenario_type": "temperate",
+    "condition": {
+      "seawater_temp_range": [
+        26.0,
+        30.0
+      ],
+      "outside_air_temp_range": [
+        28.0,
+        32.0
+      ],
+      "engine_load_range": [
+        45.0,
+        55.0
+      ],
+      "ship_speed_range": [
+        14.0,
+        16.0
+      ],
+      "season": null,
+      "latitude_range": null,
+      "longitude_range": null
+    },
+    "solution": {
+      "pump_frequency_hz": 48.5,
+      "pump_count": 2,
+      "fan_frequency_hz": 47.0,
+      "fan_count": 2,
+      "achieved_t5": 35.0,
+      "achieved_t6": 43.0,
+      "power_consumption_kw": 245.0,
+      "savings_percent": 47.0,
+      "performance_score": 96.0
+    },
+    "created_at": "2025-10-07T10:02:05.546781",
+    "last_used": "2025-10-07T10:02:05.546781",
+    "usage_count": 1,
+    "success_rate": 1.0
+  },
+  {
+    "scenario_id": "temperate_20251007_100205",
+    "scenario_type": "temperate",
+    "condition": {
+      "seawater_temp_range": [
+        26.0,
+        30.0
+      ],
+      "outside_air_temp_range": [
+        28.0,
+        32.0
+      ],
+      "engine_load_range": [
+        45.0,
+        55.0
+      ],
+      "ship_speed_range": [
+        14.0,
+        16.0
+      ],
+      "season": null,
+      "latitude_range": null,
+      "longitude_range": null
+    },
+    "solution": {
+      "pump_frequency_hz": 48.5,
+      "pump_count": 2,
+      "fan_frequency_hz": 47.0,
+      "fan_count": 2,
+      "achieved_t5": 35.0,
+      "achieved_t6": 43.0,
+      "power_consumption_kw": 245.0,
+      "savings_percent": 47.0,
+      "performance_score": 96.0
+    },
+    "created_at": "2025-10-07T10:02:05.552671",
+    "last_used": "2025-10-07T10:02:05.552671",
+    "usage_count": 1,
+    "success_rate": 1.0
+  },
+  {
+    "scenario_id": "temperate_20251007_100205",
+    "scenario_type": "temperate",
+    "condition": {
+      "seawater_temp_range": [
+        26.0,
+        30.0
+      ],
+      "outside_air_temp_range": [
+        28.0,
+        32.0
+      ],
+      "engine_load_range": [
+        45.0,
+        55.0
+      ],
+      "ship_speed_range": [
+        14.0,
+        16.0
+      ],
+      "season": null,
+      "latitude_range": null,
+      "longitude_range": null
+    },
+    "solution": {
+      "pump_frequency_hz": 48.5,
+      "pump_count": 2,
+      "fan_frequency_hz": 47.0,
+      "fan_count": 2,
+      "achieved_t5": 35.0,
+      "achieved_t6": 43.0,
+      "power_consumption_kw": 245.0,
+      "savings_percent": 47.0,
+      "performance_score": 96.0
+    },
+    "created_at": "2025-10-07T10:02:05.558573",
+    "last_used": "2025-10-07T10:02:05.558573",
+    "usage_count": 1,
+    "success_rate": 1.0
+  },
+  {
+    "scenario_id": "temperate_20251007_100205",
+    "scenario_type": "temperate",
+    "condition": {
+      "seawater_temp_range": [
+        26.0,
+        30.0
+      ],
+      "outside_air_temp_range": [
+        28.0,
+        32.0
+      ],
+      "engine_load_range": [
+        45.0,
+        55.0
+      ],
+      "ship_speed_range": [
+        14.0,
+        16.0
+      ],
+      "season": null,
+      "latitude_range": null,
+      "longitude_range": null
+    },
+    "solution": {
+      "pump_frequency_hz": 48.5,
+      "pump_count": 2,
+      "fan_frequency_hz": 47.0,
+      "fan_count": 2,
+      "achieved_t5": 35.0,
+      "achieved_t6": 43.0,
+      "power_consumption_kw": 245.0,
+      "savings_percent": 47.0,
+      "performance_score": 96.0
+    },
+    "created_at": "2025-10-07T10:02:05.564639",
+    "last_used": "2025-10-07T10:02:05.564639",
+    "usage_count": 1,
+    "success_rate": 1.0
+  },
+  {
+    "scenario_id": "temperate_20251007_100205",
+    "scenario_type": "temperate",
+    "condition": {
+      "seawater_temp_range": [
+        26.0,
+        30.0
+      ],
+      "outside_air_temp_range": [
+        28.0,
+        32.0
+      ],
+      "engine_load_range": [
+        45.0,
+        55.0
+      ],
+      "ship_speed_range": [
+        14.0,
+        16.0
+      ],
+      "season": null,
+      "latitude_range": null,
+      "longitude_range": null
+    },
+    "solution": {
+      "pump_frequency_hz": 48.5,
+      "pump_count": 2,
+      "fan_frequency_hz": 47.0,
+      "fan_count": 2,
+      "achieved_t5": 35.0,
+      "achieved_t6": 43.0,
+      "power_consumption_kw": 245.0,
+      "savings_percent": 47.0,
+      "performance_score": 96.0
+    },
+    "created_at": "2025-10-07T10:02:05.570756",
+    "last_used": "2025-10-07T10:02:05.570756",
+    "usage_count": 1,
+    "success_rate": 1.0
+  },
+  {
+    "scenario_id": "temperate_20251007_100205",
+    "scenario_type": "temperate",
+    "condition": {
+      "seawater_temp_range": [
+        26.0,
+        30.0
+      ],
+      "outside_air_temp_range": [
+        28.0,
+        32.0
+      ],
+      "engine_load_range": [
+        45.0,
+        55.0
+      ],
+      "ship_speed_range": [
+        14.0,
+        16.0
+      ],
+      "season": null,
+      "latitude_range": null,
+      "longitude_range": null
+    },
+    "solution": {
+      "pump_frequency_hz": 48.5,
+      "pump_count": 2,
+      "fan_frequency_hz": 47.0,
+      "fan_count": 2,
+      "achieved_t5": 35.0,
+      "achieved_t6": 43.0,
+      "power_consumption_kw": 245.0,
+      "savings_percent": 47.0,
+      "performance_score": 96.0
+    },
+    "created_at": "2025-10-07T10:02:05.577021",
+    "last_used": "2025-10-07T10:02:05.577021",
+    "usage_count": 1,
+    "success_rate": 1.0
+  },
+  {
+    "scenario_id": "temperate_20251007_100205",
+    "scenario_type": "temperate",
+    "condition": {
+      "seawater_temp_range": [
+        26.0,
+        30.0
+      ],
+      "outside_air_temp_range": [
+        28.0,
+        32.0
+      ],
+      "engine_load_range": [
+        45.0,
+        55.0
+      ],
+      "ship_speed_range": [
+        14.0,
+        16.0
+      ],
+      "season": null,
+      "latitude_range": null,
+      "longitude_range": null
+    },
+    "solution": {
+      "pump_frequency_hz": 48.5,
+      "pump_count": 2,
+      "fan_frequency_hz": 47.0,
+      "fan_count": 2,
+      "achieved_t5": 35.0,
+      "achieved_t6": 43.0,
+      "power_consumption_kw": 245.0,
+      "savings_percent": 47.0,
+      "performance_score": 96.0
+    },
+    "created_at": "2025-10-07T10:02:05.583239",
+    "last_used": "2025-10-07T10:02:05.583239",
+    "usage_count": 1,
+    "success_rate": 1.0
+  }
+]
