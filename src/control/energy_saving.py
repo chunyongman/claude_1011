@@ -260,18 +260,18 @@ class EnergySavingController:
             "energy_savings": 절감 효과
         }
         """
-        # T4 기반 SW 펌프 제어
+        # T5 기반 SW 펌프 제어
         sw_strategy, sw_freq, sw_reason = self.decide_proactive_control(
-            temperatures['T4'],
+            temperatures['T5'],
             current_frequencies.get('sw_pump', 50.0),
-            "T4"
+            "T5"
         )
 
-        # T5 기반 FW 펌프 제어
+        # T4 기반 FW 펌프 제어
         fw_strategy, fw_freq, fw_reason = self.decide_proactive_control(
-            temperatures['T5'],
+            temperatures['T4'],
             current_frequencies.get('fw_pump', 50.0),
-            "T5"
+            "T4"
         )
 
         # T6 기반 E/R 팬 제어

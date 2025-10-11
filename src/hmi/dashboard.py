@@ -37,6 +37,7 @@ class Dashboard:
 
         if 'sensor_history' not in st.session_state:
             st.session_state.sensor_history = {
+                'T4': [],
                 'T5': [],
                 'T6': [],
                 'timestamps': []
@@ -103,6 +104,17 @@ class Dashboard:
                 color: white !important;
                 border-color: #66BB6A !important;
             }
+
+            /* 탭 중복 렌더링 방지 */
+            .stTabs [data-baseweb="tab-list"] {
+                gap: 8px;
+            }
+
+            .stTabs [data-baseweb="tab"] {
+                height: 50px;
+                white-space: pre-wrap;
+                background-color: transparent;
+            }
             </style>
         """, unsafe_allow_html=True)
 
@@ -146,9 +158,8 @@ class Dashboard:
         with tab7:
             self._render_vfd_diagnostics()
 
-        # 자동 새로고침 (1초) - 진행률 업데이트를 위해 필수
-        # 주의: st.rerun() 호출 시 탭이 메인 대시보드로 초기화됨
-        time.sleep(1)
+        # 자동 새로고침 (3초 간격으로 변경하여 렌더링 부담 감소)
+        time.sleep(3)
         st.rerun()
 
     def _render_sidebar(self):
@@ -168,35 +179,61 @@ class Dashboard:
 
         # 활성 알람 개수
         st.sidebar.markdown("---")
+        st.sidebar.subheader("📊 알람 현황")
+
         active_alarms = self.hmi_manager.get_active_alarms()
         critical_alarms = [a for a in active_alarms if a.priority == AlarmPriority.CRITICAL]
         warning_alarms = [a for a in active_alarms if a.priority == AlarmPriority.WARNING]
+        info_alarms = [a for a in active_alarms if a.priority == AlarmPriority.INFO]
 
         st.sidebar.metric("🔴 CRITICAL 알람", len(critical_alarms))
         st.sidebar.metric("🟡 WARNING 알람", len(warning_alarms))
-        st.sidebar.metric("🔵 INFO 알람", len(active_alarms) - len(critical_alarms) - len(warning_alarms))
+        st.sidebar.metric("🔵 INFO 이벤트", len(info_alarms))
 
     def _render_main_dashboard(self):
         """메인 대시보드 렌더링"""
         st.header("📊 실시간 시스템 모니터링")
 
-        # 4개 컬럼으로 주요 센서 표시
-        col1, col2, col3, col4 = st.columns(4)
+        # 핵심 입력 센서 (AI 제어 입력값)
+        st.markdown("### 🎯 핵심 입력 센서 (AI 제어)")
+        col1, col2, col3, col4, col5 = st.columns(5)
 
         # 시뮬레이션 데이터 (실제로는 data_collector에서 가져옴)
-        T5 = 35.2
-        T6 = 43.5
-        PX1 = 2.8
+        T4 = 38.2  # FW 입구 -> FW 펌프 제어 (48°C 이하 유지)
+        T5 = 35.2  # FW 출구 -> SW 펌프 제어 (34~36°C 유지)
+        T6 = 43.5  # E/R 온도 -> E/R 팬 제어
+        PX1 = 2.8  # SW 압력 -> 안전 제약
         engine_load = 75
 
         with col1:
-            st.metric("T5 (FW 출구)", f"{T5:.1f}°C", f"{T5-35:.1f}°C")
+            st.metric("⭐ T5 (FW 출구)", f"{T5:.1f}°C", "→ SW 펌프")
         with col2:
-            st.metric("T6 (E/R 온도)", f"{T6:.1f}°C", f"{T6-43:.1f}°C")
+            st.metric("⭐ T4 (FW 입구)", f"{T4:.1f}°C", "→ FW 펌프")
         with col3:
-            st.metric("PX1 (압력)", f"{PX1:.1f} bar", "정상")
+            st.metric("⭐ T6 (E/R 온도)", f"{T6:.1f}°C", "→ E/R 팬")
         with col4:
-            st.metric("엔진 부하", f"{engine_load}%", "")
+            st.metric("⭐ PX1 (압력)", f"{PX1:.1f} bar", "→ 안전")
+        with col5:
+            st.metric("⭐ 엔진 부하", f"{engine_load}%", "→ 전체")
+
+        # 추가 모니터링 센서
+        st.markdown("### 📡 추가 모니터링 센서")
+        col1, col2, col3, col4 = st.columns(4)
+
+        # 시뮬레이션 데이터
+        T1 = 28.5  # SW 입구 온도
+        T2 = 32.3  # No.1 Cooler SW 출구
+        T3 = 32.2  # No.2 Cooler SW 출구 (T2와 유사)
+        T7 = 25.0  # 외기 온도
+
+        with col1:
+            st.metric("T1 (SW 입구)", f"{T1:.1f}°C")
+        with col2:
+            st.metric("T2 (No.1 SW 출구)", f"{T2:.1f}°C")
+        with col3:
+            st.metric("T3 (No.2 SW 출구)", f"{T3:.1f}°C")
+        with col4:
+            st.metric("T7 (외기 온도)", f"{T7:.1f}°C")
 
         st.markdown("---")
 
@@ -224,18 +261,27 @@ class Dashboard:
         if len(st.session_state.sensor_history['timestamps']) == 0 or \
            (now - st.session_state.sensor_history['timestamps'][-1]).seconds >= 1:
 
+            st.session_state.sensor_history['T4'].append(38.0 + (len(st.session_state.sensor_history['T4']) % 10) * 0.15)
             st.session_state.sensor_history['T5'].append(35.0 + (len(st.session_state.sensor_history['T5']) % 10) * 0.1)
             st.session_state.sensor_history['T6'].append(43.0 + (len(st.session_state.sensor_history['T6']) % 10) * 0.1)
             st.session_state.sensor_history['timestamps'].append(now)
 
             # 최근 600개만 유지 (10분)
             if len(st.session_state.sensor_history['timestamps']) > 600:
+                st.session_state.sensor_history['T4'] = st.session_state.sensor_history['T4'][-600:]
                 st.session_state.sensor_history['T5'] = st.session_state.sensor_history['T5'][-600:]
                 st.session_state.sensor_history['T6'] = st.session_state.sensor_history['T6'][-600:]
                 st.session_state.sensor_history['timestamps'] = st.session_state.sensor_history['timestamps'][-600:]
 
         # 그래프 생성
         fig = go.Figure()
+
+        fig.add_trace(go.Scatter(
+            x=st.session_state.sensor_history['timestamps'],
+            y=st.session_state.sensor_history['T4'],
+            name='T4 (FW 입구)',
+            line=dict(color='green', width=2)
+        ))
 
         fig.add_trace(go.Scatter(
             x=st.session_state.sensor_history['timestamps'],
@@ -251,18 +297,29 @@ class Dashboard:
             line=dict(color='red', width=2)
         ))
 
-        # 목표 온도 라인
+        # 목표 온도 라인 (라벨 위치 조정하여 그래프와 겹치지 않게)
         fig.add_hline(y=35.0, line_dash="dash", line_color="blue",
-                     annotation_text="T5 목표 (35°C)")
+                     annotation_text="T5 목표 (35°C)",
+                     annotation_position="right")
         fig.add_hline(y=43.0, line_dash="dash", line_color="red",
-                     annotation_text="T6 목표 (43°C)")
+                     annotation_text="T6 목표 (43°C)",
+                     annotation_position="right")
+        fig.add_hline(y=48.0, line_dash="dash", line_color="orange",
+                     annotation_text="T4 한계 (48°C)",
+                     annotation_position="right")
 
         fig.update_layout(
-            height=300,
-            margin=dict(l=20, r=20, t=20, b=20),
+            height=350,
+            margin=dict(l=20, r=120, t=50, b=90),
             xaxis_title="시간",
             yaxis_title="온도 (°C)",
-            legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1)
+            legend=dict(
+                orientation="h",
+                yanchor="bottom",
+                y=-0.45,
+                xanchor="center",
+                x=0.5
+            )
         )
 
         st.plotly_chart(fig, use_container_width=True)
@@ -585,16 +642,15 @@ class Dashboard:
 
         fig.update_layout(
             height=400,
-            margin=dict(l=20, r=20, t=50, b=20),
+            margin=dict(l=20, r=20, t=20, b=90),
             xaxis_title="시간",
             yaxis_title="절감률 (%)",
             legend=dict(
                 orientation="h",
-                yanchor="top",
-                y=1.15,
+                yanchor="bottom",
+                y=-0.35,
                 xanchor="center",
-                x=0.5,
-                bgcolor="rgba(255, 255, 255, 0.8)"
+                x=0.5
             )
         )
 
@@ -813,6 +869,7 @@ class Dashboard:
 
         fig.update_layout(
             height=400,
+            margin=dict(l=20, r=20, t=20, b=90),
             xaxis_title="주차",
             yaxis_title="온도 예측 정확도 (%)",
             yaxis2=dict(
@@ -820,7 +877,13 @@ class Dashboard:
                 overlaying='y',
                 side='right'
             ),
-            legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1)
+            legend=dict(
+                orientation="h",
+                yanchor="bottom",
+                y=-0.35,
+                xanchor="center",
+                x=0.5
+            )
         )
 
         st.plotly_chart(fig, use_container_width=True)

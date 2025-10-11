@@ -22,7 +22,8 @@
       "Bash(taskkill:*)",
       "Bash(cmd /c taskkill:*)",
       "Bash(tasklist)",
-      "Bash(git checkout:*)"
+      "Bash(git checkout:*)",
+      "Bash(streamlit cache:*)"
     ],
     "deny": [],
     "ask": []

@@ -131,7 +131,7 @@ class IntegratedController:
             energy_decision['er_fan_freq']
         )
 
-        decision.fw_pump_freq = pid_output['sw_pump_freq']  # FW 펌프도 T5 기반
+        decision.fw_pump_freq = energy_decision['fw_pump_freq']  # FW 펌프는 T4 기반 (Energy Saving)
 
         decision.control_mode = "integrated_pid_energy"
         decision.reason = f"PID + 에너지 절감 통합 제어"

@@ -100,19 +100,20 @@ class HMIStateManager:
         self.alarms: List[Alarm] = []
         self.max_alarms = 100  # 최대 알람 저장 개수
 
-        # 학습 진행 상태
-        self.learning_progress = {
-            "temperature_prediction_accuracy": 0.0,
-            "optimization_accuracy": 0.0,
-            "average_energy_savings": 0.0,
-            "total_learning_hours": 0.0,
-            "last_learning_time": None
-        }
-
         # 시스템 시작 시간 (실제 운영 시 데이터베이스나 파일에서 로드)
         # 현재는 시뮬레이션: 8개월 전으로 설정
         self.system_start_time = datetime.now() - timedelta(days=8*30)  # 8개월 전
         self.deployment_date = datetime.now() - timedelta(days=8*30)  # 배포일
+
+        # 학습 진행 상태 (8개월 운영 기준 시뮬레이션 데이터)
+        # 실제 운영 시 데이터베이스나 ML 모듈에서 로드
+        self.learning_progress = {
+            "temperature_prediction_accuracy": 82.5,  # 8개월차: Stage 2 단계
+            "optimization_accuracy": 79.3,
+            "average_energy_savings": 49.8,
+            "total_learning_hours": 5760.0,  # 8개월 * 30일 * 24시간
+            "last_learning_time": datetime.now() - timedelta(hours=1)  # 1시간 전 마지막 학습
+        }
 
         # GPS 프로세서 초기화
         self.gps_processor = GPSProcessor()
