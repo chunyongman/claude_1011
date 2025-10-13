@@ -38,6 +38,7 @@ class SimulationScenarios:
         self.current_scenario: Optional[ScenarioConfig] = None
         self.scenario_start_time: Optional[datetime] = None
         self.elapsed_seconds: float = 0.0
+        self.time_multiplier: float = 1.0  # 시간 배율 (1.0 = 정상, 2.0 = 2배속, 5.0 = 5배속)
 
     def _create_scenarios(self) -> Dict[ScenarioType, ScenarioConfig]:
         """4가지 시나리오 생성"""
@@ -156,10 +157,11 @@ class SimulationScenarios:
 
     def _pressure_drop(self, t: float) -> float:
         """압력 저하"""
-        # 3분에 걸쳐 압력 하락
-        pressure_drop = min(0.8, (t / 180.0) * 0.8)
+        # 2분에 걸쳐 압력 하락 (2.0 bar → 0.7 bar)
+        # 120초 동안 1.3 bar 하락
+        pressure_drop = min(1.3, (t / 120.0) * 1.3)
         noise = np.random.normal(0, 0.05)
-        return max(1.0, 2.0 - pressure_drop + noise)
+        return max(0.5, 2.0 - pressure_drop + noise)  # 최소 0.5 bar까지 하락
 
     # ========== 부하 프로파일 ==========
 
@@ -180,8 +182,21 @@ class SimulationScenarios:
         self.current_scenario = self.scenarios[scenario_type]
         self.scenario_start_time = datetime.now()
         self.elapsed_seconds = 0.0
-        print(f"🎬 시나리오 시작: {self.current_scenario.name}")
-        print(f"   {self.current_scenario.description}")
+        try:
+            print(f"🎬 시나리오 시작: {self.current_scenario.name}")
+            print(f"   {self.current_scenario.description}")
+        except UnicodeEncodeError:
+            # Windows 터미널 인코딩 문제 대응
+            print(f"[시나리오 시작] {self.current_scenario.name}")
+            print(f"   {self.current_scenario.description}")
+
+    def set_time_multiplier(self, multiplier: float) -> None:
+        """시간 배율 설정"""
+        self.time_multiplier = max(0.1, min(10.0, multiplier))  # 0.1배 ~ 10배 제한
+
+    def get_time_multiplier(self) -> float:
+        """현재 시간 배율 반환"""
+        return self.time_multiplier
 
     def get_current_values(self) -> Dict[str, float]:
         """현재 센서 값 조회"""
@@ -189,9 +204,10 @@ class SimulationScenarios:
             # 기본값 (정상 운전)
             self.start_scenario(ScenarioType.NORMAL_OPERATION)
 
-        # 경과 시간 계산
+        # 경과 시간 계산 (시간 배율 적용)
         if self.scenario_start_time:
-            self.elapsed_seconds = (datetime.now() - self.scenario_start_time).total_seconds()
+            real_elapsed = (datetime.now() - self.scenario_start_time).total_seconds()
+            self.elapsed_seconds = real_elapsed * self.time_multiplier
 
         # 시나리오별 값 생성
         temps = self.current_scenario.temperature_profile(self.elapsed_seconds)

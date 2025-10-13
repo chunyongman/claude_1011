@@ -23,7 +23,11 @@
       "Bash(cmd /c taskkill:*)",
       "Bash(tasklist)",
       "Bash(git checkout:*)",
-      "Bash(streamlit cache:*)"
+      "Bash(streamlit cache:*)",
+      "Bash(dir:*)",
+      "Bash(set PYTHONIOENCODING=utf-8)",
+      "Bash(timeout:*)",
+      "Bash(cmd /c:*)"
     ],
     "deny": [],
     "ask": []
