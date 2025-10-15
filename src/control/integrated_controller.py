@@ -469,13 +469,14 @@ class IntegratedController:
             
             # 각 장비별 독립적으로 예측 보정 적용
             decision.sw_pump_freq = min(60.0, pid_output['sw_pump_freq'] + sw_adjustment)
-            decision.er_fan_freq = min(60.0, pid_output['er_fan_freq'] + fan_adjustment)
             # FW 펌프는 에너지 절감 제어 기반 (T4)
             energy_decision = self.energy_saving.evaluate_control_decision(
                 temperatures=temperatures,
                 current_frequencies=current_frequencies
             )
             decision.fw_pump_freq = min(60.0, energy_decision['fw_pump_freq'] + fw_adjustment)
+            # E/R 팬은 예측 보정 후 T6 온도 제어에서 최종 결정
+            decision.er_fan_freq = min(60.0, pid_output['er_fan_freq'] + fan_adjustment)
             
             decision.control_mode = "predictive_control"
             if reasons:
@@ -518,27 +519,12 @@ class IntegratedController:
         # 디버깅: PID 출력 확인
         print(f"[DEBUG] T6={t6_temp:.1f}°C, PID 출력 E/R 팬={decision.er_fan_freq:.1f}Hz (변경 전)")
 
-        # 현재 온도 기반 즉각 대응 (온도 우선!)
-        if t6_temp > 46.0:
-            # 46°C 초과: 60Hz 긴급
-            decision.er_fan_freq = 60.0
-            decision.control_mode = "emergency_t6"
-            decision.reason = f"🚨 T6={t6_temp:.1f}°C > 46°C → 60Hz 긴급!"
-        elif t6_temp > 45.0:
-            # 45-46°C: 최소 58Hz
-            old_freq = decision.er_fan_freq
-            decision.er_fan_freq = max(decision.er_fan_freq, 58.0)
-            print(f"[DEBUG] T6 > 45°C: {old_freq:.1f}Hz → {decision.er_fan_freq:.1f}Hz (max 58Hz)")
+        # 현재 온도 기반 즉각 대응 (최소 주파수만 보장, 최대값 제한 없음)
+        if t6_temp > 44.0:
+            # 44°C 초과: 최소 52Hz (PID가 60Hz 출력 가능)
+            decision.er_fan_freq = max(decision.er_fan_freq, 52.0)
             if not use_predictive:
                 decision.control_mode = "high_t6"
-                decision.reason = f"⚠️ T6={t6_temp:.1f}°C > 45°C → 최소 58Hz"
-        elif t6_temp > 44.0:
-            # 44-45°C: 최소 52Hz
-            old_freq = decision.er_fan_freq
-            decision.er_fan_freq = max(decision.er_fan_freq, 52.0)
-            print(f"[DEBUG] T6 > 44°C: {old_freq:.1f}Hz → {decision.er_fan_freq:.1f}Hz (max 52Hz)")
-            if not use_predictive:
-                decision.control_mode = "elevated_t6"
                 decision.reason = f"⚠️ T6={t6_temp:.1f}°C > 44°C → 최소 52Hz"
         elif t6_temp > 42.0:
             # 42-44°C: 최소 48Hz (정상 범위)
@@ -546,12 +532,21 @@ class IntegratedController:
             if not use_predictive and not decision.reason:
                 decision.control_mode = "normal_t6"
                 decision.reason = f"✅ T6={t6_temp:.1f}°C 정상 → 최소 48Hz"
-        elif t6_temp < 40.0:
-            # 40°C 미만: 주파수 감소 가능
-            decision.er_fan_freq = max(40.0, decision.er_fan_freq)  # 최소 40Hz
+        elif t6_temp >= 40.0:
+            # 40-42°C: 온도가 낮으므로 주파수 감소 (PID 출력 - 2Hz, 최소 40Hz)
+            # 이렇게 해야 대수 감소 조건(≤42Hz)을 충족할 수 있음
+            adjusted_freq = max(40.0, decision.er_fan_freq - 2.0)
+            decision.er_fan_freq = adjusted_freq
+            if not use_predictive and not decision.reason:
+                decision.control_mode = "normal_low_t6"
+                decision.reason = f"✅ T6={t6_temp:.1f}°C 정상(낮음) → {adjusted_freq:.0f}Hz"
+        else:
+            # 40°C 미만: 주파수 추가 감소 (PID 출력 - 4Hz, 최소 40Hz)
+            adjusted_freq = max(40.0, decision.er_fan_freq - 4.0)
+            decision.er_fan_freq = adjusted_freq
             if not use_predictive and not decision.reason:
                 decision.control_mode = "low_t6"
-                decision.reason = f"✅ T6={t6_temp:.1f}°C < 40°C → 감속 (최소 40Hz)"
+                decision.reason = f"✅ T6={t6_temp:.1f}°C < 40°C → {adjusted_freq:.0f}Hz 감속"
         
         print(f"[DEBUG] T6 제어 후 E/R 팬={decision.er_fan_freq:.1f}Hz (최종)")
 
@@ -593,17 +588,17 @@ class IntegratedController:
             # E/R 팬 대수 제어 로직 (실제 운전 기준)
             # ======================================================
             # 기본 원칙:
-            # 1. 주파수 52Hz 이상 → 대수 증가 검토 (부하 상승)
-            # 2. 주파수 42Hz 이하 → 대수 감소 검토 (부하 하강)
-            # 3. 42-52Hz 중간 대역 → 현재 대수 유지 (안정 운전)
+            # 1. 주파수 60Hz (최대) → 대수 증가 검토 (더 이상 주파수 상승 불가)
+            # 2. 주파수 40Hz (최소) → 대수 감소 검토 (더 이상 주파수 하강 불가)
+            # 3. 40-60Hz 중간 대역 → 현재 대수 유지 (주파수로 제어)
             # 4. 대수 변경 시 주파수 조정으로 풍량 급변 방지
             # ======================================================
 
-            # 대수 증가 조건: 주파수 ≥ 52Hz & 10초 지속
-            if decision.er_fan_freq >= 52.0:
+            # 대수 증가 조건: 주파수 ≥ 60Hz & 10초 지속
+            if decision.er_fan_freq >= 60.0:
                 if time_at_max >= 10 and current_count < 4:
                     decision.er_fan_count = current_count + 1
-                    decision.count_change_reason = f"✅ 52Hz 이상 지속 (T6={t6:.1f}°C) → 팬 {current_count}→{current_count + 1}대 증가"
+                    decision.count_change_reason = f"✅ 60Hz 최대 도달 (T6={t6:.1f}°C) → 팬 {current_count}→{current_count + 1}대 증가"
                     current_frequencies['time_at_max_freq'] = 0  # 리셋
                     # 대수 증가 후 주파수 감소 (전체 풍량 유지)
                     decision.er_fan_freq = max(45.0, decision.er_fan_freq - 8.0)
@@ -618,11 +613,11 @@ class IntegratedController:
                 # 최소 조건 타이머는 리셋
                 current_frequencies['time_at_min_freq'] = 0
             
-            # 대수 감소 조건: 주파수 ≤ 42Hz & 10초 지속
-            elif decision.er_fan_freq <= 42.0:
+            # 대수 감소 조건: 주파수 ≤ 40Hz & 10초 지속
+            elif decision.er_fan_freq <= 40.0:
                 if time_at_min >= 10 and current_count > 2:  # 최소 2대 유지
                     decision.er_fan_count = current_count - 1
-                    decision.count_change_reason = f"✅ 42Hz 이하 지속 (T6={t6:.1f}°C) → 팬 {current_count}→{current_count - 1}대 감소"
+                    decision.count_change_reason = f"✅ 40Hz 지속 (T6={t6:.1f}°C) → 팬 {current_count}→{current_count - 1}대 감소"
                     current_frequencies['time_at_min_freq'] = 0  # 리셋
                     # 대수 감소 후 주파수 증가 (전체 풍량 유지)
                     decision.er_fan_freq = min(48.0, decision.er_fan_freq + 8.0)
@@ -637,7 +632,7 @@ class IntegratedController:
                 # 최대 조건 타이머는 리셋
                 current_frequencies['time_at_max_freq'] = 0
             
-            # 중간 대역 (42-52Hz): 현재 대수 안정 유지
+            # 중간 대역 (40-60Hz): 현재 대수 안정 유지 (주파수로 제어)
             else:
                 decision.er_fan_count = current_count
                 current_frequencies['time_at_max_freq'] = 0

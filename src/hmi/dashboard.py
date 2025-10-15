@@ -88,11 +88,11 @@ class Dashboard:
 
         # IntegratedController 초기화 (예측 제어 활성화)
         # 강제 재초기화 (코드 수정 반영을 위해)
-        if 'controller_version' not in st.session_state or st.session_state.controller_version != 2:
+        if 'controller_version' not in st.session_state or st.session_state.controller_version != 3:
             st.session_state.integrated_controller = IntegratedController(
                 enable_predictive_control=True
             )
-            st.session_state.controller_version = 2  # 버전 업데이트 시 숫자 증가
+            st.session_state.controller_version = 3  # 버전 업데이트 시 숫자 증가
 
         self.hmi_manager: HMIStateManager = st.session_state.hmi_manager
         self.scenario_engine: SimulationScenarios = st.session_state.scenario_engine
