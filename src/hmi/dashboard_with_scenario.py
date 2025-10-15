@@ -4,6 +4,7 @@ Streamlit 기반 HMI 대시보드 (시나리오 통합 버전)
 """
 
 import streamlit as st
+from streamlit_autorefresh import st_autorefresh
 import time
 import pandas as pd
 import plotly.graph_objects as go
@@ -115,8 +116,7 @@ class DashboardWithScenario:
             self._render_performance_monitoring()
 
         # 자동 새로고침 (3초 간격)
-        time.sleep(3)
-        st.rerun()
+        st_autorefresh(interval=3000, limit=None, key="auto_refresh_dashboard_with_scenario")
 
     def _render_sidebar(self):
         """사이드바 렌더링"""

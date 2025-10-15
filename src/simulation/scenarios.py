@@ -16,6 +16,7 @@ class ScenarioType(Enum):
     HIGH_LOAD = "high_load"
     COOLING_FAILURE = "cooling_failure"
     PRESSURE_DROP = "pressure_drop"
+    ER_VENTILATION = "er_ventilation"  # E/R 환기 불량
 
 
 @dataclass
@@ -88,6 +89,17 @@ class SimulationScenarios:
             load_profile=self._normal_load
         )
 
+        # 5. E/R 환기 불량 (예측 기반 선제 제어: 3대 50Hz → 60Hz → 4대 → 주파수 감소 → 3대 복귀)
+        scenarios[ScenarioType.ER_VENTILATION] = ScenarioConfig(
+            name="E/R 환기 불량",
+            description="기관실 환기 불량, 예측 시스템이 온도 상승을 미리 감지하여 선제 대응 (3대 50Hz → 4대 60Hz → 3대 45Hz)",
+            scenario_type=ScenarioType.ER_VENTILATION,
+            duration_minutes=12,  # 전체 사이클 12분
+            temperature_profile=self._er_ventilation_temperature,
+            pressure_profile=self._normal_pressure,
+            load_profile=self._normal_load
+        )
+
         return scenarios
 
     # ========== 온도 프로파일 ==========
@@ -146,6 +158,68 @@ class SimulationScenarios:
             'T5': 33.0 + temp_spike * 0.7 + noise,  # FW 출구도 상승
             'T6': 43.0 + temp_spike * 1.2 + noise,  # E/R 온도 급상승
             'T7': 32.0 + noise
+        }
+
+    def _er_ventilation_temperature(self, t: float) -> Dict[str, float]:
+        """
+        E/R 환기 불량 온도 (예측 기반 선제 제어 시나리오)
+
+        초기 상태: 3대 50Hz, T6 = 43°C
+
+        Phase 1 (0-60초): 예측 단계 - T6 상승 시작 (42°C → 44°C)
+            AI 예측: 10분 후 46-47°C 예상 → 선제 증속 시작 (50Hz → 55Hz, 3대)
+
+        Phase 2 (60-150초): 온도 상승 지속 (44°C → 46°C)
+            T6 > 45°C 도달 → 주파수 최대화 (55Hz → 60Hz, 3대)
+            AI 재예측: 10분 후 48°C 예상
+
+        Phase 3 (150-180초): 추가 온도 상승 (46°C → 48°C)
+            60Hz 3대로도 불충분 → 대수 증가 (3대 → 4대, 60Hz)
+
+        Phase 4 (180-360초): 온도 안정 및 하강 시작 (48°C → 45°C)
+            AI 예측: 10분 후 41°C 예상 → 선제 감속 시작 (60Hz → 50Hz, 4대)
+
+        Phase 5 (360-480초): 주파수 계속 감소 (45°C → 42°C 미만)
+            T6 < 42°C 정상 범위 진입 → 주파수 감속 계속 (50Hz → 40Hz, 4대)
+
+        Phase 6 (480-540초): 대수 감소 (42°C 미만, 40Hz 도달)
+            40Hz 4대로도 충분 → 대수 감소 (4대 → 3대, 45Hz)
+
+        Phase 7 (540-720초): 안정 상태 복귀 (40~42°C)
+            최종 상태: 3대 45Hz, T6 = 40~42°C
+        """
+        noise = np.random.normal(0, 0.3)
+
+        if t <= 60:  # Phase 1 (0-1분): 예측 단계, 상승 시작 (42°C → 44°C)
+            t6_temp = 42.0 + (t / 60.0) * 2.0
+
+        elif t <= 150:  # Phase 2 (1-2.5분): 온도 상승 지속 (44°C → 46°C)
+            t6_temp = 44.0 + ((t - 60) / 90.0) * 2.0
+
+        elif t <= 180:  # Phase 3 (2.5-3분): 추가 온도 상승 (46°C → 48°C)
+            t6_temp = 46.0 + ((t - 150) / 30.0) * 2.0
+
+        elif t <= 360:  # Phase 4 (3-6분): 온도 안정 및 하강 시작 (48°C → 45°C)
+            t6_temp = 48.0 - ((t - 180) / 180.0) * 3.0
+
+        elif t <= 480:  # Phase 5 (6-8분): 주파수 계속 감소 (45°C → 41°C)
+            t6_temp = 45.0 - ((t - 360) / 120.0) * 4.0
+
+        elif t <= 540:  # Phase 6 (8-9분): 대수 감소 (41°C → 40°C)
+            t6_temp = 41.0 - ((t - 480) / 60.0) * 1.0
+
+        else:  # Phase 7 (9-12분): 안정 상태 복귀 (40~42°C)
+            # 40~42°C 사이에서 안정적으로 유지
+            t6_temp = 40.5 + np.sin((t - 540) / 30.0) * 0.5
+
+        return {
+            'T1': 28.0 + noise,  # 해수 입구 (정상)
+            'T2': 42.0 + noise,  # SW 출구 1 (정상)
+            'T3': 43.0 + noise,  # SW 출구 2 (정상)
+            'T4': 45.0 + noise,  # FW 입구 (정상)
+            'T5': 33.0 + noise,  # FW 출구 (정상)
+            'T6': t6_temp + noise,  # E/R 온도 (예측 기반 사이클)
+            'T7': 32.0 + noise   # 외기 (정상)
         }
 
     # ========== 압력 프로파일 ==========

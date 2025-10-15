@@ -16,18 +16,22 @@ class TemperaturePrediction:
     timestamp: datetime
 
     # 예측 시점
+    t4_current: float
     t5_current: float
     t6_current: float
 
     # 5분 후 예측
+    t4_pred_5min: float
     t5_pred_5min: float
     t6_pred_5min: float
 
     # 10분 후 예측
+    t4_pred_10min: float
     t5_pred_10min: float
     t6_pred_10min: float
 
     # 15분 후 예측
+    t4_pred_15min: float
     t5_pred_15min: float
     t6_pred_15min: float
 
@@ -88,6 +92,10 @@ class PolynomialRegressionPredictor:
         self.degree = degree
 
         # 모델 파라미터
+        self.t4_5min_coeffs: Optional[np.ndarray] = None
+        self.t4_10min_coeffs: Optional[np.ndarray] = None
+        self.t4_15min_coeffs: Optional[np.ndarray] = None
+
         self.t5_5min_coeffs: Optional[np.ndarray] = None
         self.t5_10min_coeffs: Optional[np.ndarray] = None
         self.t5_15min_coeffs: Optional[np.ndarray] = None
@@ -111,7 +119,8 @@ class PolynomialRegressionPredictor:
         """
         시퀀스에서 특징 추출
 
-        특징 벡터 (15개):
+        특징 벡터 (19개):
+        - T4 현재값, 평균, 표준편차, 증가율
         - T5 현재값, 평균, 표준편차, 증가율
         - T6 현재값, 평균, 표준편차, 증가율
         - 엔진부하 현재값, 평균, 증가율
@@ -122,7 +131,16 @@ class PolynomialRegressionPredictor:
         """
         features = []
 
-        # T5 특징
+        # T4 특징 (FW Inlet)
+        t4_arr = np.array(sequence.t4_sequence)
+        features.extend([
+            t4_arr[-1],  # 현재값
+            np.mean(t4_arr),  # 평균
+            np.std(t4_arr),  # 표준편차
+            (t4_arr[-1] - t4_arr[0]) / len(t4_arr)  # 증가율
+        ])
+
+        # T5 특징 (FW Outlet)
         t5_arr = np.array(sequence.t5_sequence)
         features.extend([
             t5_arr[-1],  # 현재값
@@ -131,7 +149,7 @@ class PolynomialRegressionPredictor:
             (t5_arr[-1] - t5_arr[0]) / len(t5_arr)  # 증가율
         ])
 
-        # T6 특징
+        # T6 특징 (E/R Temperature)
         t6_arr = np.array(sequence.t6_sequence)
         features.extend([
             t6_arr[-1],
@@ -174,10 +192,11 @@ class PolynomialRegressionPredictor:
             poly_features.append(X ** 2)
 
             # 주요 교차항만 선택 (모델 크기 최소화)
-            # T5 * 엔진부하, T6 * 엔진부하
-            cross_1 = (X[:, 0] * X[:, 8]).reshape(-1, 1)
-            cross_2 = (X[:, 4] * X[:, 8]).reshape(-1, 1)
-            poly_features.extend([cross_1, cross_2])
+            # T4 * 엔진부하, T5 * 엔진부하, T6 * 엔진부하
+            cross_1 = (X[:, 0] * X[:, 12]).reshape(-1, 1)  # T4 * 엔진부하
+            cross_2 = (X[:, 4] * X[:, 12]).reshape(-1, 1)  # T5 * 엔진부하
+            cross_3 = (X[:, 8] * X[:, 12]).reshape(-1, 1)  # T6 * 엔진부하
+            poly_features.extend([cross_1, cross_2, cross_3])
 
         return np.hstack(poly_features)
 
@@ -187,7 +206,8 @@ class PolynomialRegressionPredictor:
 
         Args:
             training_data: [(시퀀스, 실제값)] 리스트
-                실제값 = {'t5_5min': float, 't5_10min': float, 't5_15min': float,
+                실제값 = {'t4_5min': float, 't4_10min': float, 't4_15min': float,
+                          't5_5min': float, 't5_10min': float, 't5_15min': float,
                           't6_5min': float, 't6_10min': float, 't6_15min': float}
         """
         if len(training_data) < 50:
@@ -195,12 +215,17 @@ class PolynomialRegressionPredictor:
 
         # 특징 추출
         X_list = []
+        y_t4_5min, y_t4_10min, y_t4_15min = [], [], []
         y_t5_5min, y_t5_10min, y_t5_15min = [], [], []
         y_t6_5min, y_t6_10min, y_t6_15min = [], [], []
 
         for sequence, targets in training_data:
             features = self._extract_features(sequence)
             X_list.append(features)
+
+            y_t4_5min.append(targets['t4_5min'])
+            y_t4_10min.append(targets['t4_10min'])
+            y_t4_15min.append(targets['t4_15min'])
 
             y_t5_5min.append(targets['t5_5min'])
             y_t5_10min.append(targets['t5_10min'])
@@ -221,6 +246,10 @@ class PolynomialRegressionPredictor:
         X_poly = self._polynomial_features(X_norm)
 
         # 각 예측 시점별 회귀 모델 학습 (Least Squares)
+        self.t4_5min_coeffs = np.linalg.lstsq(X_poly, y_t4_5min, rcond=None)[0]
+        self.t4_10min_coeffs = np.linalg.lstsq(X_poly, y_t4_10min, rcond=None)[0]
+        self.t4_15min_coeffs = np.linalg.lstsq(X_poly, y_t4_15min, rcond=None)[0]
+
         self.t5_5min_coeffs = np.linalg.lstsq(X_poly, y_t5_5min, rcond=None)[0]
         self.t5_10min_coeffs = np.linalg.lstsq(X_poly, y_t5_10min, rcond=None)[0]
         self.t5_15min_coeffs = np.linalg.lstsq(X_poly, y_t5_15min, rcond=None)[0]
@@ -239,6 +268,8 @@ class PolynomialRegressionPredictor:
         errors = []
         for pred, (_, actual) in zip(predictions, training_data):
             errors.extend([
+                abs(pred.t4_pred_5min - actual['t4_5min']),
+                abs(pred.t4_pred_10min - actual['t4_10min']),
                 abs(pred.t5_pred_5min - actual['t5_5min']),
                 abs(pred.t5_pred_10min - actual['t5_10min']),
                 abs(pred.t6_pred_5min - actual['t6_5min']),
@@ -252,7 +283,7 @@ class PolynomialRegressionPredictor:
         온도 예측
 
         Returns:
-            TemperaturePrediction with 5/10/15min forecasts
+            TemperaturePrediction with 5/10/15min forecasts for T4, T5, T6
         """
         if not self.is_trained:
             raise RuntimeError("Model not trained. Call train() first.")
@@ -268,14 +299,18 @@ class PolynomialRegressionPredictor:
         # 다항식 특징
         features_poly = self._polynomial_features(features_norm.reshape(1, -1))
 
-        # 예측
-        t5_pred_5 = float(features_poly @ self.t5_5min_coeffs)
-        t5_pred_10 = float(features_poly @ self.t5_10min_coeffs)
-        t5_pred_15 = float(features_poly @ self.t5_15min_coeffs)
+        # 예측 (현실적인 범위로 제한)
+        t4_pred_5 = np.clip(float(features_poly @ self.t4_5min_coeffs), 20.0, 80.0)
+        t4_pred_10 = np.clip(float(features_poly @ self.t4_10min_coeffs), 20.0, 80.0)
+        t4_pred_15 = np.clip(float(features_poly @ self.t4_15min_coeffs), 20.0, 80.0)
 
-        t6_pred_5 = float(features_poly @ self.t6_5min_coeffs)
-        t6_pred_10 = float(features_poly @ self.t6_10min_coeffs)
-        t6_pred_15 = float(features_poly @ self.t6_15min_coeffs)
+        t5_pred_5 = np.clip(float(features_poly @ self.t5_5min_coeffs), 20.0, 50.0)
+        t5_pred_10 = np.clip(float(features_poly @ self.t5_10min_coeffs), 20.0, 50.0)
+        t5_pred_15 = np.clip(float(features_poly @ self.t5_15min_coeffs), 20.0, 50.0)
+
+        t6_pred_5 = np.clip(float(features_poly @ self.t6_5min_coeffs), 30.0, 60.0)
+        t6_pred_10 = np.clip(float(features_poly @ self.t6_10min_coeffs), 30.0, 60.0)
+        t6_pred_15 = np.clip(float(features_poly @ self.t6_15min_coeffs), 30.0, 60.0)
 
         # 추론 시간
         inference_time = (datetime.now() - start_time).total_seconds() * 1000
@@ -285,12 +320,16 @@ class PolynomialRegressionPredictor:
 
         return TemperaturePrediction(
             timestamp=sequence.timestamps[-1],
+            t4_current=sequence.t4_sequence[-1],
             t5_current=sequence.t5_sequence[-1],
             t6_current=sequence.t6_sequence[-1],
+            t4_pred_5min=t4_pred_5,
             t5_pred_5min=t5_pred_5,
             t6_pred_5min=t6_pred_5,
+            t4_pred_10min=t4_pred_10,
             t5_pred_10min=t5_pred_10,
             t6_pred_10min=t6_pred_10,
+            t4_pred_15min=t4_pred_15,
             t5_pred_15min=t5_pred_15,
             t6_pred_15min=t6_pred_15,
             confidence=confidence,
@@ -298,9 +337,12 @@ class PolynomialRegressionPredictor:
         )
 
     def save_model(self, filepath: str):
-        """모델 저장 (~0.5MB)"""
+        """모델 저장 (~0.7MB)"""
         model_data = {
             'degree': self.degree,
+            't4_5min_coeffs': self.t4_5min_coeffs,
+            't4_10min_coeffs': self.t4_10min_coeffs,
+            't4_15min_coeffs': self.t4_15min_coeffs,
             't5_5min_coeffs': self.t5_5min_coeffs,
             't5_10min_coeffs': self.t5_10min_coeffs,
             't5_15min_coeffs': self.t5_15min_coeffs,
@@ -326,6 +368,9 @@ class PolynomialRegressionPredictor:
             model_data = pickle.load(f)
 
         self.degree = model_data['degree']
+        self.t4_5min_coeffs = model_data['t4_5min_coeffs']
+        self.t4_10min_coeffs = model_data['t4_10min_coeffs']
+        self.t4_15min_coeffs = model_data['t4_15min_coeffs']
         self.t5_5min_coeffs = model_data['t5_5min_coeffs']
         self.t5_10min_coeffs = model_data['t5_10min_coeffs']
         self.t5_15min_coeffs = model_data['t5_15min_coeffs']
@@ -357,7 +402,8 @@ class PolynomialRegressionPredictor:
             return 0.0
 
         total_bytes = 0
-        for coeffs in [self.t5_5min_coeffs, self.t5_10min_coeffs, self.t5_15min_coeffs,
+        for coeffs in [self.t4_5min_coeffs, self.t4_10min_coeffs, self.t4_15min_coeffs,
+                      self.t5_5min_coeffs, self.t5_10min_coeffs, self.t5_15min_coeffs,
                       self.t6_5min_coeffs, self.t6_10min_coeffs, self.t6_15min_coeffs]:
             if coeffs is not None:
                 total_bytes += coeffs.nbytes

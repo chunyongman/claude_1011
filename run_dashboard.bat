@@ -1,21 +1,25 @@
 @echo off
-REM ESS AI System - Streamlit HMI Dashboard Launcher
-REM
-REM Usage: run_dashboard.bat
-REM
-REM This script launches the Streamlit-based HMI dashboard
-REM for the ESS AI Control System.
-
-echo ================================================================================
-echo ESS AI 제어 시스템 - HMI Dashboard
-echo ================================================================================
-echo.
-echo Starting Streamlit dashboard...
-echo Dashboard will be available at: http://localhost:8501
-echo.
-echo Press Ctrl+C to stop the dashboard
+echo ================================================
+echo  E/R Fan Control System - Dashboard Launcher
+echo ================================================
 echo.
 
-streamlit run src\hmi\dashboard.py --server.port 8501 --server.address localhost
+echo [1/3] Killing all Python processes...
+taskkill /F /IM python.exe >nul 2>&1
+timeout /t 2 /nobreak >nul
+echo      Done!
+
+echo [2/3] Clearing Python cache...
+python -Bc "import pathlib; import shutil; [shutil.rmtree(p) for p in pathlib.Path('.').rglob('__pycache__')]" 2>nul
+echo      Done!
+
+echo [3/3] Starting dashboard...
+echo.
+echo ================================================
+echo  Dashboard starting on http://localhost:8501
+echo ================================================
+echo.
+set PYTHONIOENCODING=utf-8
+streamlit run src/hmi/dashboard.py --server.port 8501
 
 pause

@@ -4,6 +4,7 @@ Streamlit 기반 HMI 대시보드
 """
 
 import streamlit as st
+from streamlit_autorefresh import st_autorefresh
 import time
 import pandas as pd
 import plotly.graph_objects as go
@@ -25,6 +26,7 @@ from src.hmi.hmi_state_manager import (
 from src.gps.gps_processor import GPSData, SeaRegion, Season, NavigationState
 from src.diagnostics.vfd_monitor import DanfossStatusBits, VFDStatus
 from src.simulation.scenarios import SimulationScenarios, ScenarioType
+from src.control.integrated_controller import IntegratedController
 
 
 class Dashboard:
@@ -84,8 +86,17 @@ class Dashboard:
         if 'current_scenario_type' not in st.session_state:
             st.session_state.current_scenario_type = ScenarioType.NORMAL_OPERATION
 
+        # IntegratedController 초기화 (예측 제어 활성화)
+        # 강제 재초기화 (코드 수정 반영을 위해)
+        if 'controller_version' not in st.session_state or st.session_state.controller_version != 2:
+            st.session_state.integrated_controller = IntegratedController(
+                enable_predictive_control=True
+            )
+            st.session_state.controller_version = 2  # 버전 업데이트 시 숫자 증가
+
         self.hmi_manager: HMIStateManager = st.session_state.hmi_manager
         self.scenario_engine: SimulationScenarios = st.session_state.scenario_engine
+        self.integrated_controller: IntegratedController = st.session_state.integrated_controller
 
     def run(self):
         """대시보드 실행"""
@@ -194,8 +205,7 @@ class Dashboard:
             self._render_scenario_testing()
 
         # 자동 새로고침 (3초 간격으로 변경하여 렌더링 부담 감소)
-        time.sleep(3)
-        st.rerun()
+        st_autorefresh(interval=3000, limit=None, key="auto_refresh_main_dashboard")
 
     def _render_sidebar(self):
         """사이드바 렌더링"""
@@ -241,6 +251,52 @@ class Dashboard:
             T6 = values['T6']
             PX1 = values['PX1']
             engine_load = values['engine_load']
+            T1 = values['T1']
+            T2 = values['T2']
+            T3 = values['T3']
+            T7 = values['T7']
+            
+            # IntegratedController를 호출하여 실제 제어 계산
+            temperatures = {
+                'T1': T1, 'T2': T2, 'T3': T3, 'T4': T4, 
+                'T5': T5, 'T6': T6, 'T7': T7
+            }
+            pressure = PX1
+            
+            # 온도 시퀀스 업데이트 (예측 제어용)
+            self.integrated_controller.update_temperature_sequence(
+                temperatures, engine_load
+            )
+            
+            # 제어 결정 계산
+            # current_frequencies 준비
+            # 시나리오 테스트에서 이미 사용 중인 current_frequencies 재사용
+            if 'current_frequencies' not in st.session_state:
+                st.session_state.current_frequencies = {
+                    'sw_pump': self.hmi_manager.groups["SW_PUMPS"].target_frequency,
+                    'fw_pump': self.hmi_manager.groups["FW_PUMPS"].target_frequency,
+                    'er_fan': self.hmi_manager.groups["ER_FANS"].target_frequency,
+                    'er_fan_count': 3,  # 기본 3대
+                    'time_at_max_freq': 0,
+                    'time_at_min_freq': 0
+                }
+            
+            current_frequencies = st.session_state.current_frequencies
+            
+            control_decision = self.integrated_controller.compute_control(
+                temperatures=temperatures,
+                pressure=pressure,
+                engine_load=engine_load,
+                current_frequencies=current_frequencies
+            )
+            
+            # HMI 매니저의 목표 주파수 업데이트
+            self.hmi_manager.update_target_frequency("SW_PUMPS", control_decision.sw_pump_freq)
+            self.hmi_manager.update_target_frequency("FW_PUMPS", control_decision.fw_pump_freq)
+            self.hmi_manager.update_target_frequency("ER_FANS", control_decision.er_fan_freq)
+            
+            # 제어 결정을 세션에 저장 (다른 화면에서 사용)
+            st.session_state.last_control_decision = control_decision
         else:
             # 시뮬레이션 데이터 (실제로는 data_collector에서 가져옴)
             T4 = 38.2  # FW 입구 -> FW 펌프 제어 (48°C 이하 유지)
@@ -248,6 +304,10 @@ class Dashboard:
             T6 = 43.5  # E/R 온도 -> E/R 팬 제어
             PX1 = 2.8  # SW 압력 -> 안전 제약
             engine_load = 75
+            T1 = 28.5
+            T2 = 32.3
+            T3 = 32.2
+            T7 = 25.0
 
         with col1:
             st.metric("⭐ T5 (FW 출구)", f"{T5:.1f}°C", "→ SW 펌프")
@@ -427,6 +487,12 @@ class Dashboard:
         sw_freq = self.hmi_manager.groups["SW_PUMPS"].target_frequency
         fw_freq = self.hmi_manager.groups["FW_PUMPS"].target_frequency
         er_freq = self.hmi_manager.groups["ER_FANS"].target_frequency
+        
+        # E/R 팬 운전 대수 (시나리오에서 업데이트될 수 있음)
+        if hasattr(st.session_state, 'last_control_decision') and st.session_state.last_control_decision:
+            er_fan_count = getattr(st.session_state.last_control_decision, 'er_fan_count', 3)
+        else:
+            er_fan_count = 3  # 기본값
 
         with col1:
             st.markdown("**SW 펌프 (132kW x 3대)**")
@@ -443,10 +509,10 @@ class Dashboard:
                 st.text(f"FW-P{i}: {status} ({freq:.1f} Hz)")
 
         with col3:
-            st.markdown("**E/R 팬 (54.3kW x 4대)**")
+            st.markdown(f"**E/R 팬 (54.3kW x 4대)** - {er_fan_count}대 운전 중")
             for i in range(1, 5):
-                status = "🟢 운전 중" if i <= 3 else "⚪ 대기"
-                freq = er_freq if i <= 3 else 0
+                status = "🟢 운전 중" if i <= er_fan_count else "⚪ 대기"
+                freq = er_freq if i <= er_fan_count else 0
                 st.text(f"ER-F{i}: {status} ({freq:.1f} Hz)")
 
     def _render_control_panel(self):
@@ -1566,7 +1632,6 @@ class Dashboard:
             st.markdown("**⚡ 재생 속도**")
 
         with col_speed2:
-            current_speed = self.scenario_engine.get_time_multiplier()
             speed_options = {
                 "0.5배속 (느림)": 0.5,
                 "1배속 (정상)": 1.0,
@@ -1575,31 +1640,36 @@ class Dashboard:
                 "10배속 (빠름)": 10.0
             }
 
-            # 현재 속도에 해당하는 레이블 찾기
-            current_label = "1배속 (정상)"
-            for label, speed in speed_options.items():
-                if abs(speed - current_speed) < 0.01:
-                    current_label = label
-                    break
+            # 최초 렌더링 시 현재 시뮬레이터 속도와 가장 가까운 옵션을 선택 상태로 설정
+            if "speed_selector" not in st.session_state:
+                current_speed = self.scenario_engine.get_time_multiplier()
+                closest_label = min(
+                    speed_options.keys(),
+                    key=lambda label: abs(speed_options[label] - current_speed)
+                )
+                st.session_state.speed_selector = closest_label
+                st.session_state.speed_multiplier = speed_options[closest_label]
 
             selected_speed = st.selectbox(
                 "속도 선택",
                 options=list(speed_options.keys()),
-                index=list(speed_options.keys()).index(current_label),
                 key="speed_selector",
                 label_visibility="collapsed"
             )
 
-            # 속도 변경
             new_speed = speed_options[selected_speed]
-            if abs(new_speed - current_speed) > 0.01:
+            previous_speed = st.session_state.get("speed_multiplier", new_speed)
+            if abs(new_speed - previous_speed) > 0.001:
                 self.scenario_engine.set_time_multiplier(new_speed)
+                st.session_state.speed_multiplier = new_speed
+                st.rerun()  # 즉시 화면 새로고침
 
         with col_speed3:
-            if current_speed > 1.0:
-                st.info(f"⏩ {current_speed:.1f}배 빠른 속도로 진행 중")
-            elif current_speed < 1.0:
-                st.info(f"⏪ {current_speed:.1f}배 느린 속도로 진행 중")
+            display_speed = st.session_state.get("speed_multiplier", speed_options[selected_speed])
+            if display_speed > 1.0:
+                st.info(f"⏩ {display_speed:.1f}배 빠른 속도로 진행 중")
+            elif display_speed < 1.0:
+                st.info(f"⏪ {display_speed:.1f}배 느린 속도로 진행 중")
             else:
                 st.info("▶️ 정상 속도로 진행 중")
 
@@ -1613,7 +1683,8 @@ class Dashboard:
             "정상 운전": ScenarioType.NORMAL_OPERATION,
             "고부하 운전": ScenarioType.HIGH_LOAD,
             "냉각 실패": ScenarioType.COOLING_FAILURE,
-            "압력 저하": ScenarioType.PRESSURE_DROP
+            "압력 저하": ScenarioType.PRESSURE_DROP,
+            "E/R 환기 불량": ScenarioType.ER_VENTILATION
         }
 
         # 현재 선택된 옵션 찾기
@@ -1644,11 +1715,14 @@ class Dashboard:
             self.scenario_engine.start_scenario(scenario_options[selected])
             st.session_state.use_scenario_data = True
             st.session_state.current_scenario_type = scenario_options[selected]
-            # 주파수 초기화
+            # 주파수 및 대수 초기화
             st.session_state.current_frequencies = {
                 'sw_pump': 48.0,
                 'fw_pump': 48.0,
-                'er_fan': 47.0
+                'er_fan': 47.0,
+                'er_fan_count': 2,  # E/R 팬 작동 대수
+                'time_at_max_freq': 0,  # 60Hz 유지 시간 (초)
+                'time_at_min_freq': 0   # 40Hz 유지 시간 (초)
             }
             st.rerun()
 
@@ -1661,6 +1735,8 @@ class Dashboard:
             st.warning("⚠️ 냉각 실패 시나리오 실행 중")
         elif current == ScenarioType.PRESSURE_DROP:
             st.warning("⚠️ 압력 저하 시나리오 실행 중")
+        elif current == ScenarioType.ER_VENTILATION:
+            st.warning("⚠️ E/R 환기 불량 시나리오 실행 중")
 
         st.markdown("---")
 
@@ -1701,17 +1777,24 @@ class Dashboard:
 
             values = self.scenario_engine.get_current_values()
 
-            # AI 컨트롤러 판단 추가
-            from src.control.integrated_controller import IntegratedController
-            controller = IntegratedController()
+            # 메인 대시보드와 동일한 IntegratedController 사용
+            controller = self.integrated_controller
 
-            # 현재 주파수 (세션 상태에 저장하여 추적)
+            # 현재 주파수 및 대수 (세션 상태에 저장하여 추적)
+            # 강제로 er_fan_count를 3대로 리셋 (기존 2대 세션 상태 무시)
             if 'current_frequencies' not in st.session_state:
                 st.session_state.current_frequencies = {
                     'sw_pump': 48.0,
                     'fw_pump': 48.0,
-                    'er_fan': 47.0
+                    'er_fan': 47.0,
+                    'er_fan_count': 3,  # E/R 팬 작동 대수 (기본 3대)
+                    'time_at_max_freq': 0,  # 60Hz 유지 시간 (초)
+                    'time_at_min_freq': 0   # 40Hz 유지 시간 (초)
                 }
+
+            # 기존 세션에서 er_fan_count가 2대로 설정되어 있으면 3대로 강제 변경
+            if st.session_state.current_frequencies.get('er_fan_count', 3) == 2:
+                st.session_state.current_frequencies['er_fan_count'] = 3
 
             current_freqs = st.session_state.current_frequencies
 
@@ -1725,6 +1808,12 @@ class Dashboard:
                 'T6': values['T6'],
                 'T7': values['T7']
             }
+            
+            # 온도 시퀀스 업데이트 (예측 제어용)
+            controller.update_temperature_sequence(temperatures, values['engine_load'])
+
+            # 디버깅: 입력 값 출력
+            st.info(f"🔍 디버그: T6={values['T6']:.1f}°C, 현재 E/R 팬={current_freqs['er_fan']:.1f}Hz ({current_freqs.get('er_fan_count', 3)}대)")
 
             decision = controller.compute_control(
                 temperatures=temperatures,
@@ -1733,10 +1822,34 @@ class Dashboard:
                 current_frequencies=current_freqs
             )
 
-            # AI 판단을 현재 주파수에 반영 (점진적 변화 시뮬레이션)
-            st.session_state.current_frequencies['sw_pump'] = decision.sw_pump_freq
+            # 디버깅: 출력 값 확인
+            st.info(f"🔍 AI 판단 결과: E/R 팬={decision.er_fan_freq:.1f}Hz → Reason: {decision.reason}")
+            
+            # 예측 제어 정보 표시
+            if decision.use_predictive_control and decision.temperature_prediction:
+                pred = decision.temperature_prediction
+                # 디버그: 타입 확인
+                try:
+                    t4_val = float(pred.t4_pred_10min)
+                    t5_val = float(pred.t5_pred_10min)
+                    t6_val = float(pred.t6_pred_10min)
+                    conf_val = float(pred.confidence * 100)
+                    st.success(f"🔮 예측 제어 활성: T4={t4_val:.1f}°C, T5={t5_val:.1f}°C, T6={t6_val:.1f}°C (10분 후 예측, 신뢰도: {conf_val:.0f}%)")
+                except Exception as e:
+                    st.error(f"❌ 예측 값 포맷팅 오류: {e}")
+                    st.write(f"Debug - T4 type: {type(pred.t4_pred_10min)}, value: {pred.t4_pred_10min}")
+
+            # AI 판단을 현재 주파수 및 대수에 반영
+            st.session_state.current_frequencies['sw_pump'] = decision.er_fan_freq
             st.session_state.current_frequencies['fw_pump'] = decision.fw_pump_freq
             st.session_state.current_frequencies['er_fan'] = decision.er_fan_freq
+            st.session_state.current_frequencies['er_fan_count'] = getattr(decision, 'er_fan_count', 3)
+            # 타이머는 integrated_controller가 current_freqs에 직접 업데이트했으므로 이미 반영됨
+            
+            # 디버깅: 타이머 상태 표시
+            timer_max = current_freqs.get('time_at_max_freq', 0)
+            timer_min = current_freqs.get('time_at_min_freq', 0)
+            st.info(f"🕐 타이머 상태: 최대={timer_max}s, 최소={timer_min}s")
 
             col1, col2, col3, col4, col5 = st.columns(5)
 
@@ -1810,10 +1923,11 @@ class Dashboard:
 
             with col3:
                 freq_change = decision.er_fan_freq - current_freqs['er_fan']
+                fan_count = getattr(decision, 'er_fan_count', 2)
                 if abs(freq_change) >= 0.1:
-                    st.metric("E/R 팬 목표", f"{decision.er_fan_freq:.1f} Hz", f"{freq_change:+.1f} Hz")
+                    st.metric("E/R 팬 목표", f"{decision.er_fan_freq:.1f} Hz ({fan_count}대)", f"{freq_change:+.1f} Hz")
                 else:
-                    st.metric("E/R 팬 목표", f"{decision.er_fan_freq:.1f} Hz")
+                    st.metric("E/R 팬 목표", f"{decision.er_fan_freq:.1f} Hz ({fan_count}대)")
 
             with col4:
                 st.metric("제어 모드", decision.control_mode)
@@ -1822,6 +1936,10 @@ class Dashboard:
             if values['PX1'] < 1.0:
                 st.error("⛔ **압력 제약 조건 활성**: PX1 < 1.0 bar → SW 펌프 주파수 감소 제한")
                 st.info(f"현재 압력: {values['PX1']:.2f} bar → AI가 SW 펌프 주파수를 {decision.sw_pump_freq:.1f} Hz로 유지 (감소 불가)")
+
+            # 대수 변경 메시지
+            if hasattr(decision, 'count_change_reason') and decision.count_change_reason:
+                st.info(f"🔄 **대수 제어**: {decision.count_change_reason}")
 
             # 추가 센서
             st.markdown("### 추가 센서")
@@ -1865,6 +1983,12 @@ class Dashboard:
                 "예상 온도": "T5=33°C (낮음, 정상이면 감속 가능)",
                 "예상 압력": "PX1: 2.0 → 1.5 (1분) → 0.7 (2분)",
                 "AI 대응": "1.0bar 통과 후 주파수 감소 금지 (안전 제약)"
+            },
+            "E/R 환기 불량": {
+                "조건": "기관실 환기 불량 (T6만 상승)",
+                "예상 온도": "T6: 43°C → 48°C (7분간 점진적 상승), 기타 온도 정상",
+                "예상 압력": "PX1=2.0 bar (정상)",
+                "AI 대응": "E/R 팬 주파수/대수 증가로 기관실 냉각"
             }
         }
 

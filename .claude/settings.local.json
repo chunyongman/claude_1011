@@ -27,7 +27,8 @@
       "Bash(dir:*)",
       "Bash(set PYTHONIOENCODING=utf-8)",
       "Bash(timeout:*)",
-      "Bash(cmd /c:*)"
+      "Bash(cmd /c:*)",
+      "Bash(powershell:*)"
     ],
     "deny": [],
     "ask": []
