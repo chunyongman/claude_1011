@@ -86,13 +86,13 @@ class Dashboard:
         if 'current_scenario_type' not in st.session_state:
             st.session_state.current_scenario_type = ScenarioType.NORMAL_OPERATION
 
-        # IntegratedController 초기화 (예측 제어 활성화)
+        # IntegratedController 초기화 (Rule-based AI + ML 예측)
         # 강제 재초기화 (코드 수정 반영을 위해)
-        if 'controller_version' not in st.session_state or st.session_state.controller_version != 3:
+        if 'controller_version' not in st.session_state or st.session_state.controller_version != 6:
             st.session_state.integrated_controller = IntegratedController(
-                enable_predictive_control=True
+                enable_predictive_control=True  # ML 활성화 (T6 제어는 Safety Layer에서 우선 처리)
             )
-            st.session_state.controller_version = 3  # 버전 업데이트 시 숫자 증가
+            st.session_state.controller_version = 6  # Rule S4 (T6 우선) 버전
 
         self.hmi_manager: HMIStateManager = st.session_state.hmi_manager
         self.scenario_engine: SimulationScenarios = st.session_state.scenario_engine
@@ -161,8 +161,8 @@ class Dashboard:
         """, unsafe_allow_html=True)
 
         # 제목
-        st.title("⚡ ESS AI 제어 시스템 - HMI Dashboard")
-        st.caption("HMM 16K급 선박 - NVIDIA Jetson Xavier NX 기반 에너지 절감 시스템")
+        st.title("⚡ ESS Rule-based AI 제어 시스템 - HMI Dashboard")
+        st.caption("HMM 16K급 선박 - NVIDIA Jetson Xavier NX 기반 | Rule-based AI + ML 최적화")
 
         # 사이드바
         self._render_sidebar()
@@ -1597,7 +1597,8 @@ class Dashboard:
 
         st.info("""
         **시나리오 모드**에서는 다양한 운항 조건을 시뮬레이션할 수 있습니다.
-        시나리오를 활성화하면 **메인 대시보드의 센서 값이 시나리오 데이터로 변경**됩니다.
+        시나리오를 활성화하면 **메인 대시보드의 센서 값이 시나리오 데이터로 변경**되며,
+        **Rule-based AI 시스템**이 실시간으로 어떤 규칙을 적용하는지 확인할 수 있습니다.
         """)
 
         # 시나리오 모드 ON/OFF
@@ -1719,11 +1720,13 @@ class Dashboard:
             st.session_state.current_frequencies = {
                 'sw_pump': 48.0,
                 'fw_pump': 48.0,
-                'er_fan': 47.0,
-                'er_fan_count': 2,  # E/R 팬 작동 대수
+                'er_fan': 48.0,  # 47.0 → 48.0 (일관성)
+                'er_fan_count': 3,  # 2 → 3 (E/R 팬 기본 3대)
                 'time_at_max_freq': 0,  # 60Hz 유지 시간 (초)
                 'time_at_min_freq': 0   # 40Hz 유지 시간 (초)
             }
+            # RuleBasedController 리셋
+            self.integrated_controller.rule_controller.reset()
             st.rerun()
 
         # 선택 안내 메시지
@@ -1880,9 +1883,22 @@ class Dashboard:
             with col5:
                 st.metric("엔진 부하", f"{values['engine_load']:.1f}%")
 
-            # AI 제어 판단 표시
+            # Rule-based AI 제어 판단 표시
             st.markdown("---")
-            st.markdown("### 🤖 AI 제어 판단")
+            st.markdown("### 🤖 Rule-based AI 제어 판단")
+            
+            # 적용된 규칙 표시
+            if hasattr(decision, 'applied_rules') and decision.applied_rules:
+                with st.expander("📋 적용된 규칙 보기", expanded=False):
+                    for rule in decision.applied_rules:
+                        if rule.startswith('S'):  # Safety rules
+                            st.error(f"🚨 {rule}")
+                        elif rule.startswith('R'):  # Optimization rules
+                            st.info(f"⚙️ {rule}")
+                        elif rule == 'ML_PREDICTION':
+                            st.success(f"🤖 {rule}: ML 모델 예측 사용")
+                        else:
+                            st.text(f"• {rule}")
 
             # 제어 모드에 따른 알림 표시
             if decision.emergency_action:

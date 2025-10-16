@@ -89,15 +89,15 @@ class SimulationScenarios:
             load_profile=self._normal_load
         )
 
-        # 5. E/R 환기 불량 (예측 기반 선제 제어: 3대 50Hz → 60Hz → 4대 → 주파수 감소 → 3대 복귀)
+        # 5. E/R 환기 불량 (Rule R3 검증: T6 온도에 따른 주파수 및 대수 제어)
         scenarios[ScenarioType.ER_VENTILATION] = ScenarioConfig(
             name="E/R 환기 불량",
-            description="기관실 환기 불량, 예측 시스템이 온도 상승을 미리 감지하여 선제 대응 (3대 50Hz → 4대 60Hz → 3대 45Hz)",
+            description="T6 온도 변화에 따른 Rule-based 제어 검증 (정상 → 고온 → 대수 증가 → 정상 복귀 → 저온 → 대수 감소)",
             scenario_type=ScenarioType.ER_VENTILATION,
-            duration_minutes=12,  # 전체 사이클 12분
+            duration_minutes=15,  # 전체 사이클 15분 (900초)
             temperature_profile=self._er_ventilation_temperature,
             pressure_profile=self._normal_pressure,
-            load_profile=self._normal_load
+            load_profile=self._medium_load  # 중부하 (Rule R4 영향 제거)
         )
 
         return scenarios
@@ -162,63 +162,93 @@ class SimulationScenarios:
 
     def _er_ventilation_temperature(self, t: float) -> Dict[str, float]:
         """
-        E/R 환기 불량 온도 (예측 기반 선제 제어 시나리오)
-
-        초기 상태: 3대 50Hz, T6 = 43°C
-
-        Phase 1 (0-60초): 예측 단계 - T6 상승 시작 (42°C → 44°C)
-            AI 예측: 10분 후 46-47°C 예상 → 선제 증속 시작 (50Hz → 55Hz, 3대)
-
-        Phase 2 (60-150초): 온도 상승 지속 (44°C → 46°C)
-            T6 > 45°C 도달 → 주파수 최대화 (55Hz → 60Hz, 3대)
-            AI 재예측: 10분 후 48°C 예상
-
-        Phase 3 (150-180초): 추가 온도 상승 (46°C → 48°C)
-            60Hz 3대로도 불충분 → 대수 증가 (3대 → 4대, 60Hz)
-
-        Phase 4 (180-360초): 온도 안정 및 하강 시작 (48°C → 45°C)
-            AI 예측: 10분 후 41°C 예상 → 선제 감속 시작 (60Hz → 50Hz, 4대)
-
-        Phase 5 (360-480초): 주파수 계속 감소 (45°C → 42°C 미만)
-            T6 < 42°C 정상 범위 진입 → 주파수 감속 계속 (50Hz → 40Hz, 4대)
-
-        Phase 6 (480-540초): 대수 감소 (42°C 미만, 40Hz 도달)
-            40Hz 4대로도 충분 → 대수 감소 (4대 → 3대, 45Hz)
-
-        Phase 7 (540-720초): 안정 상태 복귀 (40~42°C)
-            최종 상태: 3대 45Hz, T6 = 40~42°C
+        E/R 환기 불량 시나리오 - T6 온도 기반 Rule-based 제어 검증
+        
+        === Rule R3 검증 시나리오 ===
+        
+        초기 상태: 3대 48Hz, T6 = 43°C (정상 범위)
+        
+        Phase 1 (0-120초, 2분): 정상 범위 유지 (42~44°C)
+            - T6: 43°C 유지
+            - 예상 제어: R3_T6_NORMAL_HOLD (48Hz 유지, 3대)
+            - 목적: 정상 범위에서 안정 유지 확인
+        
+        Phase 2 (120-180초, 1분): 온도 상승 시작 (44→45.5°C)
+            - T6: 44°C → 45.5°C (45°C 초과)
+            - 예상 제어: S3_ER_HIGH_TEMP (강제 60Hz, 3대)
+            - 목적: 긴급 고온 시 60Hz 강제 확인
+        
+        Phase 3 (180-300초, 2분): 고온 유지 (45~46°C)
+            - T6: 45.5°C → 46.0°C 유지
+            - 예상 제어: 60Hz 유지 → 10초 후 4대 증가
+            - 목적: 대수 증가 로직 확인 (60Hz 10초 지속)
+        
+        Phase 4 (300-420초, 2분): 온도 하강 시작 (46→44°C)
+            - T6: 46°C → 44°C (정상 범위 진입)
+            - 예상 제어: R3_T6_NORMAL_DECREASING (60Hz → 48Hz 단계적 감소, 4대)
+            - 목적: 정상 범위 복귀 시 목표 주파수 수렴 확인
+        
+        Phase 5 (420-540초, 2분): 정상 범위 유지 (43°C)
+            - T6: 43°C 유지
+            - 예상 제어: R3_T6_NORMAL_HOLD (48Hz 유지, 4대)
+            - 목적: 4대 상태에서 안정 유지 확인
+        
+        Phase 6 (540-660초, 2분): 저온 진입 (43→38°C)
+            - T6: 43°C → 38°C (매우 낮음 범위)
+            - 예상 제어: R3_T6_LOW + R3_T6_VERY_LOW (48Hz → 40Hz 단계적 감소, 4대)
+            - 목적: 저온 시 최소 주파수(40Hz)까지 감소 확인
+        
+        Phase 7 (660-780초, 2분): 최소 주파수 유지 (38°C)
+            - T6: 38°C 유지
+            - 예상 제어: 40Hz 10초 지속 → 3대 감소 (40Hz → 48Hz)
+            - 목적: 대수 감소 로직 확인 (40Hz 이하 + 10초 지속)
+        
+        Phase 8 (780-900초, 2분): 안정 복귀 (38→42°C)
+            - T6: 38°C → 42°C (대수 감소 후 주파수 재조정)
+            - 예상 제어: R3_T6_VERY_LOW → R3_T6_NORMAL_INCREASING (48Hz 유지 → 정상 복귀)
+            - 목적: 대수 감소 후 정상 범위 복귀 확인
         """
-        noise = np.random.normal(0, 0.3)
-
-        if t <= 60:  # Phase 1 (0-1분): 예측 단계, 상승 시작 (42°C → 44°C)
-            t6_temp = 42.0 + (t / 60.0) * 2.0
-
-        elif t <= 150:  # Phase 2 (1-2.5분): 온도 상승 지속 (44°C → 46°C)
-            t6_temp = 44.0 + ((t - 60) / 90.0) * 2.0
-
-        elif t <= 180:  # Phase 3 (2.5-3분): 추가 온도 상승 (46°C → 48°C)
-            t6_temp = 46.0 + ((t - 150) / 30.0) * 2.0
-
-        elif t <= 360:  # Phase 4 (3-6분): 온도 안정 및 하강 시작 (48°C → 45°C)
-            t6_temp = 48.0 - ((t - 180) / 180.0) * 3.0
-
-        elif t <= 480:  # Phase 5 (6-8분): 주파수 계속 감소 (45°C → 41°C)
-            t6_temp = 45.0 - ((t - 360) / 120.0) * 4.0
-
-        elif t <= 540:  # Phase 6 (8-9분): 대수 감소 유도 (41°C → 38°C)
-            t6_temp = 41.0 - ((t - 480) / 60.0) * 3.0
-
-        else:  # Phase 7 (9-12분): 안정 상태 복귀 (38~39°C)
-            # 38~39°C 사이에서 안정적으로 유지 (주파수 42Hz 이하 유도 → 대수 감소)
-            t6_temp = 38.5 + np.sin((t - 540) / 30.0) * 0.5
-
+        noise = np.random.normal(0, 0.2)  # 노이즈 감소 (명확한 온도 추이)
+        
+        # Phase 1 (0-120초): 정상 범위 유지
+        if t <= 120:
+            t6_temp = 43.0
+        
+        # Phase 2 (120-180초): 온도 상승 → 45°C 초과
+        elif t <= 180:
+            t6_temp = 43.0 + ((t - 120) / 60.0) * 2.5  # 43 → 45.5°C
+        
+        # Phase 3 (180-300초): 고온 유지 (대수 증가 트리거)
+        elif t <= 300:
+            t6_temp = 45.5 + ((t - 180) / 120.0) * 0.5  # 45.5 → 46.0°C
+        
+        # Phase 4 (300-420초): 온도 하강 → 정상 범위 복귀
+        elif t <= 420:
+            t6_temp = 46.0 - ((t - 300) / 120.0) * 2.0  # 46 → 44°C
+        
+        # Phase 5 (420-540초): 정상 범위 유지
+        elif t <= 540:
+            t6_temp = 43.0
+        
+        # Phase 6 (540-660초): 저온 진입 (최소 주파수까지 감속 유도)
+        elif t <= 660:
+            t6_temp = 43.0 - ((t - 540) / 120.0) * 5.0  # 43 → 38°C
+        
+        # Phase 7 (660-780초): 최소 주파수 유지 (대수 감소 트리거)
+        elif t <= 780:
+            t6_temp = 38.0  # 38°C 고정 유지 → 40Hz 도달 → 10초 후 3대 감소
+        
+        # Phase 8 (780-900초): 안정 복귀
+        else:
+            t6_temp = 38.0 + ((t - 780) / 120.0) * 4.0  # 38 → 42°C
+        
         return {
-            'T1': 28.0 + noise,  # 해수 입구 (정상)
+            'T1': 25.0 + noise,  # 해수 입구 (온대 해역 - Rule R5 영향 제거)
             'T2': 42.0 + noise,  # SW 출구 1 (정상)
             'T3': 43.0 + noise,  # SW 출구 2 (정상)
             'T4': 45.0 + noise,  # FW 입구 (정상)
             'T5': 33.0 + noise,  # FW 출구 (정상)
-            'T6': t6_temp + noise,  # E/R 온도 (예측 기반 사이클)
+            'T6': t6_temp + noise,  # E/R 온도 (Rule R3 검증)
             'T7': 32.0 + noise   # 외기 (정상)
         }
 
@@ -243,6 +273,11 @@ class SimulationScenarios:
         """정상 부하 (75%)"""
         noise = np.random.normal(0, 3.0)
         return 75.0 + noise
+    
+    def _medium_load(self, t: float) -> float:
+        """중부하 (50%) - Rule R4 영향 없음 (30-70% 구간)"""
+        noise = np.random.normal(0, 2.0)
+        return 50.0 + noise
 
     def _high_load(self, t: float) -> float:
         """고부하 (95%)"""
