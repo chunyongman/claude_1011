@@ -1,6 +1,11 @@
 """
 ESS AI System - 시뮬레이션 시나리오
-4가지 주요 시나리오: 정상 운전, 고부하, 냉각 실패, 압력 저하
+5가지 Rule-based AI 제어 검증 시나리오:
+1. 기본 제어 검증 (정상 조건)
+2. 고부하 제어 검증 (Rule R4)
+3. 냉각기 과열 보호 검증 (Rule S1)
+4. 압력 안전 제어 검증 (Rule S3)
+5. E/R 온도 제어 검증 (Rule S4)
 """
 
 from dataclasses import dataclass
@@ -42,13 +47,13 @@ class SimulationScenarios:
         self.time_multiplier: float = 1.0  # 시간 배율 (1.0 = 정상, 2.0 = 2배속, 5.0 = 5배속)
 
     def _create_scenarios(self) -> Dict[ScenarioType, ScenarioConfig]:
-        """4가지 시나리오 생성"""
+        """5가지 Rule-based AI 제어 검증 시나리오 생성"""
         scenarios = {}
 
-        # 1. 정상 운전
+        # 1. 기본 제어 검증
         scenarios[ScenarioType.NORMAL_OPERATION] = ScenarioConfig(
-            name="정상 운전",
-            description="정상적인 항해 조건 (열대 해역, 75% 엔진 부하)",
+            name="기본 제어 검증",
+            description="정상 조건에서 ML 예측 및 최적화 제어 검증 (열대 해역, 75% 엔진 부하)",
             scenario_type=ScenarioType.NORMAL_OPERATION,
             duration_minutes=30,
             temperature_profile=self._normal_temperature,
@@ -56,10 +61,10 @@ class SimulationScenarios:
             load_profile=self._normal_load
         )
 
-        # 2. 고부하 운전
+        # 2. 고부하 제어 검증
         scenarios[ScenarioType.HIGH_LOAD] = ScenarioConfig(
-            name="고부하 운전",
-            description="고속 항해 + 고온 환경 (95% 엔진 부하)",
+            name="고부하 제어 검증",
+            description="Rule R4(엔진 부하) 검증 - 고속 항해 + 고온 환경 대응 (95% 부하)",
             scenario_type=ScenarioType.HIGH_LOAD,
             duration_minutes=20,
             temperature_profile=self._high_load_temperature,
@@ -67,10 +72,10 @@ class SimulationScenarios:
             load_profile=self._high_load
         )
 
-        # 3. 냉각 실패
+        # 3. 냉각기 과열 보호 검증
         scenarios[ScenarioType.COOLING_FAILURE] = ScenarioConfig(
-            name="냉각 실패",
-            description="냉각 성능 저하로 온도 상승",
+            name="냉각기 과열 보호 검증",
+            description="Rule S1(Cooler 과열 보호) 검증 - T2/T3 고온 시 안전 제어",
             scenario_type=ScenarioType.COOLING_FAILURE,
             duration_minutes=15,
             temperature_profile=self._cooling_failure_temperature,
@@ -78,10 +83,10 @@ class SimulationScenarios:
             load_profile=self._normal_load
         )
 
-        # 4. 압력 저하
+        # 4. 압력 안전 제어 검증
         scenarios[ScenarioType.PRESSURE_DROP] = ScenarioConfig(
-            name="압력 저하",
-            description="SW 펌프 압력 저하 시나리오",
+            name="압력 안전 제어 검증",
+            description="Rule S3(압력 제약) 검증 - SW 펌프 압력 저하 시 보호 제어",
             scenario_type=ScenarioType.PRESSURE_DROP,
             duration_minutes=10,
             temperature_profile=self._normal_temperature,
@@ -89,10 +94,10 @@ class SimulationScenarios:
             load_profile=self._normal_load
         )
 
-        # 5. E/R 환기 불량 (Rule R3 검증: T6 온도에 따른 주파수 및 대수 제어)
+        # 5. E/R 온도 제어 검증 (Rule S4 검증: T6 온도 전체 범위 제어 테스트)
         scenarios[ScenarioType.ER_VENTILATION] = ScenarioConfig(
-            name="E/R 환기 불량",
-            description="T6 온도 변화에 따른 Rule-based 제어 검증 (정상 → 고온 → 대수 증가 → 정상 복귀 → 저온 → 대수 감소)",
+            name="E/R 온도 제어 검증",
+            description="T6 온도 변화에 따른 주파수 및 대수 제어 검증 (정상→고온→대수증가→정상복귀→저온→대수감소)",
             scenario_type=ScenarioType.ER_VENTILATION,
             duration_minutes=15,  # 전체 사이클 15분 (900초)
             temperature_profile=self._er_ventilation_temperature,
@@ -239,8 +244,12 @@ class SimulationScenarios:
             t6_temp = 38.0  # 38°C 고정 유지 → 40Hz 도달 → 10초 후 3대 감소
         
         # Phase 8 (780-900초): 안정 복귀
-        else:
+        elif t <= 900:
             t6_temp = 38.0 + ((t - 780) / 120.0) * 4.0  # 38 → 42°C
+        
+        # 시나리오 종료 후 (900초 초과): 정상 온도 유지
+        else:
+            t6_temp = 42.0  # 정상 범위 하한 유지
         
         return {
             'T1': 25.0 + noise,  # 해수 입구 (온대 해역 - Rule R5 영향 제거)

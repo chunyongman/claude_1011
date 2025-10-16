@@ -399,15 +399,21 @@ class IntegratedController:
             # 시간 추적
             time_at_max = current_frequencies.get('time_at_max_freq', 0)
             time_at_min = current_frequencies.get('time_at_min_freq', 0)
+            count_change_cooldown = current_frequencies.get('count_change_cooldown', 0)  # 대수 변경 후 안정화 시간
 
-            # 대수 증가 조건: 주파수 ≥ 60Hz & 10초 지속
-            if decision.er_fan_freq >= 60.0:
+            # 대수 변경 쿨다운 감소
+            if count_change_cooldown > 0:
+                current_frequencies['count_change_cooldown'] = count_change_cooldown - 2
+
+            # 대수 증가 조건: 주파수 ≥ 60Hz & 10초 지속 & 쿨다운 종료
+            if decision.er_fan_freq >= 60.0 and count_change_cooldown <= 0:
                 if time_at_max >= 10 and current_count < 4:
                     decision.er_fan_count = current_count + 1
                     decision.count_change_reason = f"60Hz 최대 도달 (T6={t6:.1f}C) -> 팬 {current_count}->{current_count + 1}대 증가"
                     current_frequencies['time_at_max_freq'] = 0
-                    # 대수 증가 후 주파수 감소 (전체 풍량 유지)
-                    decision.er_fan_freq = max(45.0, decision.er_fan_freq - 8.0)
+                    current_frequencies['count_change_cooldown'] = 30  # 30초 쿨다운
+                    # 대수 증가 후 주파수 감소 (Rule S4가 계속 고온 제어)
+                    decision.er_fan_freq = max(50.0, decision.er_fan_freq - 8.0)
                 else:
                     decision.er_fan_count = current_count
                     new_time = time_at_max + 2
@@ -418,14 +424,15 @@ class IntegratedController:
                         decision.count_change_reason = f"[증가 대기] {decision.er_fan_freq:.1f}Hz 지속, Timer={new_time}s/10s"
                 current_frequencies['time_at_min_freq'] = 0
             
-            # 대수 감소 조건: 주파수 ≤ 40Hz & 10초 지속
-            elif decision.er_fan_freq <= 40.0:
+            # 대수 감소 조건: 주파수 ≤ 40Hz & 10초 지속 & 쿨다운 종료
+            elif decision.er_fan_freq <= 40.0 and count_change_cooldown <= 0:
                 if time_at_min >= 10 and current_count > 2:
                     decision.er_fan_count = current_count - 1
                     decision.count_change_reason = f"40Hz 지속 (T6={t6:.1f}C) -> 팬 {current_count}->{current_count - 1}대 감소"
                     current_frequencies['time_at_min_freq'] = 0
-                    # 대수 감소 후 주파수 증가 (전체 풍량 유지)
-                    decision.er_fan_freq = min(48.0, decision.er_fan_freq + 8.0)
+                    current_frequencies['count_change_cooldown'] = 30  # 30초 쿨다운
+                    # 대수 감소 후 주파수는 40Hz 유지 (Rule S4가 온도에 따라 조정)
+                    # decision.er_fan_freq는 그대로 유지 (40Hz)
                 else:
                     decision.er_fan_count = current_count
                     new_time = time_at_min + 2
@@ -436,12 +443,15 @@ class IntegratedController:
                         decision.count_change_reason = f"[감소 대기] {decision.er_fan_freq:.1f}Hz 지속, Timer={new_time}s/10s"
                 current_frequencies['time_at_max_freq'] = 0
             
-            # 중간 대역 (40-60Hz): 현재 대수 안정 유지
+            # 중간 대역 (40-60Hz) 또는 쿨다운 중: 현재 대수 안정 유지
             else:
                 decision.er_fan_count = current_count
                 current_frequencies['time_at_max_freq'] = 0
                 current_frequencies['time_at_min_freq'] = 0
-                decision.count_change_reason = f"[안정] {decision.er_fan_freq:.1f}Hz, T6={t6:.1f}C, {current_count}대 운전"
+                if count_change_cooldown > 0:
+                    decision.count_change_reason = f"[안정화] {decision.er_fan_freq:.1f}Hz, T6={t6:.1f}C, {current_count}대 (쿨다운 {count_change_cooldown}초)"
+                else:
+                    decision.count_change_reason = f"[안정] {decision.er_fan_freq:.1f}Hz, T6={t6:.1f}C, {current_count}대 운전"
 
         return decision
 

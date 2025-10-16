@@ -133,10 +133,10 @@ class Dashboard:
             }
 
             /* 시나리오 선택 버튼 스타일 */
-            button:has(*:contains("정상 운전")),
-            button:has(*:contains("고부하 운전")),
-            button:has(*:contains("냉각 실패")),
-            button:has(*:contains("압력 저하")) {
+            button:has(*:contains("기본 제어 검증")),
+            button:has(*:contains("고부하 제어 검증")),
+            button:has(*:contains("냉각기 과열 보호 검증")),
+            button:has(*:contains("압력 안전 제어 검증")) {
                 white-space: nowrap !important;
                 min-width: 120px !important;
                 width: auto !important;
@@ -1681,11 +1681,11 @@ class Dashboard:
 
         # 라디오 버튼으로 변경 (한 줄 표시 보장)
         scenario_options = {
-            "정상 운전": ScenarioType.NORMAL_OPERATION,
-            "고부하 운전": ScenarioType.HIGH_LOAD,
-            "냉각 실패": ScenarioType.COOLING_FAILURE,
-            "압력 저하": ScenarioType.PRESSURE_DROP,
-            "E/R 환기 불량": ScenarioType.ER_VENTILATION
+            "기본 제어 검증": ScenarioType.NORMAL_OPERATION,
+            "고부하 제어 검증": ScenarioType.HIGH_LOAD,
+            "냉각기 과열 보호 검증": ScenarioType.COOLING_FAILURE,
+            "압력 안전 제어 검증": ScenarioType.PRESSURE_DROP,
+            "E/R 온도 제어 검증": ScenarioType.ER_VENTILATION
         }
 
         # 현재 선택된 옵션 찾기
@@ -1695,12 +1695,12 @@ class Dashboard:
                 current_label = label
                 break
 
-        # 세션 상태에 선택된 시나리오 저장 (초기화)
-        if 'selected_scenario_label' not in st.session_state:
+        # 세션 상태 초기화 또는 유효성 검증
+        if 'selected_scenario_label' not in st.session_state or st.session_state.selected_scenario_label not in scenario_options:
             st.session_state.selected_scenario_label = current_label
 
         # 라디오 버튼으로 시나리오 선택
-        selected_index = list(scenario_options.keys()).index(st.session_state.selected_scenario_label) if st.session_state.selected_scenario_label else 0
+        selected_index = list(scenario_options.keys()).index(st.session_state.selected_scenario_label) if st.session_state.selected_scenario_label in scenario_options else 0
 
         selected = st.radio(
             "시나리오를 선택하세요",
@@ -1731,15 +1731,15 @@ class Dashboard:
 
         # 선택 안내 메시지
         if current == ScenarioType.NORMAL_OPERATION:
-            st.info("✅ 정상 운전 시나리오 실행 중")
+            st.info("✅ 기본 제어 검증 시나리오 실행 중")
         elif current == ScenarioType.HIGH_LOAD:
-            st.info("✅ 고부하 운전 시나리오 실행 중")
+            st.info("✅ 고부하 제어 검증 시나리오 실행 중")
         elif current == ScenarioType.COOLING_FAILURE:
-            st.warning("⚠️ 냉각 실패 시나리오 실행 중")
+            st.warning("⚠️ 냉각기 과열 보호 검증 시나리오 실행 중")
         elif current == ScenarioType.PRESSURE_DROP:
-            st.warning("⚠️ 압력 저하 시나리오 실행 중")
+            st.warning("⚠️ 압력 안전 제어 검증 시나리오 실행 중")
         elif current == ScenarioType.ER_VENTILATION:
-            st.warning("⚠️ E/R 환기 불량 시나리오 실행 중")
+            st.warning("⚠️ E/R 온도 제어 검증 시나리오 실행 중")
 
         st.markdown("---")
 
@@ -1768,7 +1768,7 @@ class Dashboard:
             # 완료 여부
             if info['is_complete']:
                 st.success("✅ 시나리오 완료!")
-                st.info("👆 상단에서 다른 시나리오를 선택하거나 '정상 운전'을 선택하세요.")
+                st.info("👆 상단에서 다른 시나리오를 선택하거나 '기본 제어 검증'을 선택하세요.")
         else:
             st.info("시나리오를 선택해주세요.")
 
@@ -1854,6 +1854,9 @@ class Dashboard:
             timer_min = current_freqs.get('time_at_min_freq', 0)
             st.info(f"🕐 타이머 상태: 최대={timer_max}s, 최소={timer_min}s")
 
+            # E/R 온도 제어 검증 시나리오에서 T6 강조
+            is_er_scenario = (st.session_state.current_scenario_type == ScenarioType.ER_VENTILATION)
+            
             col1, col2, col3, col4, col5 = st.columns(5)
 
             with col1:
@@ -1870,9 +1873,23 @@ class Dashboard:
 
             with col3:
                 delta_t6 = values['T6'] - 43.0
-                st.metric("T6 (E/R 온도)", f"{values['T6']:.1f}°C",
-                         f"{delta_t6:+.1f}°C",
-                         delta_color="inverse" if delta_t6 > 0 else "normal")
+                if is_er_scenario:
+                    # E/R 시나리오에서 T6 강조
+                    st.markdown("""
+                    <div style='background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
+                                padding: 20px; border-radius: 10px; text-align: center; 
+                                box-shadow: 0 8px 16px rgba(102,126,234,0.3);'>
+                        <p style='color: white; font-size: 14px; margin: 0; font-weight: 600;'>⭐ T6 (E/R 온도)</p>
+                        <p style='color: white; font-size: 36px; margin: 10px 0; font-weight: 700;'>{:.1f}°C</p>
+                        <p style='color: {}; font-size: 16px; margin: 0; font-weight: 600;'>{:+.1f}°C</p>
+                    </div>
+                    """.format(values['T6'], 
+                              '#ff6b6b' if delta_t6 > 0 else '#51cf66',
+                              delta_t6), unsafe_allow_html=True)
+                else:
+                    st.metric("T6 (E/R 온도)", f"{values['T6']:.1f}°C",
+                             f"{delta_t6:+.1f}°C",
+                             delta_color="inverse" if delta_t6 > 0 else "normal")
 
             with col4:
                 delta_px = values['PX1'] - 2.0
@@ -1940,10 +1957,25 @@ class Dashboard:
             with col3:
                 freq_change = decision.er_fan_freq - current_freqs['er_fan']
                 fan_count = getattr(decision, 'er_fan_count', 2)
-                if abs(freq_change) >= 0.1:
-                    st.metric("E/R 팬 목표", f"{decision.er_fan_freq:.1f} Hz ({fan_count}대)", f"{freq_change:+.1f} Hz")
+                
+                if is_er_scenario:
+                    # E/R 시나리오에서 팬 목표 강조
+                    change_color = '#ff6b6b' if freq_change > 0 else ('#51cf66' if freq_change < 0 else '#ffd93d')
+                    st.markdown("""
+                    <div style='background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); 
+                                padding: 20px; border-radius: 10px; text-align: center; 
+                                box-shadow: 0 8px 16px rgba(250,112,154,0.3);'>
+                        <p style='color: #333; font-size: 14px; margin: 0; font-weight: 600;'>⭐ E/R 팬 목표</p>
+                        <p style='color: #333; font-size: 36px; margin: 10px 0; font-weight: 700;'>{:.1f} Hz</p>
+                        <p style='color: #333; font-size: 20px; margin: 5px 0; font-weight: 600;'>({:}대)</p>
+                        <p style='color: {}; font-size: 16px; margin: 0; font-weight: 600;'>{:+.1f} Hz</p>
+                    </div>
+                    """.format(decision.er_fan_freq, fan_count, change_color, freq_change), unsafe_allow_html=True)
                 else:
-                    st.metric("E/R 팬 목표", f"{decision.er_fan_freq:.1f} Hz ({fan_count}대)")
+                    if abs(freq_change) >= 0.1:
+                        st.metric("E/R 팬 목표", f"{decision.er_fan_freq:.1f} Hz ({fan_count}대)", f"{freq_change:+.1f} Hz")
+                    else:
+                        st.metric("E/R 팬 목표", f"{decision.er_fan_freq:.1f} Hz ({fan_count}대)")
 
             with col4:
                 st.metric("제어 모드", decision.control_mode)
@@ -1976,31 +2008,31 @@ class Dashboard:
         st.subheader("📖 시나리오 설명")
 
         scenario_descriptions = {
-            "정상 운전": {
+            "기본 제어 검증": {
                 "조건": "열대 해역, 75% 엔진 부하",
                 "예상 온도": "T5=33°C, T6=43°C (정상 범위)",
                 "예상 압력": "PX1=2.0 bar (정상)",
                 "AI 대응": "현재 상태 유지, 효율 최적화"
             },
-            "고부하 운전": {
+            "고부하 제어 검증": {
                 "조건": "고속 항해, 95% 엔진 부하",
                 "예상 온도": "T5=35°C, T6=46°C (점진적 상승)",
                 "예상 압력": "PX1=2.0 bar",
                 "AI 대응": "펌프/팬 증속으로 냉각 강화"
             },
-            "냉각 실패": {
+            "냉각기 과열 보호 검증": {
                 "조건": "냉각 성능 저하",
                 "예상 온도": "T5=40°C, T6=52°C (급격한 상승)",
                 "예상 압력": "PX1=2.0 bar",
                 "AI 대응": "최대 냉각, 알람 발생"
             },
-            "압력 저하": {
+            "압력 안전 제어 검증": {
                 "조건": "SW 펌프 압력 저하 (2분간 2.0→0.7bar)",
                 "예상 온도": "T5=33°C (낮음, 정상이면 감속 가능)",
                 "예상 압력": "PX1: 2.0 → 1.5 (1분) → 0.7 (2분)",
                 "AI 대응": "1.0bar 통과 후 주파수 감소 금지 (안전 제약)"
             },
-            "E/R 환기 불량": {
+            "E/R 온도 제어 검증": {
                 "조건": "기관실 환기 불량 (T6만 상승)",
                 "예상 온도": "T6: 43°C → 48°C (7분간 점진적 상승), 기타 온도 정상",
                 "예상 압력": "PX1=2.0 bar (정상)",

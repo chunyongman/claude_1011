@@ -156,6 +156,12 @@ class RuleBasedController:
             applied_rules.append("S4_ER_HIGH_TEMP")
             reason_parts.append(f"[CRITICAL] T6={t6_temp:.1f}°C > 45°C → 강제 60Hz")
         
+        elif 44.0 < t6_temp <= 45.0:  # 고온 범위 (44~45°C) - 60Hz 유지
+            er_freq = self.freq_max  # 60Hz 유지 (45°C 초과 직전)
+            safety_override = True
+            applied_rules.append("S4_T6_HIGH")
+            reason_parts.append(f"[고온] T6={t6_temp:.1f}°C (44~45°C) → 60Hz 유지")
+        
         elif 42.0 <= t6_temp <= 44.0:  # 정상 범위 (42~44°C)
             # 목표 주파수(48Hz)로 수렴 (이전 주파수 기준)
             if self.prev_er_freq > NORMAL_TARGET_FREQ + 0.5:
@@ -180,14 +186,30 @@ class RuleBasedController:
             er_freq = max(self.freq_min, self.prev_er_freq - 2.0)
             applied_rules.append("S4_T6_LOW")
             reason_parts.append(f"저온 (T6={t6_temp:.1f}°C) → -2Hz (현재 {self.prev_er_freq:.0f}Hz → {er_freq:.0f}Hz)")
-            safety_override = True  # ML 무시
+            # 이미 최소 주파수(40Hz)에 도달했으면 대수 제어 허용
+            if er_freq <= self.freq_min:
+                # prev 값 미리 업데이트
+                self.prev_sw_freq = sw_freq
+                self.prev_fw_freq = fw_freq
+                self.prev_er_freq = er_freq
+                safety_override = False  # 대수 제어 로직 실행 허용
+            else:
+                safety_override = True  # ML 무시
         
         elif t6_temp < 40.0:  # 매우 낮음
             # 이전 주파수 기준으로 감소
             er_freq = max(self.freq_min, self.prev_er_freq - 4.0)
             applied_rules.append("S4_T6_VERY_LOW")
             reason_parts.append(f"매우 낮음 (T6={t6_temp:.1f}°C) → -4Hz (현재 {self.prev_er_freq:.0f}Hz → {er_freq:.0f}Hz)")
-            safety_override = True  # ML 무시
+            # 이미 최소 주파수(40Hz)에 도달했으면 대수 제어 허용
+            if er_freq <= self.freq_min:
+                # prev 값 미리 업데이트
+                self.prev_sw_freq = sw_freq
+                self.prev_fw_freq = fw_freq
+                self.prev_er_freq = er_freq
+                safety_override = False  # 대수 제어 로직 실행 허용
+            else:
+                safety_override = True  # ML 무시
         
         # 안전 계층에서 처리되었으면 즉시 반환
         if safety_override:
@@ -406,7 +428,7 @@ class RuleBasedController:
                 "S1: Cooler 과열 보호 (T2/T3 < 49°C)",
                 "S2: FW 입구 온도 한계 (T4 < 48°C)",
                 "S3: 압력 제약 (PX1 ≥ 1.0 bar)",
-                "S4: T6 온도 제어 (>45°C 긴급, 42~44°C 정상, <42°C 저온) - ML보다 우선"
+                "S4: T6 온도 제어 (>45°C 긴급, 44~45°C 고온, 42~44°C 정상, <42°C 저온) - ML보다 우선"
             ],
             "optimization_rules": [
                 "R1: T5 온도 기반 SW 펌프 조정",
