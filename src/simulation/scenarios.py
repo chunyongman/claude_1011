@@ -61,26 +61,26 @@ class SimulationScenarios:
             load_profile=self._normal_load
         )
 
-        # 2. 고부하 제어 검증
+        # 2. SW 펌프 제어 검증 (T5 기반 ML 예측 주도 + Rule 보정)
         scenarios[ScenarioType.HIGH_LOAD] = ScenarioConfig(
-            name="고부하 제어 검증",
-            description="Rule R4(엔진 부하) 검증 - 고속 항해 + 고온 환경 대응 (95% 부하)",
+            name="SW 펌프 제어 검증",
+            description="🤖 ML 온도 예측 (선제 대응) + Rule R1 보정 (목표 가속) - 에너지 절감 핵심 기능 검증",
             scenario_type=ScenarioType.HIGH_LOAD,
-            duration_minutes=20,
-            temperature_profile=self._high_load_temperature,
+            duration_minutes=10,  # 10분 (600초)
+            temperature_profile=self._sw_pump_control_temperature,
             pressure_profile=self._normal_pressure,
-            load_profile=self._high_load
+            load_profile=self._medium_load  # 중부하 (Rule R4 영향 제거)
         )
 
-        # 3. 냉각기 과열 보호 검증
+        # 3. FW 펌프 제어 검증 (T4 기반 ML 예측 주도 + Rule 보정)
         scenarios[ScenarioType.COOLING_FAILURE] = ScenarioConfig(
-            name="냉각기 과열 보호 검증",
-            description="Rule S1(Cooler 과열 보호) 검증 - T2/T3 고온 시 안전 제어",
+            name="FW 펌프 제어 검증",
+            description="🤖 ML 온도 예측 (선제 대응) + Rule R2 보정 (목표 가속) - 에너지 절감 핵심 기능 검증",
             scenario_type=ScenarioType.COOLING_FAILURE,
-            duration_minutes=15,
-            temperature_profile=self._cooling_failure_temperature,
+            duration_minutes=10,
+            temperature_profile=self._fw_pump_control_temperature,
             pressure_profile=self._normal_pressure,
-            load_profile=self._normal_load
+            load_profile=self._medium_load  # 중부하 (Rule R4 영향 제거)
         )
 
         # 4. 압력 안전 제어 검증
@@ -127,42 +127,225 @@ class SimulationScenarios:
             'T7': 32.0 + noise   # 외기
         }
 
-    def _high_load_temperature(self, t: float) -> Dict[str, float]:
+    def _sw_pump_control_temperature(self, t: float) -> Dict[str, float]:
         """
-        고부하 운전 온도
-        온도가 점진적으로 상승
+        SW 펌프 제어 검증 시나리오 - T5 온도 기반 ML 예측 주도 + Rule R1 보정
+        
+        === 🎯 핵심 가치: 선제적 온도 예측 제어로 에너지 절감 ===
+        
+        1️⃣ ML Predictive Control (주도) 🤖
+           - Temperature Predictor: 30초 후 T5 온도 예측
+           - Random Forest: 예측 온도 기반 최적 주파수 추천
+           - 목적: 온도가 오르기 **전에** 미리 주파수 조정 (선제 대응)
+           - **이것이 기존 ESS 대비 핵심 차별점!**
+        
+        2️⃣ Rule R1 강화 보정 (보조)
+           - ML 예측 주파수에 현재 온도 기반 보정 추가
+           - T5 > 38°C: +6Hz | 36~38°C: +4Hz (60Hz 빠른 도달)
+           - T5 < 32°C: -6Hz | 32~34°C: -3Hz (40Hz 빠른 도달)
+           - 목적: ML 예측을 현재 상태로 강화하여 목표 가속
+        
+        3️⃣ Safety Layer (극한 상황만)
+           - S4: T5 극한 보호 (>40°C 또는 <30°C만 개입)
+           - S1, S2, S3: 기타 안전 제약
+        
+        === 시나리오 타임라인 (10분, 600초) ===
+        
+        초기 상태: SW 펌프 48Hz, T5 = 35°C (정상 범위)
+        
+        Phase 1 (0-90초, 1.5분): 정상 범위 유지 (34~36°C)
+            - T5: 35°C 유지
+            - 예상 제어: ML + Rule 협업 → 48Hz 유지
+            - 목적: 정상 범위에서 안정 유지 확인
+        
+        Phase 2 (90-180초, 1.5분): 온도 급상승 → 매우 높음
+            - T5: 35°C → 40°C (극심한 고온)
+            - 예상 제어: 
+              * ML: "급격한 온도 상승 예측" → 선제적 주파수 대폭 증가
+              * Rule R1: T5 > 37°C → +4Hz 추가
+            - 목적: 최대 주파수 60Hz 도달 확인
+        
+        Phase 3 (180-270초, 1.5분): 극고온 유지
+            - T5: 40°C 유지
+            - 예상 제어: 최대 주파수 유지 (60Hz)
+            - 목적: 극한 상황에서 최대 냉각 확인
+        
+        Phase 4 (270-360초, 1.5분): 온도 하강 → 정상 복귀
+            - T5: 40°C → 35°C (정상 범위)
+            - 예상 제어:
+              * ML: "온도 하강 예측" → 선제적 주파수 감소
+              * Rule R1: T5 정상 범위 → 보정 최소화
+            - 목적: ML 주도의 부드러운 정상 복귀 (60Hz → 48Hz)
+        
+        Phase 5 (360-420초, 1분): 정상 범위 유지
+            - T5: 35°C 유지
+            - 예상 제어: ML 최적화 → 48Hz 안정 유지
+            - 목적: 안정 상태 확인
+        
+        Phase 6 (420-510초, 1.5분): 온도 급하강 → 매우 낮음
+            - T5: 35°C → 30°C (극저온)
+            - 예상 제어:
+              * ML: "급격한 온도 하강 예측" → 선제적 주파수 대폭 감소
+              * Rule R1: T5 < 34°C → -2Hz 추가 (에너지 절감)
+            - 목적: 최소 주파수 40Hz 도달 확인
+        
+        Phase 7 (510-600초, 1.5분): 정상 복귀
+            - T5: 30°C → 35°C
+            - 예상 제어:
+              * ML: "온도 상승 예측" → 선제적 주파수 증가
+              * Rule R1: T5 정상 진입 → 보정 최소화
+            - 목적: 전체 사이클 완료 (40Hz → 48Hz)
         """
-        # 10분에 걸쳐 온도 상승
-        temp_increase = min(5.0, (t / 600.0) * 5.0)
-        noise = np.random.normal(0, 0.8)
-
+        noise = np.random.normal(0, 0.2)
+        
+        # Phase 1 (0-90초): 정상 범위 유지
+        if t <= 90:
+            t5_temp = 35.0
+        
+        # Phase 2 (90-180초): 온도 급상승 → 매우 높음 (60Hz 도달 목표)
+        elif t <= 180:
+            t5_temp = 35.0 + ((t - 90) / 90.0) * 5.0  # 35 → 40°C
+        
+        # Phase 3 (180-270초): 극고온 유지
+        elif t <= 270:
+            t5_temp = 40.0
+        
+        # Phase 4 (270-360초): 온도 하강 → 정상 복귀
+        elif t <= 360:
+            t5_temp = 40.0 - ((t - 270) / 90.0) * 5.0  # 40 → 35°C
+        
+        # Phase 5 (360-420초): 정상 범위 유지
+        elif t <= 420:
+            t5_temp = 35.0
+        
+        # Phase 6 (420-510초): 온도 급하강 → 매우 낮음 (40Hz 도달 목표)
+        elif t <= 510:
+            t5_temp = 35.0 - ((t - 420) / 90.0) * 5.0  # 35 → 30°C
+        
+        # Phase 7 (510-600초): 정상 복귀
+        elif t <= 600:
+            t5_temp = 30.0 + ((t - 510) / 90.0) * 5.0  # 30 → 35°C
+        
+        # 시나리오 종료 후 (600초 초과): 정상 온도 유지
+        else:
+            t5_temp = 35.0
+        
         return {
-            'T1': 30.0 + noise,
-            'T2': 45.0 + temp_increase + noise,
-            'T3': 46.0 + temp_increase + noise,
-            'T4': 46.5 + temp_increase + noise,
-            'T5': 35.0 + temp_increase * 0.5 + noise,
-            'T6': 46.0 + temp_increase + noise,
-            'T7': 35.0 + noise
+            'T1': 25.0 + noise,  # 해수 입구 (온대 해역 - Rule R5 영향 제거)
+            'T2': 42.0 + noise,  # SW 출구 1 (정상)
+            'T3': 43.0 + noise,  # SW 출구 2 (정상)
+            'T4': 45.0 + noise,  # FW 입구 (정상)
+            'T5': t5_temp + noise,  # FW 출구 (Rule R1 검증)
+            'T6': 43.0 + noise,  # E/R 온도 (정상)
+            'T7': 32.0 + noise   # 외기 (정상)
         }
 
-    def _cooling_failure_temperature(self, t: float) -> Dict[str, float]:
+    def _fw_pump_control_temperature(self, t: float) -> Dict[str, float]:
         """
-        냉각 실패 온도
-        급격한 온도 상승
+        FW 펌프 제어 검증 시나리오 - T4 온도 기반 ML 예측 + Rule R2 3단계 제어
+        
+        === 🎯 핵심 가치: 극한 에너지 절감 + 선제적 온도 예측 제어 ===
+        
+        1️⃣ Phase 1: 에너지 절감 모드 (T4 < 48°C & 예측 < 48°C)
+           - T4 < 46°C: 무조건 40Hz 운전 (최대 에너지 절감)
+           - T4 < 47°C: 42Hz 운전 (안전 마진)
+           - T4 < 48°C: 46Hz 운전 (대기)
+           - **목적: 48°C 안전하면 최대한 주파수를 낮춰서 에너지 절감!**
+        
+        2️⃣ Phase 2: 선제 대응 모드 (현재 T4 < 48°C BUT 예측 T4 ≥ 48°C)
+           - ML이 30초 후 48°C 초과 예측 → 지금 선제적으로 증속
+           - 예측 초과 정도에 따라 50Hz, 52Hz, 56Hz로 증속
+           - **목적: 온도 상승 억제 (온도가 오르기 전에 미리 대응)**
+        
+        3️⃣ Phase 3: 긴급 모드 (실제 T4 ≥ 48°C)
+           - Safety Layer S2에서 강제 60Hz 긴급 냉각
+           - **목적: 48°C 초과 시 즉각 최대 냉각**
+        
+        === 시나리오 타임라인 (10분, 600초) ===
+        
+        초기 상태: FW 펌프 48Hz, T4 = 43°C (정상 범위)
+        
+        Phase 1 (0-90초, 1.5분): 에너지 절감 모드 (43°C 유지)
+            - T4: 43°C 유지 (48°C까지 5°C 여유)
+            - 예상 제어: R2 Phase 1 → 40Hz 급속 감속 (극한 에너지 절감)
+            - 목적: 48°C 안전하면 최대한 주파수 낮춤 확인
+        
+        Phase 2 (90-180초, 1.5분): 선제 대응 모드 (43°C → 48°C)
+            - T4: 43°C → 48°C (급격한 온도 상승)
+            - 예상 제어: 
+              * ML: "48°C 초과 예측" → 선제적 증속 (R2 Phase 2)
+              * 예측 초과 정도에 따라 50Hz → 52Hz → 56Hz
+            - 목적: 온도가 오르기 전에 미리 증속하여 상승 억제
+        
+        Phase 3 (180-270초, 1.5분): 긴급 모드 (48°C 도달)
+            - T4: 48°C 유지 (임계값 초과)
+            - 예상 제어: Safety Layer S2 → 강제 60Hz (R2 Phase 3)
+            - 목적: 48°C 초과 시 즉각 최대 냉각 확인
+        
+        Phase 4 (270-360초, 1.5분): 선제 대응 → 에너지 절감 전환
+            - T4: 48°C → 43°C (온도 하강)
+            - 예상 제어:
+              * ML: "온도 하강 예측" → 선제적 감속
+              * 48°C 미만 진입 → R2 Phase 2 → Phase 1 전환
+            - 목적: 60Hz → 50Hz대 → 40Hz로 단계적 절감 전환
+        
+        Phase 5 (360-420초, 1분): 에너지 절감 모드 복귀
+            - T4: 43°C 유지
+            - 예상 제어: R2 Phase 1 → 40Hz 안정 유지
+            - 목적: 에너지 절감 모드 안정성 확인
+        
+        Phase 6 (420-510초, 1.5분): 극한 에너지 절감 (43°C → 38°C)
+            - T4: 43°C → 38°C (온도 추가 하강)
+            - 예상 제어: R2 Phase 1 유지 → 40Hz 지속 (최소 주파수)
+            - 목적: 저온에서도 40Hz 유지 (과도 감속 방지)
+        
+        Phase 7 (510-600초, 1.5분): 정상 복귀
+            - T4: 38°C → 43°C (온도 상승)
+            - 예상 제어: R2 Phase 1 유지 → 40Hz에서 점진적 증속
+            - 목적: 전체 사이클 완료 (40Hz 안정 운전)
         """
-        # 5분에 걸쳐 급격한 온도 상승
-        temp_spike = min(8.0, (t / 300.0) * 8.0)
-        noise = np.random.normal(0, 1.0)
-
+        noise = np.random.normal(0, 0.2)
+        
+        # Phase 1 (0-90초): 정상 범위 유지
+        if t <= 90:
+            t4_temp = 43.0
+        
+        # Phase 2 (90-180초): 온도 급상승 → 매우 높음 (60Hz 도달 목표)
+        elif t <= 180:
+            t4_temp = 43.0 + ((t - 90) / 90.0) * 5.0  # 43 → 48°C
+        
+        # Phase 3 (180-270초): 극고온 유지
+        elif t <= 270:
+            t4_temp = 48.0
+        
+        # Phase 4 (270-360초): 온도 하강 → 정상 복귀
+        elif t <= 360:
+            t4_temp = 48.0 - ((t - 270) / 90.0) * 5.0  # 48 → 43°C
+        
+        # Phase 5 (360-420초): 정상 범위 유지
+        elif t <= 420:
+            t4_temp = 43.0
+        
+        # Phase 6 (420-510초): 온도 급하강 → 매우 낮음 (40Hz 도달 목표)
+        elif t <= 510:
+            t4_temp = 43.0 - ((t - 420) / 90.0) * 5.0  # 43 → 38°C
+        
+        # Phase 7 (510-600초): 정상 복귀
+        elif t <= 600:
+            t4_temp = 38.0 + ((t - 510) / 90.0) * 5.0  # 38 → 43°C
+        
+        # 시나리오 종료 후 (600초 초과): 정상 온도 유지
+        else:
+            t4_temp = 43.0
+        
         return {
-            'T1': 28.0 + noise,
-            'T2': 42.0 + temp_spike + noise,  # 최대 50°C까지 상승
-            'T3': 43.0 + temp_spike + noise,
-            'T4': 45.0 + temp_spike * 0.5 + noise,
-            'T5': 33.0 + temp_spike * 0.7 + noise,  # FW 출구도 상승
-            'T6': 43.0 + temp_spike * 1.2 + noise,  # E/R 온도 급상승
-            'T7': 32.0 + noise
+            'T1': 25.0 + noise,  # 해수 입구 (온대 해역 - Rule R5 영향 제거)
+            'T2': 42.0 + noise,  # SW 출구 1 (정상)
+            'T3': 43.0 + noise,  # SW 출구 2 (정상)
+            'T4': t4_temp + noise,  # FW 입구 (Rule R2 검증)
+            'T5': 35.0 + noise,  # FW 출구 (정상)
+            'T6': 43.0 + noise,  # E/R 온도 (정상)
+            'T7': 32.0 + noise   # 외기 (정상)
         }
 
     def _er_ventilation_temperature(self, t: float) -> Dict[str, float]:

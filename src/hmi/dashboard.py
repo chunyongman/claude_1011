@@ -78,9 +78,9 @@ class Dashboard:
             # 기본 시나리오 시작
             st.session_state.scenario_engine.start_scenario(ScenarioType.NORMAL_OPERATION)
 
-        # 시나리오 모드 플래그
+        # 시나리오 모드 플래그 (기본적으로 시나리오 데이터 사용)
         if 'use_scenario_data' not in st.session_state:
-            st.session_state.use_scenario_data = False
+            st.session_state.use_scenario_data = True  # 메인 대시보드가 항상 살아있게
 
         # 현재 선택된 시나리오 추적
         if 'current_scenario_type' not in st.session_state:
@@ -88,11 +88,11 @@ class Dashboard:
 
         # IntegratedController 초기화 (Rule-based AI + ML 예측)
         # 강제 재초기화 (코드 수정 반영을 위해)
-        if 'controller_version' not in st.session_state or st.session_state.controller_version != 6:
+        if 'controller_version' not in st.session_state or st.session_state.controller_version != 10:
             st.session_state.integrated_controller = IntegratedController(
-                enable_predictive_control=True  # ML 활성화 (T6 제어는 Safety Layer에서 우선 처리)
+                enable_predictive_control=True  # ML 활성화 (선제적 온도 예측 제어 - 핵심 기능)
             )
-            st.session_state.controller_version = 6  # Rule S4 (T6 우선) 버전
+            st.session_state.controller_version = 10  # T4 3단계 제어 (극한 에너지 절감) 버전
 
         self.hmi_manager: HMIStateManager = st.session_state.hmi_manager
         self.scenario_engine: SimulationScenarios = st.session_state.scenario_engine
@@ -367,14 +367,26 @@ class Dashboard:
 
     def _render_temperature_trend(self):
         """온도 트렌드 그래프"""
-        # 시뮬레이션 데이터 추가
+        # 현재 온도 값 가져오기 (시나리오 데이터 또는 기본 시뮬레이션)
+        if st.session_state.use_scenario_data:
+            values = self.scenario_engine.get_current_values()
+            current_T4 = values['T4']
+            current_T5 = values['T5']
+            current_T6 = values['T6']
+        else:
+            # 기본 시뮬레이션 데이터
+            current_T4 = 38.0 + (len(st.session_state.sensor_history['T4']) % 10) * 0.15
+            current_T5 = 35.0 + (len(st.session_state.sensor_history['T5']) % 10) * 0.1
+            current_T6 = 43.0 + (len(st.session_state.sensor_history['T6']) % 10) * 0.1
+        
+        # 데이터 추가
         now = datetime.now()
         if len(st.session_state.sensor_history['timestamps']) == 0 or \
            (now - st.session_state.sensor_history['timestamps'][-1]).seconds >= 1:
 
-            st.session_state.sensor_history['T4'].append(38.0 + (len(st.session_state.sensor_history['T4']) % 10) * 0.15)
-            st.session_state.sensor_history['T5'].append(35.0 + (len(st.session_state.sensor_history['T5']) % 10) * 0.1)
-            st.session_state.sensor_history['T6'].append(43.0 + (len(st.session_state.sensor_history['T6']) % 10) * 0.1)
+            st.session_state.sensor_history['T4'].append(current_T4)
+            st.session_state.sensor_history['T5'].append(current_T5)
+            st.session_state.sensor_history['T6'].append(current_T6)
             st.session_state.sensor_history['timestamps'].append(now)
 
             # 최근 600개만 유지 (10분)
@@ -437,14 +449,48 @@ class Dashboard:
 
     def _render_energy_savings_gauge(self):
         """에너지 절감률 게이지"""
-        # 학습 데이터에서 평균 절감률 가져오기
-        learning_progress = self.hmi_manager.get_learning_progress()
-        avg_savings = learning_progress['average_energy_savings']
-
-        # 그룹별 절감률 (평균 기준으로 약간 변동)
-        sw_savings = avg_savings - 1.5
-        fw_savings = avg_savings - 1.5
-        fan_savings = avg_savings + 1.5
+        # 실제 제어 주파수 가져오기
+        if st.session_state.use_scenario_data and hasattr(st.session_state, 'last_control_decision'):
+            decision = st.session_state.last_control_decision
+            sw_freq = decision.sw_pump_freq
+            fw_freq = decision.fw_pump_freq
+            er_freq = decision.er_fan_freq
+            er_count = decision.er_fan_count
+        else:
+            sw_freq = self.hmi_manager.groups["SW_PUMPS"].target_frequency
+            fw_freq = self.hmi_manager.groups["FW_PUMPS"].target_frequency
+            er_freq = self.hmi_manager.groups["ER_FANS"].target_frequency
+            er_count = 3
+        
+        # 실시간 에너지 절감률 계산
+        sw_rated = 132.0  # kW
+        fw_rated = 75.0
+        er_rated = 54.3
+        
+        sw_running = 2
+        fw_running = 2
+        er_running = er_count
+        
+        def calc_power(freq, rated_kw, running_count):
+            return rated_kw * ((freq / 60.0) ** 3) * running_count
+        
+        # 60Hz 기준
+        sw_60hz = calc_power(60.0, sw_rated, sw_running)
+        fw_60hz = calc_power(60.0, fw_rated, fw_running)
+        er_60hz = calc_power(60.0, er_rated, er_running)
+        total_60hz = sw_60hz + fw_60hz + er_60hz
+        
+        # AI 제어
+        sw_ai = calc_power(sw_freq, sw_rated, sw_running)
+        fw_ai = calc_power(fw_freq, fw_rated, fw_running)
+        er_ai = calc_power(er_freq, er_rated, er_running)
+        total_ai = sw_ai + fw_ai + er_ai
+        
+        # 절감률
+        sw_savings = ((sw_60hz - sw_ai) / sw_60hz) * 100 if sw_60hz > 0 else 0
+        fw_savings = ((fw_60hz - fw_ai) / fw_60hz) * 100 if fw_60hz > 0 else 0
+        fan_savings = ((er_60hz - er_ai) / er_60hz) * 100 if er_60hz > 0 else 0
+        avg_savings = ((total_60hz - total_ai) / total_60hz) * 100 if total_60hz > 0 else 0
 
         fig = go.Figure(go.Indicator(
             mode="gauge+number+delta",
@@ -1641,15 +1687,11 @@ class Dashboard:
                 "10배속 (빠름)": 10.0
             }
 
-            # 최초 렌더링 시 현재 시뮬레이터 속도와 가장 가까운 옵션을 선택 상태로 설정
+            # 최초 렌더링 시 기본값을 10배속으로 설정
             if "speed_selector" not in st.session_state:
-                current_speed = self.scenario_engine.get_time_multiplier()
-                closest_label = min(
-                    speed_options.keys(),
-                    key=lambda label: abs(speed_options[label] - current_speed)
-                )
-                st.session_state.speed_selector = closest_label
-                st.session_state.speed_multiplier = speed_options[closest_label]
+                st.session_state.speed_selector = "10배속 (빠름)"
+                st.session_state.speed_multiplier = 10.0
+                self.scenario_engine.set_time_multiplier(10.0)
 
             selected_speed = st.selectbox(
                 "속도 선택",
@@ -1682,8 +1724,8 @@ class Dashboard:
         # 라디오 버튼으로 변경 (한 줄 표시 보장)
         scenario_options = {
             "기본 제어 검증": ScenarioType.NORMAL_OPERATION,
-            "고부하 제어 검증": ScenarioType.HIGH_LOAD,
-            "냉각기 과열 보호 검증": ScenarioType.COOLING_FAILURE,
+            "SW 펌프 제어 검증": ScenarioType.HIGH_LOAD,
+            "FW 펌프 제어 검증": ScenarioType.COOLING_FAILURE,
             "압력 안전 제어 검증": ScenarioType.PRESSURE_DROP,
             "E/R 온도 제어 검증": ScenarioType.ER_VENTILATION
         }
@@ -1702,17 +1744,27 @@ class Dashboard:
         # 라디오 버튼으로 시나리오 선택
         selected_index = list(scenario_options.keys()).index(st.session_state.selected_scenario_label) if st.session_state.selected_scenario_label in scenario_options else 0
 
-        selected = st.radio(
-            "시나리오를 선택하세요",
-            options=list(scenario_options.keys()),
-            index=selected_index,
-            horizontal=True,
-            label_visibility="collapsed"
-        )
+        col_radio, col_button = st.columns([4, 1])
+        
+        with col_radio:
+            selected = st.radio(
+                "시나리오를 선택하세요",
+                options=list(scenario_options.keys()),
+                index=selected_index,
+                horizontal=True,
+                label_visibility="collapsed"
+            )
+        
+        with col_button:
+            st.write("")  # 버튼 정렬을 위한 공백
+            start_button = st.button("🚀 시작", type="primary", use_container_width=True)
 
-        # 선택이 변경되면 시나리오 시작
+        # 선택이 변경되면 선택만 업데이트 (시작 버튼으로 실행)
         if selected != st.session_state.selected_scenario_label:
             st.session_state.selected_scenario_label = selected
+        
+        # 시작 버튼 클릭 시 시나리오 시작
+        if start_button:
             self.scenario_engine.start_scenario(scenario_options[selected])
             st.session_state.use_scenario_data = True
             st.session_state.current_scenario_type = scenario_options[selected]
@@ -1733,9 +1785,9 @@ class Dashboard:
         if current == ScenarioType.NORMAL_OPERATION:
             st.info("✅ 기본 제어 검증 시나리오 실행 중")
         elif current == ScenarioType.HIGH_LOAD:
-            st.info("✅ 고부하 제어 검증 시나리오 실행 중")
+            st.info("✅ SW 펌프 제어 검증 시나리오 실행 중")
         elif current == ScenarioType.COOLING_FAILURE:
-            st.warning("⚠️ 냉각기 과열 보호 검증 시나리오 실행 중")
+            st.warning("⚠️ FW 펌프 제어 검증 시나리오 실행 중")
         elif current == ScenarioType.PRESSURE_DROP:
             st.warning("⚠️ 압력 안전 제어 검증 시나리오 실행 중")
         elif current == ScenarioType.ER_VENTILATION:
@@ -1854,22 +1906,53 @@ class Dashboard:
             timer_min = current_freqs.get('time_at_min_freq', 0)
             st.info(f"🕐 타이머 상태: 최대={timer_max}s, 최소={timer_min}s")
 
-            # E/R 온도 제어 검증 시나리오에서 T6 강조
+            # 시나리오별 강조 표시 플래그
             is_er_scenario = (st.session_state.current_scenario_type == ScenarioType.ER_VENTILATION)
+            is_sw_scenario = (st.session_state.current_scenario_type == ScenarioType.HIGH_LOAD)
+            is_fw_scenario = (st.session_state.current_scenario_type == ScenarioType.COOLING_FAILURE)
+            is_pressure_scenario = (st.session_state.current_scenario_type == ScenarioType.PRESSURE_DROP)
             
             col1, col2, col3, col4, col5 = st.columns(5)
 
             with col1:
                 delta_t5 = values['T5'] - 35.0
-                st.metric("T5 (FW 출구)", f"{values['T5']:.1f}°C",
-                         f"{delta_t5:+.1f}°C",
-                         delta_color="inverse" if delta_t5 > 0 else "normal")
+                if is_sw_scenario:
+                    # SW 펌프 시나리오에서 T5 강조
+                    st.markdown("""
+                    <div style='background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
+                                padding: 20px; border-radius: 10px; text-align: center; 
+                                box-shadow: 0 8px 16px rgba(102,126,234,0.3);'>
+                        <p style='color: white; font-size: 14px; margin: 0; font-weight: 600;'>⭐ T5 (FW 출구)</p>
+                        <p style='color: white; font-size: 36px; margin: 10px 0; font-weight: 700;'>{:.1f}°C</p>
+                        <p style='color: {}; font-size: 16px; margin: 0; font-weight: 600;'>{:+.1f}°C</p>
+                    </div>
+                    """.format(values['T5'], 
+                              '#ff6b6b' if delta_t5 > 0 else '#51cf66',
+                              delta_t5), unsafe_allow_html=True)
+                else:
+                    st.metric("T5 (FW 출구)", f"{values['T5']:.1f}°C",
+                             f"{delta_t5:+.1f}°C",
+                             delta_color="inverse" if delta_t5 > 0 else "normal")
 
             with col2:
-                delta_t4 = values['T4'] - 45.0
-                st.metric("T4 (FW 입구)", f"{values['T4']:.1f}°C",
-                         f"{delta_t4:+.1f}°C",
-                         delta_color="inverse" if delta_t4 > 0 else "normal")
+                delta_t4 = values['T4'] - 43.0  # T4 정상 범위 중심
+                if is_fw_scenario:
+                    # FW 펌프 시나리오에서 T4 강조
+                    st.markdown("""
+                    <div style='background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
+                                padding: 20px; border-radius: 10px; text-align: center; 
+                                box-shadow: 0 8px 16px rgba(102,126,234,0.3);'>
+                        <p style='color: white; font-size: 14px; margin: 0; font-weight: 600;'>⭐ T4 (FW 입구)</p>
+                        <p style='color: white; font-size: 36px; margin: 10px 0; font-weight: 700;'>{:.1f}°C</p>
+                        <p style='color: {}; font-size: 16px; margin: 0; font-weight: 600;'>{:+.1f}°C</p>
+                    </div>
+                    """.format(values['T4'], 
+                              '#ff6b6b' if delta_t4 > 0 else '#51cf66',
+                              delta_t4), unsafe_allow_html=True)
+                else:
+                    st.metric("T4 (FW 입구)", f"{values['T4']:.1f}°C",
+                             f"{delta_t4:+.1f}°C",
+                             delta_color="inverse" if delta_t4 > 0 else "normal")
 
             with col3:
                 delta_t6 = values['T6'] - 43.0
@@ -1893,9 +1976,23 @@ class Dashboard:
 
             with col4:
                 delta_px = values['PX1'] - 2.0
-                st.metric("PX1 (압력)", f"{values['PX1']:.2f} bar",
-                         f"{delta_px:+.2f}",
-                         delta_color="inverse" if delta_px < 0 else "normal")
+                if is_pressure_scenario:
+                    # 압력 시나리오에서 PX1 강조
+                    st.markdown("""
+                    <div style='background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); 
+                                padding: 20px; border-radius: 10px; text-align: center; 
+                                box-shadow: 0 8px 16px rgba(240,147,251,0.3);'>
+                        <p style='color: white; font-size: 14px; margin: 0; font-weight: 600;'>⭐ PX1 (압력)</p>
+                        <p style='color: white; font-size: 36px; margin: 10px 0; font-weight: 700;'>{:.2f} bar</p>
+                        <p style='color: {}; font-size: 16px; margin: 0; font-weight: 600;'>{:+.2f} bar</p>
+                    </div>
+                    """.format(values['PX1'], 
+                              '#51cf66' if delta_px > 0 else '#ff6b6b',
+                              delta_px), unsafe_allow_html=True)
+                else:
+                    st.metric("PX1 (압력)", f"{values['PX1']:.2f} bar",
+                             f"{delta_px:+.2f}",
+                             delta_color="inverse" if delta_px < 0 else "normal")
 
             with col5:
                 st.metric("엔진 부하", f"{values['engine_load']:.1f}%")
@@ -1903,6 +2000,25 @@ class Dashboard:
             # Rule-based AI 제어 판단 표시
             st.markdown("---")
             st.markdown("### 🤖 Rule-based AI 제어 판단")
+            
+            # 제어 상태 표시 (시나리오별)
+            if is_sw_scenario:
+                ml_used = hasattr(decision, 'ml_prediction_used') and decision.ml_prediction_used
+                if ml_used:
+                    st.success("🤖 **제어 방식**: ML 온도 예측 (T5 선제 대응) + Rule R1 강화 보정 (60Hz/40Hz 가속) - 핵심 에너지 절감 기능!")
+                else:
+                    st.warning("📐 **제어 방식**: Rule 기반 제어 (ML 데이터 축적 중...)")
+            elif is_fw_scenario:
+                ml_used = hasattr(decision, 'ml_prediction_used') and decision.ml_prediction_used
+                if ml_used:
+                    st.success("🤖 **제어 방식**: ML 온도 예측 + Rule R2 3단계 제어 (극한 에너지 절감) - T4<48°C일 때 최대한 40Hz 운전!")
+                else:
+                    st.warning("📐 **제어 방식**: Rule 기반 제어 (ML 데이터 축적 중...)")
+            elif is_pressure_scenario:
+                if decision.control_mode == "pressure_constraint":
+                    st.error("⛔ **제어 방식**: Safety Layer S3 압력 보호 - PX1 < 1.0 bar → SW 펌프 감속 차단!")
+                else:
+                    st.info("📊 **제어 방식**: 압력 모니터링 중 (PX1 ≥ 1.0 bar → 정상)")
             
             # 적용된 규칙 표시
             if hasattr(decision, 'applied_rules') and decision.applied_rules:
@@ -1913,7 +2029,7 @@ class Dashboard:
                         elif rule.startswith('R'):  # Optimization rules
                             st.info(f"⚙️ {rule}")
                         elif rule == 'ML_PREDICTION':
-                            st.success(f"🤖 {rule}: ML 모델 예측 사용")
+                            st.success(f"🤖 {rule}: ML 모델 예측 사용 (선제적 주파수 조정)")
                         else:
                             st.text(f"• {rule}")
 
@@ -1932,27 +2048,56 @@ class Dashboard:
 
             with col1:
                 freq_change = decision.sw_pump_freq - current_freqs['sw_pump']
-                # 압력 제약이 활성화된 경우 특별 표시
-                if decision.control_mode == "pressure_constraint":
-                    st.metric("SW 펌프 목표", f"{decision.sw_pump_freq:.1f} Hz",
-                             "⛔ 감소 제한", delta_color="off")
-                elif decision.sw_pump_freq >= 60.0 and decision.emergency_action:
-                    st.metric("SW 펌프 목표", f"{decision.sw_pump_freq:.1f} Hz",
-                             "🚨 최대!", delta_color="inverse")
-                elif abs(freq_change) >= 0.1:
-                    st.metric("SW 펌프 목표", f"{decision.sw_pump_freq:.1f} Hz", f"{freq_change:+.1f} Hz")
+                if is_sw_scenario or is_pressure_scenario:
+                    # SW 펌프 시나리오 또는 압력 시나리오에서 주파수 강조
+                    change_color = '#ff6b6b' if freq_change > 0 else ('#51cf66' if freq_change < 0 else '#ffd93d')
+                    gradient_bg = 'linear-gradient(135deg, #fa709a 0%, #fee140 100%)' if is_sw_scenario else 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)'
+                    text_color = '#333' if is_sw_scenario else 'white'
+                    change_text_color = change_color if is_sw_scenario else 'white'
+                    st.markdown(f"""
+                    <div style='background: {gradient_bg}; 
+                                padding: 20px; border-radius: 10px; text-align: center; 
+                                box-shadow: 0 8px 16px rgba(250,112,154,0.3);'>
+                        <p style='color: {text_color}; font-size: 14px; margin: 0; font-weight: 600;'>⭐ SW 펌프 목표</p>
+                        <p style='color: {text_color}; font-size: 36px; margin: 10px 0; font-weight: 700;'>{decision.sw_pump_freq:.1f} Hz</p>
+                        <p style='color: {change_text_color}; font-size: 16px; margin: 0; font-weight: 600;'>{freq_change:+.1f} Hz</p>
+                    </div>
+                    """, unsafe_allow_html=True)
                 else:
-                    st.metric("SW 펌프 목표", f"{decision.sw_pump_freq:.1f} Hz")
+                    # 압력 제약이 활성화된 경우 특별 표시
+                    if decision.control_mode == "pressure_constraint":
+                        st.metric("SW 펌프 목표", f"{decision.sw_pump_freq:.1f} Hz",
+                                 "⛔ 감소 제한", delta_color="off")
+                    elif decision.sw_pump_freq >= 60.0 and decision.emergency_action:
+                        st.metric("SW 펌프 목표", f"{decision.sw_pump_freq:.1f} Hz",
+                                 "🚨 최대!", delta_color="inverse")
+                    elif abs(freq_change) >= 0.1:
+                        st.metric("SW 펌프 목표", f"{decision.sw_pump_freq:.1f} Hz", f"{freq_change:+.1f} Hz")
+                    else:
+                        st.metric("SW 펌프 목표", f"{decision.sw_pump_freq:.1f} Hz")
 
             with col2:
                 freq_change = decision.fw_pump_freq - current_freqs['fw_pump']
-                if decision.fw_pump_freq >= 60.0 and decision.emergency_action:
-                    st.metric("FW 펌프 목표", f"{decision.fw_pump_freq:.1f} Hz",
-                             "🚨 최대!", delta_color="inverse")
-                elif abs(freq_change) >= 0.1:
-                    st.metric("FW 펌프 목표", f"{decision.fw_pump_freq:.1f} Hz", f"{freq_change:+.1f} Hz")
+                if is_fw_scenario:
+                    # FW 펌프 시나리오에서 주파수 강조
+                    change_color = '#ff6b6b' if freq_change > 0 else ('#51cf66' if freq_change < 0 else '#ffd93d')
+                    st.markdown("""
+                    <div style='background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); 
+                                padding: 20px; border-radius: 10px; text-align: center; 
+                                box-shadow: 0 8px 16px rgba(250,112,154,0.3);'>
+                        <p style='color: #333; font-size: 14px; margin: 0; font-weight: 600;'>⭐ FW 펌프 목표</p>
+                        <p style='color: #333; font-size: 36px; margin: 10px 0; font-weight: 700;'>{:.1f} Hz</p>
+                        <p style='color: {}; font-size: 16px; margin: 0; font-weight: 600;'>{:+.1f} Hz</p>
+                    </div>
+                    """.format(decision.fw_pump_freq, change_color, freq_change), unsafe_allow_html=True)
                 else:
-                    st.metric("FW 펌프 목표", f"{decision.fw_pump_freq:.1f} Hz")
+                    if decision.fw_pump_freq >= 60.0 and decision.emergency_action:
+                        st.metric("FW 펌프 목표", f"{decision.fw_pump_freq:.1f} Hz",
+                                 "🚨 최대!", delta_color="inverse")
+                    elif abs(freq_change) >= 0.1:
+                        st.metric("FW 펌프 목표", f"{decision.fw_pump_freq:.1f} Hz", f"{freq_change:+.1f} Hz")
+                    else:
+                        st.metric("FW 펌프 목표", f"{decision.fw_pump_freq:.1f} Hz")
 
             with col3:
                 freq_change = decision.er_fan_freq - current_freqs['er_fan']
