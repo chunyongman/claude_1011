@@ -53,15 +53,19 @@ class RuleBasedController:
         self.freq_min = 40.0
         self.freq_max = 60.0
         
-        # 온도 목표값
+        # 온도 목표값 (V3 설정)
         self.t5_target = 35.0
-        self.t6_target = 43.0
+        self.t6_target = 43.0     # 변경: 41 → 43°C (실용적 운영 온도)
         
         # 안전 임계값
         self.t2_t3_limit = 49.0  # Cooler 보호
         self.t4_limit = 48.0     # FW 입구 한계
-        self.t6_emergency = 45.0 # E/R 긴급 온도 (Rule R3에서 처리)
+        self.t6_emergency = 47.0 # E/R 긴급 온도 (변경: 45 → 47°C, 갭 4.0°C 유지)
         self.px1_min = 1.0       # 최소 압력
+        
+        # 피드백 제어 파라미터
+        self.kp_t6 = 3.0         # T6 비례 게인
+        self.max_change_per_cycle = 5.0  # 최대 변화율 (Hz/cycle)
         
         # 히스테리시스 (떨림 방지)
         self.hysteresis_freq = 0.5  # Hz
@@ -253,71 +257,83 @@ class RuleBasedController:
         
         # 일반 범위: Safety Layer 통과 (ML이 제어)
         
-        # Rule S5: T6 온도 기반 E/R 팬 제어 (Safety + Fine-tuning)
-        # T6 제어는 ML보다 우선하여 적용
+        # Rule S5: T6 온도 피드백 제어 (Safety Layer + ML 통합)
+        # 목표: 43°C, 극한: 47°C, 갭: 4.0°C
         t6_temp = temperatures.get('T6', 43.0)
-        NORMAL_TARGET_FREQ = 48.0
         
-        if t6_temp > 45.0:  # 긴급 고온 (45°C 초과)
+        # ML 예측값 가져오기 (5분 후 T6 온도 예측)
+        if ml_prediction and hasattr(ml_prediction, 't6_pred_5min'):
+            t6_pred_5min = ml_prediction.t6_pred_5min
+        else:
+            t6_pred_5min = t6_temp
+        
+        # === Safety Layer: 극한 온도 강제 제어 ===
+        if t6_temp >= self.t6_emergency:  # 47°C 이상
             er_freq = self.freq_max  # 강제 60Hz
             safety_override = True
-            applied_rules.append("S5_ER_HIGH_TEMP")
-            reason_parts.append(f"[CRITICAL] T6={t6_temp:.1f}°C > 45°C → 강제 60Hz")
+            applied_rules.append("S5_T6_EMERGENCY")
+            reason_parts.append(f"[EMERGENCY] T6={t6_temp:.1f}°C ≥ {self.t6_emergency}°C → 강제 60Hz")
         
-        elif 44.0 < t6_temp <= 45.0:  # 고온 범위 (44~45°C) - 60Hz 유지
-            er_freq = self.freq_max  # 60Hz 유지 (45°C 초과 직전)
-            safety_override = True
-            applied_rules.append("S5_T6_HIGH")
-            reason_parts.append(f"[고온] T6={t6_temp:.1f}°C (44~45°C) → 60Hz 유지")
-        
-        elif 42.0 <= t6_temp <= 44.0:  # 정상 범위 (42~44°C)
-            # 목표 주파수(48Hz)로 수렴 (이전 주파수 기준)
-            if self.prev_er_freq > NORMAL_TARGET_FREQ + 0.5:
-                er_freq = max(NORMAL_TARGET_FREQ, self.prev_er_freq - 2.0)
-                applied_rules.append("S5_T6_NORMAL_DECREASING")
-                reason_parts.append(f"정상 복귀 ({self.prev_er_freq:.0f}Hz → {er_freq:.0f}Hz)")
-                safety_override = True  # ML 무시
-            elif self.prev_er_freq < NORMAL_TARGET_FREQ - 0.5:
-                er_freq = min(NORMAL_TARGET_FREQ, self.prev_er_freq + 2.0)
-                applied_rules.append("S5_T6_NORMAL_INCREASING")
-                reason_parts.append(f"정상 복귀 ({self.prev_er_freq:.0f}Hz → {er_freq:.0f}Hz)")
-                safety_override = True  # ML 무시
+        else:
+            # === 피드백 제어: 온도 오차 기반 주파수 조정 ===
+            
+            # 1. 현재 온도 오차
+            error_current = t6_temp - self.t6_target
+            
+            # 2. 예측 온도 오차
+            error_predicted = t6_pred_5min - self.t6_target
+            
+            # 3. 가중치 동적 조정
+            if abs(error_predicted) > 2.0:
+                # 큰 변화 예측 → 예측 중시
+                w_current, w_predicted = 0.2, 0.8
+            elif abs(error_current) > 1.0:
+                # 현재 이미 벗어남 → 현재 중시
+                w_current, w_predicted = 0.6, 0.4
             else:
-                # 목표 주파수 도달 (48Hz ± 0.5Hz)
-                er_freq = NORMAL_TARGET_FREQ
-                applied_rules.append("S5_T6_NORMAL_HOLD")
-                reason_parts.append(f"정상 유지 (48Hz)")
-                # 정상 유지 시에는 ML 허용하지 않음 (48Hz 고정)
-        
-        elif 40.0 <= t6_temp < 42.0:  # 저온 범위
-            # 이전 주파수 기준으로 감소
-            er_freq = max(self.freq_min, self.prev_er_freq - 2.0)
-            applied_rules.append("S5_T6_LOW")
-            reason_parts.append(f"저온 (T6={t6_temp:.1f}°C) → -2Hz (현재 {self.prev_er_freq:.0f}Hz → {er_freq:.0f}Hz)")
-            # 이미 최소 주파수(40Hz)에 도달했으면 대수 제어 허용
-            if er_freq <= self.freq_min:
-                # prev 값 미리 업데이트
-                self.prev_sw_freq = sw_freq
-                self.prev_fw_freq = fw_freq
-                self.prev_er_freq = er_freq
-                safety_override = False  # 대수 제어 로직 실행 허용
+                # 정상 범위 → 균형
+                w_current, w_predicted = 0.4, 0.6
+            
+            # 4. 통합 오차
+            error_combined = w_current * error_current + w_predicted * error_predicted
+            
+            # 5. 비례 제어 (P-Control)
+            adjustment = self.kp_t6 * error_combined
+            
+            # 6. 변화율 제한
+            adjustment = max(-self.max_change_per_cycle, min(self.max_change_per_cycle, adjustment))
+            
+            # 7. 새 주파수 계산
+            er_freq = self.prev_er_freq + adjustment
+            er_freq = max(self.freq_min, min(self.freq_max, er_freq))
+            
+            # 8. 제어 모드 결정
+            if abs(error_combined) < 0.3:
+                applied_rules.append("S5_T6_STABLE")
+                reason_parts.append(f"[안정] T6={t6_temp:.1f}°C (목표 {self.t6_target}°C) → {er_freq:.0f}Hz")
+                # 40Hz에 도달하면 대수 제어 허용
+                if er_freq <= self.freq_min:
+                    self.prev_sw_freq = sw_freq
+                    self.prev_fw_freq = fw_freq
+                    self.prev_er_freq = er_freq
+                    safety_override = False
+                else:
+                    safety_override = True
+            elif error_combined > 0:
+                applied_rules.append("S5_T6_COOLING")
+                reason_parts.append(f"[냉각] T6={t6_temp:.1f}°C → 예측 {t6_pred_5min:.1f}°C | {adjustment:+.1f}Hz → {er_freq:.0f}Hz")
+                safety_override = True
             else:
-                safety_override = True  # ML 무시
-        
-        elif t6_temp < 40.0:  # 매우 낮음
-            # 이전 주파수 기준으로 감소
-            er_freq = max(self.freq_min, self.prev_er_freq - 4.0)
-            applied_rules.append("S5_T6_VERY_LOW")
-            reason_parts.append(f"매우 낮음 (T6={t6_temp:.1f}°C) → -4Hz (현재 {self.prev_er_freq:.0f}Hz → {er_freq:.0f}Hz)")
-            # 이미 최소 주파수(40Hz)에 도달했으면 대수 제어 허용
-            if er_freq <= self.freq_min:
-                # prev 값 미리 업데이트
-                self.prev_sw_freq = sw_freq
-                self.prev_fw_freq = fw_freq
-                self.prev_er_freq = er_freq
-                safety_override = False  # 대수 제어 로직 실행 허용
-            else:
-                safety_override = True  # ML 무시
+                applied_rules.append("S5_T6_ENERGY_SAVING")
+                reason_parts.append(f"[절감] T6={t6_temp:.1f}°C → 예측 {t6_pred_5min:.1f}°C | {adjustment:+.1f}Hz → {er_freq:.0f}Hz")
+                # 40Hz에 도달하면 대수 제어 허용
+                if er_freq <= self.freq_min:
+                    self.prev_sw_freq = sw_freq
+                    self.prev_fw_freq = fw_freq
+                    self.prev_er_freq = er_freq
+                    safety_override = False
+                else:
+                    safety_override = True
         
         # 안전 계층에서 처리되었으면 즉시 반환
         if safety_override:

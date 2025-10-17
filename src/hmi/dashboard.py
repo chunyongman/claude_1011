@@ -88,11 +88,11 @@ class Dashboard:
 
         # IntegratedController 초기화 (Rule-based AI + ML 예측)
         # 강제 재초기화 (코드 수정 반영을 위해)
-        if 'controller_version' not in st.session_state or st.session_state.controller_version != 10:
+        if 'controller_version' not in st.session_state or st.session_state.controller_version != 11:
             st.session_state.integrated_controller = IntegratedController(
                 enable_predictive_control=True  # ML 활성화 (선제적 온도 예측 제어 - 핵심 기능)
             )
-            st.session_state.controller_version = 10  # T4 3단계 제어 (극한 에너지 절감) 버전
+            st.session_state.controller_version = 11  # V3: T6 피드백 제어 (목표 43°C, 극한 47°C, 갭 4.0°C)
 
         self.hmi_manager: HMIStateManager = st.session_state.hmi_manager
         self.scenario_engine: SimulationScenarios = st.session_state.scenario_engine

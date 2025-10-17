@@ -392,66 +392,113 @@ class IntegratedController:
             if fan_count != current_fan_count:
                 decision.count_change_reason = fan_reason
         else:
-            # 시뮬레이션: 30초 지연을 가진 대수 제어 로직
+            # 시뮬레이션: 우선순위별 대수 제어 로직
             current_count = current_frequencies.get('er_fan_count', 3)
             t6 = temperatures.get('T6', 43.0)
+
+            # ML 예측값 가져오기
+            t6_pred_5min = t6  # 기본값
+            if hasattr(decision, 'ml_prediction') and decision.ml_prediction:
+                if hasattr(decision.ml_prediction, 't6_pred_5min'):
+                    t6_pred_5min = decision.ml_prediction.t6_pred_5min
 
             # 시간 추적
             time_at_max = current_frequencies.get('time_at_max_freq', 0)
             time_at_min = current_frequencies.get('time_at_min_freq', 0)
-            count_change_cooldown = current_frequencies.get('count_change_cooldown', 0)  # 대수 변경 후 안정화 시간
+            count_change_cooldown = current_frequencies.get('count_change_cooldown', 0)
 
             # 대수 변경 쿨다운 감소
             if count_change_cooldown > 0:
                 current_frequencies['count_change_cooldown'] = count_change_cooldown - 2
 
-            # 대수 증가 조건: 주파수 ≥ 60Hz & 10초 지속 & 쿨다운 종료
-            if decision.er_fan_freq >= 60.0 and count_change_cooldown <= 0:
-                if time_at_max >= 10 and current_count < 4:
+            # ===================================================================
+            # 대수 증가 로직 (우선순위별)
+            # ===================================================================
+            # 조건: 59.5Hz 이상 (피드백 제어의 부동소수점 오차 허용)
+            if decision.er_fan_freq >= 59.5 and count_change_cooldown <= 0 and current_count < 4:
+                
+                # Priority 1: 극한 온도 도달 (즉시!)
+                if t6 >= 47.0:
                     decision.er_fan_count = current_count + 1
-                    decision.count_change_reason = f"60Hz 최대 도달 (T6={t6:.1f}C) -> 팬 {current_count}->{current_count + 1}대 증가"
+                    decision.count_change_reason = f"[긴급] 극한 온도 {t6:.1f}°C ≥ 47°C → 즉시 {current_count + 1}대 증설!"
                     current_frequencies['time_at_max_freq'] = 0
-                    current_frequencies['count_change_cooldown'] = 30  # 30초 쿨다운
-                    # 대수 증가 후 주파수 감소 (Rule S4가 계속 고온 제어)
+                    current_frequencies['count_change_cooldown'] = 30
                     decision.er_fan_freq = max(50.0, decision.er_fan_freq - 8.0)
-                else:
-                    decision.er_fan_count = current_count
+                
+                # Priority 2: 극한 예상 (즉시!)
+                elif t6 >= 46.0 and t6_pred_5min >= 47.0:
+                    decision.er_fan_count = current_count + 1
+                    decision.count_change_reason = f"[선제] 극한 예상 (예측 {t6_pred_5min:.1f}°C ≥ 47°C) → 즉시 {current_count + 1}대 증설!"
+                    current_frequencies['time_at_max_freq'] = 0
+                    current_frequencies['count_change_cooldown'] = 30
+                    decision.er_fan_freq = max(50.0, decision.er_fan_freq - 8.0)
+                
+                # Priority 3: 고온 (5초 대기)
+                elif t6 >= 45.0:
                     new_time = time_at_max + 2
                     current_frequencies['time_at_max_freq'] = new_time
-                    if current_count >= 4:
-                        decision.count_change_reason = f"[최대] {current_count}대 운전 중 (Max 4대)"
+                    if new_time >= 5:
+                        decision.er_fan_count = current_count + 1
+                        decision.count_change_reason = f"[고온] {t6:.1f}°C ≥ 45°C, {decision.er_fan_freq:.1f}Hz 5초 → {current_count + 1}대 증설"
+                        current_frequencies['time_at_max_freq'] = 0
+                        current_frequencies['count_change_cooldown'] = 30
+                        decision.er_fan_freq = max(50.0, decision.er_fan_freq - 8.0)
                     else:
-                        decision.count_change_reason = f"[증가 대기] {decision.er_fan_freq:.1f}Hz 지속, Timer={new_time}s/10s"
+                        decision.er_fan_count = current_count
+                        decision.count_change_reason = f"[고온 대기] {t6:.1f}°C ≥ 45°C, {decision.er_fan_freq:.1f}Hz {new_time}초/5초"
+                
+                # Priority 4: 정상 (10초 대기)
+                else:
+                    new_time = time_at_max + 2
+                    current_frequencies['time_at_max_freq'] = new_time
+                    if new_time >= 10:
+                        decision.er_fan_count = current_count + 1
+                        decision.count_change_reason = f"[정상] {decision.er_fan_freq:.1f}Hz 10초 지속 → {current_count + 1}대 증설"
+                        current_frequencies['time_at_max_freq'] = 0
+                        current_frequencies['count_change_cooldown'] = 30
+                        decision.er_fan_freq = max(50.0, decision.er_fan_freq - 8.0)
+                    else:
+                        decision.er_fan_count = current_count
+                        decision.count_change_reason = f"[증가 대기] {decision.er_fan_freq:.1f}Hz {new_time}초/10초"
+                
+                # 증가 조건에서는 감소 타이머 리셋
                 current_frequencies['time_at_min_freq'] = 0
             
-            # 대수 감소 조건: 주파수 ≤ 40Hz & 10초 지속 & 쿨다운 종료
-            elif decision.er_fan_freq <= 40.0 and count_change_cooldown <= 0:
-                if time_at_min >= 10 and current_count > 2:
+            # ===================================================================
+            # 대수 감소 로직 (10초 대기)
+            # ===================================================================
+            # 조건: 40.5Hz 이하 (피드백 제어의 부동소수점 오차 허용)
+            elif decision.er_fan_freq <= 40.5 and count_change_cooldown <= 0 and current_count > 2:
+                new_time = time_at_min + 2
+                current_frequencies['time_at_min_freq'] = new_time
+                if new_time >= 10:
                     decision.er_fan_count = current_count - 1
-                    decision.count_change_reason = f"40Hz 지속 (T6={t6:.1f}C) -> 팬 {current_count}->{current_count - 1}대 감소"
+                    decision.count_change_reason = f"[절감] {decision.er_fan_freq:.1f}Hz 10초 지속 → {current_count - 1}대 감소"
                     current_frequencies['time_at_min_freq'] = 0
-                    current_frequencies['count_change_cooldown'] = 30  # 30초 쿨다운
-                    # 대수 감소 후 주파수는 40Hz 유지 (Rule S4가 온도에 따라 조정)
-                    # decision.er_fan_freq는 그대로 유지 (40Hz)
+                    current_frequencies['count_change_cooldown'] = 30
+                    decision.er_fan_freq = 48.0  # 재분배
                 else:
                     decision.er_fan_count = current_count
-                    new_time = time_at_min + 2
-                    current_frequencies['time_at_min_freq'] = new_time
-                    if current_count <= 2:
-                        decision.count_change_reason = f"[최소] {current_count}대 운전 중 (Min 2대)"
-                    else:
-                        decision.count_change_reason = f"[감소 대기] {decision.er_fan_freq:.1f}Hz 지속, Timer={new_time}s/10s"
+                    decision.count_change_reason = f"[감소 대기] {decision.er_fan_freq:.1f}Hz {new_time}초/10초"
+                
+                # 감소 조건에서는 증가 타이머 리셋
                 current_frequencies['time_at_max_freq'] = 0
             
-            # 중간 대역 (40-60Hz) 또는 쿨다운 중: 현재 대수 안정 유지
+            # ===================================================================
+            # 현재 대수 유지
+            # ===================================================================
             else:
                 decision.er_fan_count = current_count
                 current_frequencies['time_at_max_freq'] = 0
                 current_frequencies['time_at_min_freq'] = 0
                 if count_change_cooldown > 0:
-                    decision.count_change_reason = f"[안정화] {decision.er_fan_freq:.1f}Hz, T6={t6:.1f}C, {current_count}대 (쿨다운 {count_change_cooldown}초)"
+                    decision.count_change_reason = f"[안정화] {decision.er_fan_freq:.1f}Hz, T6={t6:.1f}°C, {current_count}대 (쿨다운 {count_change_cooldown}초)"
+                elif current_count >= 4:
+                    decision.count_change_reason = f"[최대] {current_count}대 운전 중 (Max 4대)"
+                elif current_count <= 2:
+                    decision.count_change_reason = f"[최소] {current_count}대 운전 중 (Min 2대)"
                 else:
-                    decision.count_change_reason = f"[안정] {decision.er_fan_freq:.1f}Hz, T6={t6:.1f}C, {current_count}대 운전"
+                    decision.count_change_reason = f"[안정] {decision.er_fan_freq:.1f}Hz, T6={t6:.1f}°C, {current_count}대 운전"
 
         return decision
 
