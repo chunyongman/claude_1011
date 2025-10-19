@@ -414,54 +414,55 @@ class IntegratedController:
             # ===================================================================
             # 대수 증가 로직 (우선순위별)
             # ===================================================================
-            # 조건: 59.5Hz 이상 (피드백 제어의 부동소수점 오차 허용)
-            if decision.er_fan_freq >= 59.5 and count_change_cooldown <= 0 and current_count < 4:
-                
-                # Priority 1: 극한 온도 도달 (즉시!)
-                if t6 >= 47.0:
+            
+            # Priority 1: 극한 온도 도달 (즉시! 주파수 무관)
+            if t6 >= 47.0 and count_change_cooldown <= 0 and current_count < 4:
+                decision.er_fan_count = current_count + 1
+                decision.count_change_reason = f"[긴급] 극한 온도 {t6:.1f}°C ≥ 47°C → 즉시 {current_count + 1}대 증설!"
+                current_frequencies['time_at_max_freq'] = 0
+                current_frequencies['time_at_min_freq'] = 0
+                current_frequencies['count_change_cooldown'] = 30
+                decision.er_fan_freq = max(50.0, decision.er_fan_freq - 8.0)
+            
+            # Priority 2: 극한 예상 (즉시! 주파수 무관)
+            elif t6 >= 46.0 and t6_pred_5min >= 47.0 and count_change_cooldown <= 0 and current_count < 4:
+                decision.er_fan_count = current_count + 1
+                decision.count_change_reason = f"[선제] 극한 예상 (예측 {t6_pred_5min:.1f}°C ≥ 47°C) → 즉시 {current_count + 1}대 증설!"
+                current_frequencies['time_at_max_freq'] = 0
+                current_frequencies['time_at_min_freq'] = 0
+                current_frequencies['count_change_cooldown'] = 30
+                decision.er_fan_freq = max(50.0, decision.er_fan_freq - 8.0)
+            
+            # Priority 3: 고온 (5초 대기, 주파수 무관)
+            elif t6 >= 45.0 and count_change_cooldown <= 0 and current_count < 4:
+                new_time = time_at_max + 2
+                current_frequencies['time_at_max_freq'] = new_time
+                if new_time >= 5:
                     decision.er_fan_count = current_count + 1
-                    decision.count_change_reason = f"[긴급] 극한 온도 {t6:.1f}°C ≥ 47°C → 즉시 {current_count + 1}대 증설!"
+                    decision.count_change_reason = f"[고온] {t6:.1f}°C ≥ 45°C, 5초 대기 → {current_count + 1}대 증설"
                     current_frequencies['time_at_max_freq'] = 0
                     current_frequencies['count_change_cooldown'] = 30
                     decision.er_fan_freq = max(50.0, decision.er_fan_freq - 8.0)
-                
-                # Priority 2: 극한 예상 (즉시!)
-                elif t6 >= 46.0 and t6_pred_5min >= 47.0:
-                    decision.er_fan_count = current_count + 1
-                    decision.count_change_reason = f"[선제] 극한 예상 (예측 {t6_pred_5min:.1f}°C ≥ 47°C) → 즉시 {current_count + 1}대 증설!"
-                    current_frequencies['time_at_max_freq'] = 0
-                    current_frequencies['count_change_cooldown'] = 30
-                    decision.er_fan_freq = max(50.0, decision.er_fan_freq - 8.0)
-                
-                # Priority 3: 고온 (5초 대기)
-                elif t6 >= 45.0:
-                    new_time = time_at_max + 2
-                    current_frequencies['time_at_max_freq'] = new_time
-                    if new_time >= 5:
-                        decision.er_fan_count = current_count + 1
-                        decision.count_change_reason = f"[고온] {t6:.1f}°C ≥ 45°C, {decision.er_fan_freq:.1f}Hz 5초 → {current_count + 1}대 증설"
-                        current_frequencies['time_at_max_freq'] = 0
-                        current_frequencies['count_change_cooldown'] = 30
-                        decision.er_fan_freq = max(50.0, decision.er_fan_freq - 8.0)
-                    else:
-                        decision.er_fan_count = current_count
-                        decision.count_change_reason = f"[고온 대기] {t6:.1f}°C ≥ 45°C, {decision.er_fan_freq:.1f}Hz {new_time}초/5초"
-                
-                # Priority 4: 정상 (10초 대기)
                 else:
-                    new_time = time_at_max + 2
-                    current_frequencies['time_at_max_freq'] = new_time
-                    if new_time >= 10:
-                        decision.er_fan_count = current_count + 1
-                        decision.count_change_reason = f"[정상] {decision.er_fan_freq:.1f}Hz 10초 지속 → {current_count + 1}대 증설"
-                        current_frequencies['time_at_max_freq'] = 0
-                        current_frequencies['count_change_cooldown'] = 30
-                        decision.er_fan_freq = max(50.0, decision.er_fan_freq - 8.0)
-                    else:
-                        decision.er_fan_count = current_count
-                        decision.count_change_reason = f"[증가 대기] {decision.er_fan_freq:.1f}Hz {new_time}초/10초"
-                
-                # 증가 조건에서는 감소 타이머 리셋
+                    decision.er_fan_count = current_count
+                    decision.count_change_reason = f"[고온 대기] {t6:.1f}°C ≥ 45°C, {new_time}초/5초 (주파수 {decision.er_fan_freq:.1f}Hz)"
+                # 감소 타이머 리셋
+                current_frequencies['time_at_min_freq'] = 0
+            
+            # Priority 4: 정상 (10초 대기, 60Hz 조건 필요)
+            elif decision.er_fan_freq >= 59.5 and count_change_cooldown <= 0 and current_count < 4:
+                new_time = time_at_max + 2
+                current_frequencies['time_at_max_freq'] = new_time
+                if new_time >= 10:
+                    decision.er_fan_count = current_count + 1
+                    decision.count_change_reason = f"[정상] {decision.er_fan_freq:.1f}Hz 10초 지속 → {current_count + 1}대 증설"
+                    current_frequencies['time_at_max_freq'] = 0
+                    current_frequencies['count_change_cooldown'] = 30
+                    decision.er_fan_freq = max(50.0, decision.er_fan_freq - 8.0)
+                else:
+                    decision.er_fan_count = current_count
+                    decision.count_change_reason = f"[증가 대기] {decision.er_fan_freq:.1f}Hz {new_time}초/10초 (T6={t6:.1f}°C)"
+                # 감소 타이머 리셋
                 current_frequencies['time_at_min_freq'] = 0
             
             # ===================================================================
