@@ -254,8 +254,12 @@ def test_plc_response_time():
     # 6. 결과 파일 저장
     print("[4단계] 결과 파일 저장 중...")
 
+    # test_results 폴더 생성
+    results_dir = Path(__file__).parent.parent / 'test_results'
+    results_dir.mkdir(exist_ok=True)
+
     # 상세 결과 CSV
-    detail_file = f'test_results_plc_response_{datetime.now().strftime("%Y%m%d_%H%M%S")}.csv'
+    detail_file = results_dir / f'test_results_plc_response_{datetime.now().strftime("%Y%m%d_%H%M%S")}.csv'
     df.to_csv(detail_file, index=False, encoding='utf-8-sig')
     print(f"  OK 상세 결과: {detail_file}")
 
@@ -281,7 +285,7 @@ def test_plc_response_time():
         ]
     })
 
-    summary_file = f'test_summary_plc_response_{datetime.now().strftime("%Y%m%d_%H%M%S")}.csv'
+    summary_file = results_dir / f'test_summary_plc_response_{datetime.now().strftime("%Y%m%d_%H%M%S")}.csv'
     summary_df.to_csv(summary_file, index=False, encoding='utf-8-sig')
     print(f"  OK 통계 요약: {summary_file}")
 

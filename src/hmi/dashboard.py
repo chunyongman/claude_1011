@@ -25,6 +25,8 @@ from src.hmi.hmi_state_manager import (
 )
 from src.gps.gps_processor import GPSData, SeaRegion, Season, NavigationState
 from src.diagnostics.vfd_monitor import DanfossStatusBits, VFDStatus
+from src.diagnostics.vfd_predictive_diagnosis import VFDPredictiveDiagnosis
+from src.adapter.shared_data_writer import SharedDataWriter
 from src.simulation.scenarios import SimulationScenarios, ScenarioType
 from src.control.integrated_controller import IntegratedController
 
@@ -94,9 +96,19 @@ class Dashboard:
             )
             st.session_state.controller_version = 12  # V12: 온도 우선 대수 증설 (45°C 이상 주파수 무관)
 
+        # VFD 예방진단 시스템 초기화
+        if 'vfd_predictive' not in st.session_state:
+            st.session_state.vfd_predictive = VFDPredictiveDiagnosis()
+
+        # 공유 데이터 Writer 초기화
+        if 'shared_data_writer' not in st.session_state:
+            st.session_state.shared_data_writer = SharedDataWriter(shared_dir="C:/shared")
+
         self.hmi_manager: HMIStateManager = st.session_state.hmi_manager
         self.scenario_engine: SimulationScenarios = st.session_state.scenario_engine
         self.integrated_controller: IntegratedController = st.session_state.integrated_controller
+        self.vfd_predictive: VFDPredictiveDiagnosis = st.session_state.vfd_predictive
+        self.shared_data_writer: SharedDataWriter = st.session_state.shared_data_writer
 
     def run(self):
         """대시보드 실행"""
@@ -560,6 +572,34 @@ class Dashboard:
                 status = "🟢 운전 중" if i <= er_fan_count else "⚪ 대기"
                 freq = er_freq if i <= er_fan_count else 0
                 st.text(f"ER-F{i}: {status} ({freq:.1f} Hz)")
+
+        # VFD 예방진단 데이터 생성 및 공유 파일 저장
+        self._update_vfd_predictive_diagnostics()
+
+    def _update_vfd_predictive_diagnostics(self):
+        """VFD 예방진단 데이터 생성 및 공유 파일 저장"""
+        try:
+            # 모든 VFD 진단 데이터 수집
+            diagnostics = self.hmi_manager.get_vfd_diagnostics()
+            if not diagnostics:
+                return
+
+            # 예방진단 예측 수행
+            predictions = {}
+            for vfd_id, diagnostic in diagnostics.items():
+                prediction = self.vfd_predictive.predict(diagnostic)
+                if prediction:
+                    predictions[vfd_id] = prediction
+
+            # 공유 파일에 저장
+            if predictions:
+                self.shared_data_writer.write_vfd_diagnostics(diagnostics, predictions)
+
+        except Exception as e:
+            # 에러 발생 시 로그만 남기고 계속 진행
+            import logging
+            logger = logging.getLogger(__name__)
+            logger.debug(f"VFD 예방진단 데이터 저장 실패 (무시): {e}")
 
     def _render_control_panel(self):
         """제어 패널 렌더링"""
@@ -1462,6 +1502,7 @@ class Dashboard:
 
         if selected_vfd in diagnostics:
             diag = diagnostics[selected_vfd]
+            prediction = self.vfd_predictive.predict(diag)
 
             col1, col2 = st.columns([2, 1])
 
@@ -1484,6 +1525,61 @@ class Dashboard:
                     st.metric("히트싱크 온도", f"{diag.heatsink_temperature_c:.1f}°C")
 
                 st.markdown("---")
+
+                # 예방진단 예측 데이터 (NEW!)
+                if prediction:
+                    st.markdown("**🔮 예방진단 예측**")
+
+                    pred_col1, pred_col2, pred_col3, pred_col4 = st.columns(4)
+
+                    with pred_col1:
+                        trend_icon = {
+                            'rising': '↑ 상승',
+                            'falling': '↓ 하강',
+                            'stable': '→ 안정'
+                        }.get(prediction.temp_trend, '→ 안정')
+                        st.metric(
+                            "온도 추세",
+                            trend_icon,
+                            f"{prediction.temp_rise_rate:.3f}°C/min"
+                        )
+
+                    with pred_col2:
+                        st.metric(
+                            "30분 후 예측 온도",
+                            f"{prediction.predicted_temp_30min:.1f}°C"
+                        )
+
+                    with pred_col3:
+                        st.metric(
+                            "이상 점수",
+                            f"{prediction.anomaly_score:.0f}/100"
+                        )
+
+                    with pred_col4:
+                        st.metric(
+                            "수명 잔여율",
+                            f"{prediction.remaining_life_percent:.1f}%"
+                        )
+
+                    pred_col5, pred_col6 = st.columns(2)
+
+                    with pred_col5:
+                        priority_text = {
+                            0: "정상",
+                            1: "정기 점검",
+                            3: "1주일 내 점검",
+                            5: "즉시 점검"
+                        }.get(prediction.maintenance_priority, "-")
+                        st.metric("정비 우선순위", priority_text)
+
+                    with pred_col6:
+                        st.metric(
+                            "정비 예상 일수",
+                            f"{prediction.estimated_days_to_maintenance} days"
+                        )
+
+                    st.markdown("---")
 
                 # 이상 패턴
                 if diag.anomaly_patterns:
@@ -1532,7 +1628,7 @@ class Dashboard:
                 st.text(f"{'❌' if bits.warning else '✅'} No Warning")
 
     def _render_vfd_card(self, col, diagnostic):
-        """VFD 카드 렌더링"""
+        """VFD 카드 렌더링 (예방진단 데이터 포함)"""
         with col:
             # 상태 색상
             if diagnostic.status_grade == VFDStatus.NORMAL:
@@ -1552,7 +1648,35 @@ class Dashboard:
             st.markdown(f"{status_emoji} {status_text}")
             st.metric("주파수", f"{diagnostic.current_frequency_hz:.1f} Hz")
             st.metric("모터 온도", f"{diagnostic.motor_temperature_c:.1f}°C")
-            st.caption(f"운전: {diagnostic.cumulative_runtime_hours:.1f}h")
+
+            # 예방진단 데이터 추가
+            prediction = self.vfd_predictive.predict(diagnostic)
+            if prediction:
+                # 온도 추세 아이콘
+                trend_icon = {
+                    'rising': '↑',
+                    'falling': '↓',
+                    'stable': '→'
+                }.get(prediction.temp_trend, '→')
+
+                st.metric(
+                    "30분 후 예측",
+                    f"{prediction.predicted_temp_30min:.1f}°C",
+                    f"{trend_icon} {prediction.temp_rise_rate:.2f}°C/min"
+                )
+
+                # 이상 점수
+                anomaly_color = (
+                    "🔴" if prediction.anomaly_score > 75 else
+                    "🟠" if prediction.anomaly_score > 50 else
+                    "🟡" if prediction.anomaly_score > 25 else "🟢"
+                )
+                st.caption(f"{anomaly_color} 이상점수: {prediction.anomaly_score:.0f}/100")
+
+                # 수명 잔여율
+                st.caption(f"💚 수명: {prediction.remaining_life_percent:.0f}%")
+
+            st.caption(f"⏱ 운전: {diagnostic.cumulative_runtime_hours:.1f}h")
 
     def _initialize_vfd_simulation(self):
         """VFD 시뮬레이션 데이터 초기화"""
@@ -1636,6 +1760,26 @@ class Dashboard:
             )
 
             self.hmi_manager.update_vfd_diagnostic(vfd_id, diagnostic)
+
+        # VFD 예방진단 예측 수행 및 공유 파일에 저장
+        self._update_predictive_diagnostics()
+
+    def _update_predictive_diagnostics(self):
+        """VFD 예방진단 예측 수행 및 공유 파일에 저장"""
+        diagnostics = self.hmi_manager.get_vfd_diagnostics()
+        predictions = {}
+
+        # 각 VFD에 대해 예측 수행
+        for vfd_id, diagnostic in diagnostics.items():
+            prediction = self.vfd_predictive.predict(diagnostic)
+            predictions[vfd_id] = prediction
+
+        # 공유 파일에 저장 (HMI가 읽을 수 있도록)
+        try:
+            self.shared_data_writer.write_vfd_diagnostics(diagnostics, predictions)
+        except Exception as e:
+            import logging
+            logging.error(f"공유 파일 저장 실패: {e}")
 
     def _render_scenario_testing(self):
         """시나리오 테스트 렌더링"""

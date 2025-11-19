@@ -440,15 +440,19 @@ def test_ai_prediction_accuracy():
     # 6. CSV 파일 저장
     print("[5단계] 결과 파일 저장 중...")
 
+    # test_results 폴더 생성
+    results_dir = Path(__file__).parent.parent / 'test_results'
+    results_dir.mkdir(exist_ok=True)
+
     # 전체 결과
-    output_file = f'test_results_ai_accuracy_{datetime.now().strftime("%Y%m%d_%H%M%S")}.csv'
+    output_file = results_dir / f'test_results_ai_accuracy_{datetime.now().strftime("%Y%m%d_%H%M%S")}.csv'
     df.to_csv(output_file, index=False, encoding='utf-8-sig')
     print(f"  ✓ 전체 결과: {output_file}")
 
     # 부하별 결과
     for load_cat in ['low', 'medium', 'high']:
         load_df = df[df['load_category'] == load_cat]
-        load_file = f'test_results_ai_accuracy_{load_cat}_load_{datetime.now().strftime("%Y%m%d_%H%M%S")}.csv'
+        load_file = results_dir / f'test_results_ai_accuracy_{load_cat}_load_{datetime.now().strftime("%Y%m%d_%H%M%S")}.csv'
         load_df.to_csv(load_file, index=False, encoding='utf-8-sig')
         print(f"  ✓ {load_cat.upper()} 부하 결과: {load_file}")
 
